@@ -64,7 +64,7 @@ const workHistoryGroupIfy = createFormGroup({ WorkHistory, EduHistory });
 const workHistoryGroup = workHistoryGroupIfy(
   class {
     render(){
-      const { renderForms } = this.props;
+      const { renderWorkHistory, renderEduHistory } = this.props;
       return (
         <div>
           {
