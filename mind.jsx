@@ -59,7 +59,7 @@ const WorkHistory = workHistoryify(
 );
 
 
-const workHistoryGroupIfy = createFormGroup(WorkHistory);
+const workHistoryGroupIfy = createFormGroup({ WorkHistory, EduHistory });
 
 const workHistoryGroup = workHistoryGroupIfy(
   class {
