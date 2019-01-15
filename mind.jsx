@@ -38,48 +38,40 @@ class FieldFragment2 {
   }
 }
 
+const resumeify = createForm({
+  fragments: { 
+    FieldFragment1,
+    FieldFragment2,
+  },
+  groupFragments: { WorkHistory, EduHistory },
+});
 
-const workHistoryify = createForm({ FieldFragment1, FieldFragment2 });
-
-const WorkHistory = workHistoryify(
-  class {
-    didMount(){
-      this.props.form.setFields({});
-    }
-    render(){
-      const { FieldFragment1, FieldFragment2 } = this.props;
+resumeify(
+  class B{
+    did(){}
+    render(){ 
+      const { 
+        dinoForm: { 
+          fragments: {
+            FieldFragment1,
+            FieldFragment2
+          },
+          group: {
+            WorkHistory,
+            EduHistory
+          },
+        },
+      } = this.props;
+      
       return (
         <div>
-          <FieldFragment1/>
-          <FieldFragment2/>
+          <div className="part1">
+            <FieldFragment1  />     
+          </div>
+          
         </div>
-      );
-    }
-  }
-);
-
-
-const workHistoryGroupIfy = createFormGroup({ WorkHistory, EduHistory });
-
-const workHistoryGroup = workHistoryGroupIfy(
-  class {
-    render(){
-      const { renderWorkHistory, renderEduHistory } = this.props;
-      return (
-        <div>
-          {
-            renderForms(({ F, ID, onDelete, move })=>{
-              return (
-                <div>
-                  <F />
-                  <div>Delete</div>
-                </div>
-              )
-            })
-          }
-          <button>Add</button>
-        </div>
-      );
+      )
     }
   }
 )
+
