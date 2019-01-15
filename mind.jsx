@@ -68,7 +68,7 @@ const workHistoryGroup = workHistoryGroupIfy(
       return (
         <div>
           {
-            renderForms((F)=>{
+            renderForms(({ F, ID, onDelete, move })=>{
               return (
                 <div>
                   <F />
