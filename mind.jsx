@@ -38,20 +38,48 @@ class FieldFragment2 {
   }
 }
 
-const Form = createForm({ FieldFragment1, FieldFragment2 })(
-  class Buss {
+
+const workHistoryify = createForm({ FieldFragment1, FieldFragment2 });
+
+const WorkHistory = workHistoryify(
+  class {
     didMount(){
       this.props.form.setFields({});
     }
     render(){
       const { FieldFragment1, FieldFragment2 } = this.props;
-      return <div>
-        <FieldFragment1/>
-        <FieldFragment2/>
-      </div>;
+      return (
+        <div>
+          <FieldFragment1/>
+          <FieldFragment2/>
+        </div>
+      );
     }
   }
 );
 
 
-group
+const workHistoryGroupIfy = createFormGroup(WorkHistory);
+
+const workHistoryGroup = workHistoryGroupIfy(
+  class {
+    render(){
+      const { renderForms } = this.props;
+      return (
+        <div>
+          {
+            renderForms((F)=>{
+              return (
+                <div>
+                  <F />
+                  <div>Delete</div>
+                </div>
+              )
+            })
+          }
+          <button>Add</button>
+        </div>
+      );
+    }
+  }
+)
