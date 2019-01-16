@@ -19,6 +19,7 @@ const workHistoryForm = createForm({
   groups: {
     projects: {
       Com: props => <ProjectsForm {...props} />,
+      field: "projects",
       count: 1,
     },
   },
