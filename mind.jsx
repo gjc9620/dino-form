@@ -17,23 +17,6 @@ class Input {
   }
 }
 
-class FieldFragment2 {
-  render (){
-    const { FromItem, form } = this.props;
-    
-    return(
-      <FromItem
-        label='name'
-        field=""
-        com={Input}
-        comProps={{
-          onChange: ()=>{}
-        }}
-      />
-    )
-  }
-}
-
 const ProjectsForm = createForm({
   fragments: {
     ProjectsName: (props)=> <Input
