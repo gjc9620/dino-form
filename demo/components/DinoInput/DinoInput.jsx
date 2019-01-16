@@ -15,6 +15,7 @@ function dinoFromItemify(Com) {
           setFields,
           getFields,
           verify,
+          If,
         },
         label,
         field,
@@ -34,6 +35,7 @@ function dinoFromItemify(Com) {
               require ?
               [
                 {
+                  validateTrigger: ['onChange', 'onBlur'],
                   fun: value => !!value,
                   message: 'value 不能等于二',
                 },
