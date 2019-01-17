@@ -18,11 +18,29 @@ function createForm({
     return class Form extends Component {
       constructor(props) {
         super(props);
+        
         this.FromItem = this.createFromItem();
+        this.fragments = mapObject(fragments, (comName, { Com, ...props} = {}) => {
+          return {
+            [comName]: runTimeProps => (
+              <Com
+                dinoForm = {{
+                  FromItem: this.FromItem,
+                  setFields: this.setFields,
+                  getFields: this.getFields,
+                  verify: this.verify,
+                  If: ()=>{},
+                }}
+                {...props}
+                {...runTimeProps}
+              />
+            )
+          };
+        })
       }
       createFromItem = () => {
         return props => (<DinoFormItem
-          form={{
+          dinoForm={{
             setFields: this.setFields,
             getFields: this.getFields,
             verify: this.verify,
@@ -40,14 +58,7 @@ function createForm({
               setFields: this.setFields,
               getFields: this.getFields,
               verify: this.verify,
-              fragments: mapObject(fragments, (comName, Com) => {
-                return props => (
-                  <Com
-                    FromItem={this.FromItem}
-                    {...props}
-                    />
-                );
-              }),
+              fragments: this.fragments,
             }}
             />
         );

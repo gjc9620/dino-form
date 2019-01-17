@@ -18,6 +18,11 @@ class DinoFormItem extends React.Component {
   
   render() {
     const {
+      dinoForm: {
+        setFields,
+        getFields,
+        verify,
+      },
       label,
       field,
       Com,
@@ -32,7 +37,7 @@ class DinoFormItem extends React.Component {
     return (
       <section className='dino-form-item'>
         <div>
-          <div>label</div>
+          <div>{ label }</div>
           <div>
             <div><Com {...comProps} /></div>
             { message && <div>{message}</div> }

@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import createForm from './createForm';
 import { DinoInput } from './DinoComponents.jsx';
-
-function DinoFragments({ Com, ...props } = {}) {
-  return runTimeProps => <Com {...props} {...runTimeProps} />;
-}
+//
+// function DinoFragments({ Com, ...props } = {}) {
+//   return runTimeProps => <Com {...props} {...runTimeProps} />;
+// }
 
 const ProjectsForm = createForm({
   fragments: {
-    ProjectsName: <DinoFragments
-      Com={DinoInput}
-      label="projectsName"
-      field="projectsName"
-      />,
-    Time: <DinoFragments
-      Com={DinoInput}
-      label="time"
-      field="time"
-      />,
+    ProjectsName: {
+      Com: DinoInput,
+      label: "projectsName",
+      field: "projectsName",
+    },
+    Time: {
+      Com: DinoInput,
+      label: "time",
+      field: "time",
+    },
   },
 })((props) => {
   const {
+    dinoForm,
     dinoForm: {
       setFields,
       getFields,
@@ -31,6 +32,7 @@ const ProjectsForm = createForm({
       },
     },
   } = props;
+  
   return (
     <div>
       <div>
