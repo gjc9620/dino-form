@@ -11,17 +11,53 @@ class DinoFormItem extends React.Component {
   }
   componentDidMount() {
     // 注册规则 ref
+    const {
+      dinoForm: {
+        store,
+      },
+      initValue,
+      field,
+      rules,
+    } = this.props;
+  
+    store.set(field, {
+      value: initValue,
+      rules,
+    });
   }
   componentWillUnmount() {
     // 移除标记
-  }
+    const {
+      dinoForm: {
+        store,
+      },
+      field,
+    } = this.props;
   
+    store.remove(field);
+  }
+  onChange = (value)=>{
+    const {
+      dinoForm: {
+        store,
+      },
+      field,
+    } = this.props;
+  
+    const scheme = store.get(field);
+    
+    store.update(scheme, 'value', value);
+  }
+  clickLabel = () => {
+    this.com && this.com.wakeUp && this.com.wakeUp();
+  }
   render() {
     const {
       dinoForm: {
         setFields,
         getFields,
         verify,
+        store,
       },
       label,
       field,
@@ -36,12 +72,16 @@ class DinoFormItem extends React.Component {
     
     return (
       <section className='dino-form-item'>
+        <div onClick={this.clickLabel}>{ label }</div>
         <div>
-          <div>{ label }</div>
           <div>
-            <div><Com {...comProps} /></div>
-            { message && <div>{message}</div> }
+            <Com
+              {...comProps}
+              onChange={this.onChange}
+              ref={ref=>this.Com = ref}
+              />
           </div>
+          { message && <div>{message}</div> }
         </div>
       </section>
     )

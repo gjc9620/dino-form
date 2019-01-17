@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
+import createDinoFormStore from './components/DinoFormStore';
 
 function mapObject(obj, callback) {
   const mapedObj = {};
@@ -14,6 +15,9 @@ function createForm({
   fragments = {},
   group,
 } = {}) {
+  const store = createDinoFormStore();
+  window.store = store;
+  
   return function create(View) {
     return class Form extends Component {
       constructor(props) {
@@ -44,6 +48,7 @@ function createForm({
             setFields: this.setFields,
             getFields: this.getFields,
             verify: this.verify,
+            store,
           }}
           {...props}
           />);

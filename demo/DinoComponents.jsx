@@ -20,6 +20,7 @@ function dinoFromItemify(Com) {
         label,
         field,
         require = false,
+        initValue,
         rules = [],
         ...others
       } = this.props;
@@ -28,6 +29,7 @@ function dinoFromItemify(Com) {
         <FromItem
           label={label}
           field={field}
+          initValue={initValue}
           Com={Com}
           comProps={others}
           rules={[
