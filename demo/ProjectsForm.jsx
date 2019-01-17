@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import createForm from './createForm';
-import DinoInput from '../../components/DinoInput';
+import { DinoInput } from './DinoComponents.jsx';
 
 function DinoFragments({ Com, ...props } = {}) {
   return runTimeProps => <Com {...props} {...runTimeProps} />;
