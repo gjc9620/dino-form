@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import { mapObject, getValueFromEvent } from "../../util";
+import { isEventObj } from "../../util";
 
 //注册规则
 //卸载标记
@@ -39,23 +41,6 @@ class DinoFormItem extends React.Component {
       isMount,
     });
   }
-  isEventObj = (obj) =>{
-    if(typeof obj !== 'object'){
-      return false
-    }
-    
-    return (
-      obj.type !== undefined &&
-      obj.eventPhase !== undefined &&
-      obj.target !== undefined &&
-      typeof obj.stopPropagation === 'function' &&
-      typeof obj.preventDefault === 'function'
-    )
-  }
-  getValueFromEvent = (e)=>{
-    const { target } = e;
-    return target.type === 'checkbox' ? target.checked : target.value;
-  }
   onChange = (arg, ...others)=>{
     const {
       dinoForm: {
@@ -64,16 +49,13 @@ class DinoFormItem extends React.Component {
         setFieldsValues,
       },
       field,
-      onChange = ()=>{},
     } = this.props;
     
-    const value = this.isEventObj(arg)? this.getValueFromEvent(arg): args;
+    const value = isEventObj(arg)? getValueFromEvent(arg): args;
   
     setFieldsValues({
       [field]: value,
     });
-    
-    onChange(arg, ...others);
   }
   clickLabel = () => {
     this.com && this.com.wakeUp && this.com.wakeUp();
@@ -92,6 +74,58 @@ class DinoFormItem extends React.Component {
     rules;
     value;
   }
+  setRule = ()=>{
+    const {
+      dinoForm: {
+        store,
+      },
+      label,
+      field,
+      fieldName,
+      comProps = {},
+      rules = [],
+    } = this.props;
+  
+    const events = rules.reduceRight((trigger, rule)=>{
+      const { validateTrigger = [], fun, error } = rule;
+      validateTrigger.forEach((eventName)=>{
+        const preTrigger = trigger[eventName] || (()=>{});
+        trigger[eventName] = (value, ...arg)=>{
+          if(fun(value, ...arg)){
+            store.update(field, { error: undefined });
+            preTrigger(value, ...arg);
+            return
+          }
+          store.update(field, { error: error(fieldName, label, field) });
+        }
+      });
+      return trigger
+    }, {});
+  
+    const mergeEventFormComProps = {
+      ...events,
+      ...mapObject(comProps, (propsKey, propsValue)=>{
+        const event = events[propsKey];
+        if(event) {
+          return {
+            [propsKey]: function (value, ...args) {
+              propsValue();
+              return event(value, ...args);
+            }
+          }
+        }
+        return {}
+      })
+    };
+  
+    return {
+      ...mergeEventFormComProps,
+      onChange: (value, ...args) => {
+        this.onChange(value, ...args);
+        mergeEventFormComProps.onChange && mergeEventFormComProps.onChange(value, ...args);
+      }
+    }
+  }
   render() {
     const {
       dinoForm: {
@@ -105,28 +139,32 @@ class DinoFormItem extends React.Component {
       field,
       Com,
       comProps = {},
-      rules,
+      rules = [],
     } = this.props;
+    
+    console.log(store.get());
     
     this.syncToStore();
   
+    const { error } = store.get(field);
     const [ value ] = getFieldsValues(field);
-  
-    const message = this.verify(value, rules);
     
     return (
       <section className='dino-form-item'>
         <div onClick={this.clickLabel}>{ label }</div>
         <div>
-          <div>
+          <div className={`${error? 'has-error': ''}`}>
             <Com
               {...comProps}
               value={value}
-              onChange={this.onChange}
+              error={error}
+              {
+                ...this.setRule()
+              }
               ref={ref=>this.com = ref}
               />
           </div>
-          { message && <div>{message}</div> }
+          { error && <div>{error}</div> }
         </div>
       </section>
     )

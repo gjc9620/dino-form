@@ -1,37 +1,37 @@
 
-const scheme = {
+const schemeaa = {
   value: undefined,
   rules: [],
   initValue: undefined,
+  error: undefined,
   formItem: undefined,
   comRef: undefined,
   isMount: true,
 };
 
-export default function createDinoFormStore(){
+export default function createDinoFormStore() {
   const store = {};
-  
+
   return {
-    set: function (field, scheme) {
+    set(field, scheme) {
       store[field] = scheme;
     },
-    remove: function(field){
+    remove(field) {
       delete store[field];
     },
-    get: function (field) {
-      if(field){
-       return store[field];
+    get(field) {
+      if (field) {
+        return store[field];
       }
       return store;
     },
-    update: function (storeKey, obj) {
-      const scheme = store[storeKey]? store[storeKey]: {};
+    update(storeKey, obj) {
+      const scheme = store[storeKey] ? store[storeKey] : {};
       store[storeKey] = {
         ...scheme,
-        ...obj
+        ...obj,
       };
       return store[storeKey];
-    }
-  }
-  
+    },
+  };
 }

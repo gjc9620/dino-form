@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { Input, InputNumber } from 'antd';
+import { Input, InputNumber,TimePicker } from 'antd';
+import { InputItem } from 'antd-mobile';
+import { isEventObj, getValueFromEvent } from './util';
+import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
+import 'antd-mobile/dist/antd-mobile.css';
 
 function dinoFromItemify(Com) {
   return class extends React.Component {
@@ -19,7 +23,7 @@ function dinoFromItemify(Com) {
         },
         label,
         field,
-        require = false,
+        required = false,
         initValue,
         rules = [],
         ...others
@@ -27,27 +31,32 @@ function dinoFromItemify(Com) {
 
       return (
         <FromItem
-          label={label}
-          field={field}
-          initValue={initValue}
-          Com={Com}
-          comProps={others}
-          rules={[
+          label={ label }
+          field={ field }
+          initValue={ initValue }
+          Com={ Com }
+          comProps={ others }
+          rules={ [
             ...(
-              require ?
-              [
-                {
-                  validateTrigger: ['onChange', 'onBlur'],
-                  fun: value => !!value,
-                  message: 'value 不能等于二',
-                },
-              ]
-              :
-              []
+              required
+                ? [
+                  {
+                    validateTrigger: ['onChange', 'onBlur'],
+                    fun: (firstArg) => {
+                      const value = isEventObj(firstArg) ? getValueFromEvent(firstArg) : firstArg;
+                      if (Array.isArray(value)) {
+                        return value.length > 0;
+                      }
+                      return value !== undefined && value !== '';
+                    },
+                    error: (fieldName, label, field) => `${label} 必填`,
+                  },
+                ]
+                : []
             ),
             ...rules,
-          ]}
-          />
+          ] }
+        />
       );
     }
   };
@@ -55,5 +64,7 @@ function dinoFromItemify(Com) {
 
 export const DinoInput = dinoFromItemify(Input);
 export const DinoInputNumber = dinoFromItemify(InputNumber);
+export const DinoTimePicker = dinoFromItemify(TimePicker);
+export const DinoInputItem = dinoFromItemify(InputItem);
 
 export default dinoFromItemify;

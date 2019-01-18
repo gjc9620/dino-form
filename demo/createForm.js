@@ -2,14 +2,8 @@ import React, { Component } from 'react';
 import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
+import { mapObject } from './util';
 
-function mapObject(obj, callback) {
-  const mapedObj = {};
-  for (const [key, value] of Object.entries(obj)) {
-    Object.assign(mapedObj, callback(key, value, obj));
-  }
-  return mapedObj;
-}
 
 function createForm({
   fragments = {},

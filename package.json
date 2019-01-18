@@ -25,6 +25,7 @@
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "antd": "^3.12.3",
+    "antd-mobile": "^2.2.8",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
