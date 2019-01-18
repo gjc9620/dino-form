@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import createForm from './createForm';
 import {
-  DinoInput, DinoInputNumber, DinoInputItem, DinoTimePicker,
+  DinoInput,
+  DinoInputNumber,
+  DinoInputItem,
+  DinoTimePicker,
 } from './DinoComponents.jsx';
 
 const ProjectsForm = createForm({
@@ -27,16 +30,23 @@ const ProjectsForm = createForm({
         error: (fieldName, label, field) => `${label} !== 100`,
       }],
     },
-    Time2: {
+    Time1: {
       Com: DinoInputItem,
       label: 'time1',
       field: 'time1',
     },
-    Time3: {
+    Time2: {
       Com: DinoTimePicker,
       required: true,
       label: 'time2',
       field: 'time2',
+    },
+    Time3: {
+      Com: DinoInputItem,
+      required: true,
+      label: 'time3',
+      field: 'time3',
+      onErrorClick: () => console.log('DDDDD'),
     },
   },
 })((props) => {
@@ -49,6 +59,7 @@ const ProjectsForm = createForm({
       fragments: {
         ProjectsName,
         Time,
+        Time1,
         Time2,
         Time3,
       },
@@ -62,6 +73,7 @@ const ProjectsForm = createForm({
       </div>
       <div>
         <Time />
+        <Time1 />
         <Time2 />
         <Time3 />
       </div>
