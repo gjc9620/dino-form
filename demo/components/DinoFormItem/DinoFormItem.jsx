@@ -6,35 +6,38 @@ class DinoFormItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: undefined,
+      // message: undefined,
     };
   }
   componentDidMount() {
-    // 注册规则 ref
-    const {
-      dinoForm: {
-        store,
-      },
-      initValue,
-      field,
-      rules,
-    } = this.props;
-  
-    store.set(field, {
-      value: initValue,
-      rules,
-    });
+    this.syncToStore({ isMount: false });
   }
   componentWillUnmount() {
-    // 移除标记
+    this.syncToStore({ isMount: false });
+  }
+  syncToStore = ({
+    isMount = true,
+  } = {})=>{
     const {
       dinoForm: {
         store,
+        getFieldsValues,
       },
       field,
+      rules,
+      initValue,
     } = this.props;
-  
-    store.remove(field);
+    
+    const [ value ] = getFieldsValues(field);
+    
+    store.update(field, {
+      value,
+      rules,
+      initValue,
+      formItem: this,
+      comRef: this.com,
+      isMount,
+    });
   }
   isEventObj = (obj) =>{
     if(typeof obj !== 'object'){
@@ -49,32 +52,52 @@ class DinoFormItem extends React.Component {
       typeof obj.preventDefault === 'function'
     )
   }
-  getValueFromEvent(e){
+  getValueFromEvent = (e)=>{
     const { target } = e;
     return target.type === 'checkbox' ? target.checked : target.value;
   }
-  onChange = (arg)=>{
+  onChange = (arg, ...others)=>{
     const {
       dinoForm: {
         store,
+        setFields,
+        setFieldsValues,
       },
       field,
+      onChange = ()=>{},
     } = this.props;
     
     const value = this.isEventObj(arg)? this.getValueFromEvent(arg): args;
   
-    const scheme = store.get(field);
+    setFieldsValues({
+      [field]: value,
+    });
     
-    store.update(scheme, 'value', value);
+    onChange(arg, ...others);
   }
   clickLabel = () => {
     this.com && this.com.wakeUp && this.com.wakeUp();
+  }
+  verify = ()=>{
+    const {
+      rules,
+      field,
+      dinoForm: {
+        getFieldsValues,
+      },
+    } = this.props;
+    
+    const [ value ] = getFieldsValues(field);
+  
+    rules;
+    value;
   }
   render() {
     const {
       dinoForm: {
         setFields,
         getFields,
+        getFieldsValues,
         verify,
         store,
       },
@@ -85,9 +108,11 @@ class DinoFormItem extends React.Component {
       rules,
     } = this.props;
     
-    const {
-      message,
-    } = this.state;
+    this.syncToStore();
+  
+    const [ value ] = getFieldsValues(field);
+  
+    const message = this.verify(value, rules);
     
     return (
       <section className='dino-form-item'>
@@ -96,8 +121,9 @@ class DinoFormItem extends React.Component {
           <div>
             <Com
               {...comProps}
+              value={value}
               onChange={this.onChange}
-              ref={ref=>this.Com = ref}
+              ref={ref=>this.com = ref}
               />
           </div>
           { message && <div>{message}</div> }

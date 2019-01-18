@@ -46,12 +46,26 @@ function createForm({
         return props => (<DinoFormItem
           dinoForm={{
             setFields: this.setFields,
+            setFieldsValues: this.setFieldsValues,
             getFields: this.getFields,
+            getFieldsValues: this.getFieldsValues,
             verify: this.verify,
             store,
           }}
           {...props}
           />);
+      }
+      setFieldsValues = (obj)=>{
+        [...Object.entries(obj)].forEach(([field, newValue])=>{
+          store.update(field, {value: newValue});
+        });
+        this.setState({});
+      }
+      getFieldsValues = (...fields)=>{
+        return fields.map((field)=>{
+          const scheme = store.get(field) || {};
+          return scheme.value;
+        })
       }
       setFields = () => {}
       getFields = () => {}

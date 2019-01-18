@@ -2,8 +2,10 @@
 const scheme = {
   value: undefined,
   rules: [],
-  message: undefined,
   initValue: undefined,
+  formItem: undefined,
+  comRef: undefined,
+  isMount: true,
 };
 
 export default function createDinoFormStore(){
@@ -22,8 +24,13 @@ export default function createDinoFormStore(){
       }
       return store;
     },
-    update: function (scheme, schemeKey, schemeValue) {
-      scheme[schemeKey] = schemeValue;
+    update: function (storeKey, obj) {
+      const scheme = store[storeKey]? store[storeKey]: {};
+      store[storeKey] = {
+        ...scheme,
+        ...obj
+      };
+      return store[storeKey];
     }
   }
   
