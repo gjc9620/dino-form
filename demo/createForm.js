@@ -41,6 +41,7 @@ function createForm({
           dinoForm={{
             setFields: this.setFields,
             setFieldsValues: this.setFieldsValues,
+            setFieldsError: this.setFieldsError,
             getFields: this.getFields,
             getFieldsValues: this.getFieldsValues,
             verify: this.verify,
@@ -48,6 +49,12 @@ function createForm({
           }}
           {...props}
           />);
+      }
+      setFieldsError = (obj)=>{
+        [...Object.entries(obj)].forEach(([field, error])=>{
+          store.update(field, { error });
+        });
+        this.setState({});
       }
       setFieldsValues = (obj)=>{
         [...Object.entries(obj)].forEach(([field, newValue])=>{

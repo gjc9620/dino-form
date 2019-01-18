@@ -47,7 +47,9 @@ function dinoFromItemify(Com) {
                       if (Array.isArray(value)) {
                         return value.length > 0;
                       }
-                      return value !== undefined && value !== '';
+                      return value !== undefined
+                        && value !== null
+                        && value !== '';
                     },
                     error: (fieldName, label, field) => `${label} 必填`,
                   },

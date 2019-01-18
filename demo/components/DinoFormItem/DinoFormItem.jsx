@@ -51,7 +51,7 @@ class DinoFormItem extends React.Component {
       field,
     } = this.props;
     
-    const value = isEventObj(arg)? getValueFromEvent(arg): args;
+    const value = isEventObj(arg)? getValueFromEvent(arg): arg;
   
     setFieldsValues({
       [field]: value,
@@ -78,6 +78,8 @@ class DinoFormItem extends React.Component {
     const {
       dinoForm: {
         store,
+        getFieldsValues,
+        setFieldsError,
       },
       label,
       field,
@@ -90,13 +92,14 @@ class DinoFormItem extends React.Component {
       const { validateTrigger = [], fun, error } = rule;
       validateTrigger.forEach((eventName)=>{
         const preTrigger = trigger[eventName] || (()=>{});
-        trigger[eventName] = (value, ...arg)=>{
+        trigger[eventName] = (firstArg, ...arg)=>{
+          const value = isEventObj(firstArg) ? getValueFromEvent(firstArg) : firstArg;
           if(fun(value, ...arg)){
-            store.update(field, { error: undefined });
+            setFieldsError({ [field]: undefined });
             preTrigger(value, ...arg);
             return
           }
-          store.update(field, { error: error(fieldName, label, field) });
+          setFieldsError({ [field]: error(fieldName, label, field) });
         }
       });
       return trigger

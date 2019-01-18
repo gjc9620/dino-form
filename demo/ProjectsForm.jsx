@@ -13,19 +13,24 @@ const ProjectsForm = createForm({
       field: 'projectsNameField',
       rules: [{
         validateTrigger: ['onChange', 'onBlur'],
-        fun: event => event.target.value === '12',
+        fun: value => value === '12',
         error: (fieldName, label, field) => `${label} !== 12`,
       }],
     },
-    Time1: {
+    Time: {
       Com: DinoInputNumber,
-      label: 'time1',
-      field: 'time1',
+      label: 'time',
+      field: 'time',
+      rules: [{
+        validateTrigger: ['onBlur'],
+        fun: value => +value !== 100,
+        error: (fieldName, label, field) => `${label} !== 100`,
+      }],
     },
     Time2: {
       Com: DinoInputItem,
-      label: 'time2',
-      field: 'time2',
+      label: 'time1',
+      field: 'time1',
     },
     Time3: {
       Com: DinoTimePicker,
@@ -44,6 +49,8 @@ const ProjectsForm = createForm({
       fragments: {
         ProjectsName,
         Time,
+        Time2,
+        Time3,
       },
     },
   } = props;
@@ -55,6 +62,8 @@ const ProjectsForm = createForm({
       </div>
       <div>
         <Time />
+        <Time2 />
+        <Time3 />
       </div>
     </div>
   );

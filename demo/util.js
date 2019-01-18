@@ -14,7 +14,7 @@ export function getValueFromEvent(e) {
 
 
 export function isEventObj(obj) {
-  if (typeof obj !== 'object') {
+  if (obj === null || typeof obj !== 'object') {
     return false;
   }
 
