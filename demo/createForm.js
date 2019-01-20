@@ -22,13 +22,7 @@ function createForm({
           return {
             [comName]: runTimeProps => (
               <Com
-                dinoForm = {{
-                  FromItem: this.FromItem,
-                  setFields: this.setFields,
-                  getFields: this.getFields,
-                  verify: this.verify,
-                  If: ()=>{},
-                }}
+                dinoForm = {this.createDinoFormApi()}
                 {...props}
                 {...runTimeProps}
               />
@@ -36,17 +30,21 @@ function createForm({
           };
         })
       }
+      createDinoFormApi = () => {
+        return {
+          FromItem: this.FromItem,
+          setFields: this.setFields,
+          setFieldsValues: this.setFieldsValues,
+          setFieldsError: this.setFieldsError,
+          getFields: this.getFields,
+          getFieldsValues: this.getFieldsValues,
+          verify: this.verify,
+          store,
+        }
+      }
       createFromItem = () => {
         return props => (<DinoFormItem
-          dinoForm={{
-            setFields: this.setFields,
-            setFieldsValues: this.setFieldsValues,
-            setFieldsError: this.setFieldsError,
-            getFields: this.getFields,
-            getFieldsValues: this.getFieldsValues,
-            verify: this.verify,
-            store,
-          }}
+          dinoForm={this.createDinoFormApi()}
           {...props}
           />);
       }
