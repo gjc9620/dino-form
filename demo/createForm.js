@@ -73,9 +73,7 @@ function createForm({
         return (
           <View
             dinoForm={{
-              setFields: this.setFields,
-              getFields: this.getFields,
-              verify: this.verify,
+              ...this.createDinoFormApi(),
               fragments: this.fragments,
             }}
             />
