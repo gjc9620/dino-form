@@ -8,7 +8,7 @@ import ProjectsForm from './ProjectsForm.jsx';
 
 function createForm({
   fragments = {},
-  groups,
+  groups = {},
 } = {}) {
   const store = createDinoFormStore();
   window.store = store;
@@ -60,8 +60,6 @@ function createForm({
         },
       }))
 
-      updateGroupsRef = () => this.state.groups[formName].ref
-
       createDinoFormApi = () => ({
         FromItem: this.FromItem,
         setFields: this.setFields,
@@ -111,6 +109,7 @@ function createForm({
             dinoForm={ {
               ...this.createDinoFormApi(),
               fragments: this.fragments,
+              groups: {},
             } }
             />
         );
