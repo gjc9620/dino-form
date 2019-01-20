@@ -1,24 +1,25 @@
 import React from 'react';
-import createForm from './createForm';
-import ProjectsForm from './ProjectsForm';
-import DinoInput from '../../components/DinoInput';
+import createForm from './createForm.jsx';
+import ProjectsForm from './ProjectsForm.jsx';
+import {
+  DinoInput,
+  DinoInputNumber,
+  DinoInputItem,
+  DinoTimePicker,
+} from './DinoComponents.jsx';
 
 const workHistoryForm = createForm({
   fragments: {
-    CompanyName: props => (
-      <DinoInput
-        label="companyName"
-        field="companyName"
-        { ...props }
-      />
-    ),
-    Time: props => (
-      <DinoInput
-        label="time"
-        field="time"
-        { ...props }
-      />
-    ),
+    CompanyName: {
+      com: DinoInput,
+      label: 'companyName',
+      field: 'companyName',
+    },
+    Time: {
+      com: DinoInput,
+      label: 'time',
+      field: 'time',
+    },
   },
   groups: {
     ProjectsForm: {
@@ -48,7 +49,6 @@ const workHistoryForm = createForm({
         <div>
           <Time />
         </div>
-        { projects.render() }
       </div>
     );
   }

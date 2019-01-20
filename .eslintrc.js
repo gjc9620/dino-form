@@ -1,14 +1,12 @@
 module.exports = {
   "env": {
     "browser": true,
-    "node": true,
-    "jest": true,
-    "mocha": true,
+    "node": true
   },
   "extends": [
     "airbnb",
   ],
-  globals: {},
+  parser: 'babel-eslint',
   rules: {
     //general
     "global-require": "off",
@@ -31,6 +29,8 @@ module.exports = {
       "allowMultiline": true,
       "spacing": {"objectLiterals": "always"}
     }],
+    "react/jsx-one-expression-per-line": "off",
+    'react/jsx-closing-bracket-location': [1, {selfClosing: 'props-aligned', nonEmpty: 'after-props'}],
     "react/sort-comp": [2, {
       order: [
         'static-methods',
