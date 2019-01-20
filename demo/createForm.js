@@ -3,11 +3,12 @@ import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
 import { mapObject } from './util';
+import ProjectsForm from "./ProjectsForm";
 
 
 function createForm({
   fragments = {},
-  group,
+  groups,
 } = {}) {
   const store = createDinoFormStore();
   window.store = store;
@@ -28,7 +29,43 @@ function createForm({
               />
             )
           };
+        });
+  
+        this.ID = 0;
+        this.state = {
+          groups: {
+            ...this.createGroup(groups),
+            ProjectsForm: {
+              Com: ProjectsForm,
+              field: 'projects',
+              WarpCom: ProjectsForm,
+              IDRefMap:{
+                0:{},
+                1:{},
+              },
+              IDList: []
+            }
+          }
+        };
+      }
+      createGroup = (groups)=>{
+        return mapObject(groups, (formName, { Com, field, count } = {})=>{
+          return {
+            Com,
+            field,
+            IDRefMap: {},
+            IDList: [...new Array(count)].map(()=>this.ID++),
+            WarpCom: (props)=>{
+              const { ID, index } = props;
+              return <Com ref={(ref)=>{
+                return this.state.groups[formName].IDRefMap[ID] = ref;
+              }} />
+            },
+          }
         })
+      }
+      updateGroupsRef = ()=> {
+        return this.state.groups[formName].ref
       }
       createDinoFormApi = () => {
         return {

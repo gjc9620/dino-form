@@ -5,21 +5,25 @@ import DinoInput from '../../components/DinoInput';
 
 const workHistoryForm = createForm({
   fragments: {
-    CompanyName: props => (<DinoInput
-      label="companyName"
-      field="companyName"
-      {...props}
-      />),
-    Time: props => (<DinoInput
-      label="time"
-      field="time"
-      {...props}
-      />),
+    CompanyName: props => (
+      <DinoInput
+        label="companyName"
+        field="companyName"
+        { ...props }
+      />
+    ),
+    Time: props => (
+      <DinoInput
+        label="time"
+        field="time"
+        { ...props }
+      />
+    ),
   },
   groups: {
-    projects: {
-      Com: props => <ProjectsForm {...props} />,
-      field: "projects",
+    ProjectsForm: {
+      Com: ProjectsForm,
+      field: 'projects',
       count: 1,
     },
   },
