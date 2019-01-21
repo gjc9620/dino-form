@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DinoForm from './components/DinoForm';
+// import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
 import { mapObject } from './util';
@@ -14,7 +14,7 @@ function createForm({
   window.store = store;
 
   return function create(View) {
-    return class Form extends Component {
+    return class DinoForm extends Component {
       constructor(props) {
         super(props);
 
@@ -30,33 +30,34 @@ function createForm({
         }));
 
         this.ID = 0;
-        this.state = {
-          groups: {
-            ...this.createGroup(groups),
-            ProjectsForm: {
-              Com: ProjectsForm,
-              field: 'projects',
-              WarpCom: ProjectsForm,
-              IDRefMap: {
-                0: {},
-                1: {},
-              },
-              IDList: [],
-            },
-          },
-        };
+        // ProjectsForm: {
+        //   Com: ProjectsForm,
+        //   field: 'projects',
+        //   WarpCom: ProjectsForm,
+        //   IDRefMap: {
+        //     0: {},
+        //     1: {},
+        //   },
+        //   IDList: [],
+        // },
+        this.groups = this.createGroups(groups);
       }
 
-      createGroup = groups => mapObject(groups, (formName, { Com, field, count } = {}) => ({
-        Com,
-        field,
-        IDRefMap: {},
-        IDList: [...new Array(count)].map(() => this.ID++),
-        WarpCom: (props) => {
-          const { ID, index } = props;
-          return (
-            <Com ref={ ref => this.state.groups[formName].IDRefMap[ID] = ref } />
-          );
+      createGroups = groups => mapObject(groups, (formName, {
+        Com, field, count, formProps = {},
+      } = {}) => ({
+        [formName]: {
+          Com,
+          field,
+          IDRefMap: {},
+          formProps,
+          IDList: [...new Array(count)].map(() => this.ID++),
+          Form: (props) => {
+            const { ID, index } = props;
+            return (
+              <Com ref={ ref => this.groups[formName].IDRefMap[ID] = ref } />
+            );
+          },
         },
       }))
 
@@ -103,13 +104,65 @@ function createForm({
 
       verify = () => {}
 
+      addItem = () => {
+
+      }
+
+      deleteItem = () => {}
+
+      groupsAPI = () => mapObject(this.groups, (groupName, {
+        Com,
+        field,
+        IDRefMap,
+        IDList,
+        Form,
+        formProps,
+      }) => ({
+        [groupName]: {
+          render: (render = this.renderGroup) => render({
+            Com,
+            field,
+            IDRefMap,
+            IDList,
+            Form,
+            deleteIt: () => {},
+            move: () => {},
+            moveTo: () => {},
+            formProps,
+          }),
+          addItem: (add = this.addItem) => add({
+            Com,
+            field,
+            IDRefMap,
+            IDList,
+            Form,
+          }),
+          deleteItem: (add = this.deleteItem) => add({
+            Com,
+            field,
+            IDRefMap,
+            IDList,
+            Form,
+          }),
+        },
+      }))
+
+      renderGroup = ({ Form, IDList, field }) => {
+        const group = IDList.map((id, index) => (
+          <div className={ `dino-form-${field}-group-item` }>
+            <Form id={ id } index={ index } />)
+          </div>
+        ));
+        return <div className={ `dino-form-${field}-group` }>{group}</div>;
+      }
+
       render() {
         return (
           <View
             dinoForm={ {
               ...this.createDinoFormApi(),
               fragments: this.fragments,
-              groups: {},
+              groups: this.groupsAPI(),
             } }
             />
         );

@@ -6,6 +6,7 @@ import WorkHistoryForm from './WorkHistoryForm.jsx';
 const App = () => (
   <div>
     <ProjectsForm />
+    <hr />
     <WorkHistoryForm />
   </div>
 );

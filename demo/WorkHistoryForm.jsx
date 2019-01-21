@@ -11,21 +11,22 @@ import {
 const workHistoryForm = createForm({
   fragments: {
     CompanyName: {
-      com: DinoInput,
+      Com: DinoInput,
       label: 'companyName',
       field: 'companyName',
     },
     Time: {
-      com: DinoInput,
+      Com: DinoInput,
       label: 'time',
       field: 'time',
     },
   },
   groups: {
-    ProjectsForm: {
+    projects: {
       Com: ProjectsForm,
       field: 'projects',
       count: 1,
+      formProps: { aa: 1 },
     },
   },
 })(class extends React.Component {
@@ -37,10 +38,15 @@ const workHistoryForm = createForm({
           Time,
         },
         groups: {
-          projects,
+          projects: {
+            render,
+            addItem,
+            deleteItem,
+          },
         },
       },
     } = this.props;
+
     return (
       <div>
         <div>
@@ -48,6 +54,20 @@ const workHistoryForm = createForm({
         </div>
         <div>
           <Time />
+        </div>
+        <div className="groups">
+          {
+            render(({
+              Form, deleteIt, move, moveTo, aa,
+            }) => (
+              <div>
+                <Form />
+                <button onClick={ deleteIt }>删除</button>
+                <button onClick={ () => move(-1) }>上</button>
+                <button onClick={ () => move(-2) }>下</button>
+              </div>
+            ))
+          }
         </div>
       </div>
     );
