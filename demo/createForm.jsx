@@ -31,22 +31,54 @@ function createForm({
 
       createGroups = groupsObj => mapObject(groupsObj, (formName, {
         Com, field, count, formProps = {},
-      } = {}) => ({
-        [formName]: {
+      } = {}) => {
+        const that = this;
+        const group = {
           Com,
           field,
-          IDRefMap: {},
+          IDRefMap: {
+            // 0: {
+            //   ref: {},
+            //   props: {}
+            // }
+          },
           formProps,
           IDList: [...new Array(count)].map(() => this.ID++),
-          Forms: [],
-          Form: (props) => {
-            const { ID, index } = props;
-            return (
-              <Com ref={ (ref) => { this.groups[formName].IDRefMap[ID] = ref; } } />
-            );
+          Form: class extends Component {
+            constructor(props){
+              super(props);
+              const { ID, index } = props;
+              that.groups[formName].IDRefMap[ID] = {};
+            }
+
+            componentWillUnmount() {
+              const { ID, index } = this.props;
+              that.groups[formName].IDRefMap[ID] = undefined;
+            }
+
+            catchRef = (ref) => {
+              const { ID, index } = this.props;
+              that.groups[formName].IDRefMap[ID].ref = ref;
+            }
+
+            render() {
+              const { ID, index } = this.props;
+              return (
+                <Com ref={ this.catchRef } />
+              );
+            }
           },
-        },
-      }))
+        };
+        return ({
+          [formName]: group,
+        });
+      })
+
+      createCatchRef = () => {
+        if (ref) {
+          return this.groups[formName].IDRefMap[ID] = ref;
+        }
+      }
 
       createDinoFormApi = () => ({
         FromItem: this.FromItem,
@@ -128,7 +160,7 @@ function createForm({
             const values = [];
 
             for (const ID of IDList) {
-              const result = await IDRefMap[ID].verify();
+              const result = await IDRefMap[ID].ref.verify();
               if (result.hasError) hasError = true;
               values.push(result.data);
             }
@@ -154,7 +186,7 @@ function createForm({
 
       deleteItem = () => {}
 
-      mapGroup = ({ Form, ID }) => <Form ID={ ID } />
+      mapGroup = ({ Form, ID, formProps = {} }) => <Form { ...formProps }  ID={ ID } />
 
       groupsAPI = () => mapObject(this.groups, (groupName, {
         Com,

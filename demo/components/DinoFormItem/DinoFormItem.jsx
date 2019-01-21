@@ -140,8 +140,6 @@ class DinoFormItem extends React.Component {
       rules = [],
     } = this.props;
 
-    console.log(store.get());
-
     this.syncToStore({ isMount: true });
 
     const { error } = store.get(field);

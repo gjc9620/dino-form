@@ -11,7 +11,7 @@ function dinoFromItemify(Com) {
     //   super(props);
     //   this.state = {};
     // }
-    // componentDidMount() {}
+    // componentDidMountcomponentDidMount() {}
     render() {
       const {
         dinoForm: {
