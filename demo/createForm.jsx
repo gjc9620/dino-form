@@ -38,6 +38,7 @@ function createForm({
           IDRefMap: {},
           formProps,
           IDList: [...new Array(count)].map(() => this.ID++),
+          Forms: [],
           Form: (props) => {
             const { ID, index } = props;
             return (
