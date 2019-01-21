@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Input, InputNumber,TimePicker } from 'antd';
+import { Input, InputNumber, TimePicker } from 'antd';
 import { InputItem } from 'antd-mobile';
 import { isEventObj, getValueFromEvent } from './util';
-import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import 'antd-mobile/dist/antd-mobile.css';
 
 function dinoFromItemify(Com) {
@@ -51,14 +51,14 @@ function dinoFromItemify(Com) {
                         && value !== null
                         && value !== '';
                     },
-                    error: (fieldName, label, field) => `${label} 必填`,
+                    error: ({ label, field }) => `${label} 必填`,
                   },
                 ]
                 : []
             ),
             ...rules,
           ] }
-        />
+          />
       );
     }
   };

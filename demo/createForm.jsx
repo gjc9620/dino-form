@@ -102,7 +102,35 @@ function createForm({
 
       getFields = () => {}
 
-      verify = () => {}
+      verify = () => Promise.resolve().then(() => {
+        let hasError = false;
+        const fragmentsField = mapObject(store.get(), (field, scheme) => {
+          const {
+            rules = [], isMount, value, label,
+          } = scheme;
+          if (!isMount) { return {}; }
+
+          let error;
+          let isPass;
+          for (const rule of rules) {
+            isPass = rule.fun(value);
+            if (!isPass) {
+              hasError = true;
+              error = rule.error({ label, field });
+              this.setFieldsError({ [field]: error });
+              break;
+            }
+          }
+
+          return { [field]: value };
+        });
+
+        debugger;
+        const groupField = mapObject(this.groups, (groupName, ) => {
+        
+        });
+        debugger;
+      })
 
       addItem = () => {
 

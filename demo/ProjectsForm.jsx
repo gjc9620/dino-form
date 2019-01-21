@@ -17,7 +17,7 @@ const ProjectsForm = createForm({
       rules: [{
         validateTrigger: ['onChange', 'onBlur'],
         fun: value => value === '12',
-        error: (fieldName, label, field) => `${label} !== 12`,
+        error: ({ label, field }) => `${label} !== 12`,
       }],
     },
     Time: {
@@ -27,7 +27,7 @@ const ProjectsForm = createForm({
       rules: [{
         validateTrigger: ['onBlur'],
         fun: value => +value !== 100,
-        error: (fieldName, label, field) => `${label} !== 100`,
+        error: ({ label, field }) => `${label} !== 100`,
       }],
     },
     Time1: {

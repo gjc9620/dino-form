@@ -1,6 +1,7 @@
 
 const schemeaa = {
   value: undefined,
+  label: undefined,
   rules: [],
   initValue: undefined,
   error: undefined,

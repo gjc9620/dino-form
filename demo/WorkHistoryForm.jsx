@@ -12,6 +12,7 @@ const workHistoryForm = createForm({
   fragments: {
     CompanyName: {
       Com: DinoInput,
+      required: true,
       label: 'companyName',
       field: 'companyName',
     },
@@ -25,7 +26,7 @@ const workHistoryForm = createForm({
     projects: {
       Com: ProjectsForm,
       field: 'projects',
-      count: 3,
+      count: 1,
       formProps: { aa: 1 },
     },
   },
@@ -45,6 +46,7 @@ const workHistoryForm = createForm({
             deleteItem,
           },
         },
+        verify,
       },
     } = this.props;
 
@@ -64,6 +66,7 @@ const workHistoryForm = createForm({
                 Form, ID, index, deleteIt, move, moveTo, aa,
               }) => (
                 <div key={ ID }>
+                  <div>{ID}</div>
                   <Form />
                   <button onClick={ deleteIt }>删除</button>
                   <button onClick={ () => move(-1) }>上</button>
@@ -74,6 +77,7 @@ const workHistoryForm = createForm({
             )
           }
         </div>
+        <div onClick={ verify }>提交</div>
       </div>
     );
   }
