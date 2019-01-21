@@ -5,9 +5,12 @@ import WorkHistoryForm from './WorkHistoryForm.jsx';
 
 const App = () => (
   <div>
-    <ProjectsForm />
-    <hr />
     <WorkHistoryForm />
+    <hr />
+    <hr />
+    <hr />
+    <hr />
+    <ProjectsForm />
   </div>
 );
 

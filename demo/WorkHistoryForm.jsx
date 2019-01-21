@@ -25,7 +25,7 @@ const workHistoryForm = createForm({
     projects: {
       Com: ProjectsForm,
       field: 'projects',
-      count: 1,
+      count: 3,
       formProps: { aa: 1 },
     },
   },
@@ -40,6 +40,7 @@ const workHistoryForm = createForm({
         groups: {
           projects: {
             render,
+            map,
             addItem,
             deleteItem,
           },
@@ -57,16 +58,20 @@ const workHistoryForm = createForm({
         </div>
         <div className="groups">
           {
-            render(({
-              Form, deleteIt, move, moveTo, aa,
-            }) => (
-              <div>
-                <Form />
-                <button onClick={ deleteIt }>删除</button>
-                <button onClick={ () => move(-1) }>上</button>
-                <button onClick={ () => move(-2) }>下</button>
-              </div>
-            ))
+            render(
+              children => <div>{children}</div>,
+              map(({
+                Form, ID, index, deleteIt, move, moveTo, aa,
+              }) => (
+                <div key={ ID }>
+                  <Form />
+                  <button onClick={ deleteIt }>删除</button>
+                  <button onClick={ () => move(-1) }>上</button>
+                  <button onClick={ () => move(-2) }>下</button>
+                  <hr />
+                </div>
+              )),
+            )
           }
         </div>
       </div>

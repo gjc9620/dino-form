@@ -117,9 +117,11 @@ function createForm({
         IDList,
         Form,
         formProps,
-      }) => ({
-        [groupName]: {
-          render: (render = this.renderGroup) => render({
+      }) => {
+        const group = {
+          map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => mapGroup({
+            ID,
+            index,
             Com,
             field,
             IDRefMap,
@@ -129,7 +131,11 @@ function createForm({
             move: () => {},
             moveTo: () => {},
             formProps,
-          }),
+          })),
+          render: (
+            renderGroup = ele => <div className={ `dino-form-${field}-group` }>{ele}</div>,
+            children = group.map(),
+          ) => renderGroup(children),
           addItem: (add = this.addItem) => add({
             Com,
             field,
@@ -144,17 +150,10 @@ function createForm({
             IDList,
             Form,
           }),
-        },
-      }))
+        };
 
-      renderGroup = ({ Form, IDList, field }) => {
-        const group = IDList.map((id, index) => (
-          <div className={ `dino-form-${field}-group-item` }>
-            <Form id={ id } index={ index } />)
-          </div>
-        ));
-        return <div className={ `dino-form-${field}-group` }>{group}</div>;
-      }
+        return { [groupName]: group };
+      })
 
       render() {
         return (
