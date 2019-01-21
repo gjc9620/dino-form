@@ -6,11 +6,11 @@ import WorkHistoryForm from './WorkHistoryForm.jsx';
 const App = () => (
   <div>
     <WorkHistoryForm />
-    <hr />
-    <hr />
-    <hr />
-    <hr />
-    <ProjectsForm />
+    {/*<hr />*/}
+    {/*<hr />*/}
+    {/*<hr />*/}
+    {/*<hr />*/}
+    {/*<ProjectsForm />*/}
   </div>
 );
 

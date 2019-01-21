@@ -7,6 +7,14 @@ export function mapObject(obj, callback) {
   return mapedObj;
 }
 
+export async function mapObjectAsync(obj, callback) {
+  const mapedObj = {};
+  for (const [key, value] of Object.entries(obj)) {
+    Object.assign(mapedObj, await callback(key, value, obj));
+  }
+  return mapedObj;
+}
+
 export function getValueFromEvent(e) {
   const { target } = e;
   return target.type === 'checkbox' ? target.checked : target.value;

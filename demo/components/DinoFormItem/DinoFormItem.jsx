@@ -68,21 +68,6 @@ class DinoFormItem extends React.Component {
     this.com && this.com.wakeUp && this.com.wakeUp();
   }
 
-  verify = () => {
-    const {
-      rules,
-      field,
-      dinoForm: {
-        getFieldsValues,
-      },
-    } = this.props;
-
-    const [value] = getFieldsValues(field);
-
-    rules;
-    value;
-  }
-
   setRule = () => {
     const {
       dinoForm: {

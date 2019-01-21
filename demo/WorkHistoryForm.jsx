@@ -26,7 +26,7 @@ const workHistoryForm = createForm({
     projects: {
       Com: ProjectsForm,
       field: 'projects',
-      count: 1,
+      count: 2,
       formProps: { aa: 1 },
     },
   },
@@ -67,7 +67,7 @@ const workHistoryForm = createForm({
               }) => (
                 <div key={ ID }>
                   <div>{ID}</div>
-                  <Form />
+                  <Form ID={ ID } />
                   <button onClick={ deleteIt }>删除</button>
                   <button onClick={ () => move(-1) }>上</button>
                   <button onClick={ () => move(-2) }>下</button>
@@ -77,7 +77,11 @@ const workHistoryForm = createForm({
             )
           }
         </div>
-        <div onClick={ verify }>提交</div>
+        <div onClick={ async () => {
+          const { hasError, data } = await verify();
+          console.log(hasError, data);
+        } }>提交
+        </div>
       </div>
     );
   }

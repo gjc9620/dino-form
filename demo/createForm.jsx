@@ -2,22 +2,18 @@ import React, { Component } from 'react';
 // import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
-import { mapObject } from './util';
-import ProjectsForm from './ProjectsForm.jsx';
-
+import { mapObject, mapObjectAsync } from './util';
 
 function createForm({
   fragments = {},
   groups = {},
 } = {}) {
-  const store = createDinoFormStore();
-  window.store = store;
-
   return function create(View) {
     return class DinoForm extends Component {
-      constructor(props) {
-        super(props);
+      constructor(constructorProps) {
+        super(constructorProps);
 
+        this.store = createDinoFormStore();
         this.FromItem = this.createFromItem();
         this.fragments = mapObject(fragments, (comName, { Com, ...props } = {}) => ({
           [comName]: runTimeProps => (
@@ -30,20 +26,10 @@ function createForm({
         }));
 
         this.ID = 0;
-        // ProjectsForm: {
-        //   Com: ProjectsForm,
-        //   field: 'projects',
-        //   WarpCom: ProjectsForm,
-        //   IDRefMap: {
-        //     0: {},
-        //     1: {},
-        //   },
-        //   IDList: [],
-        // },
         this.groups = this.createGroups(groups);
       }
 
-      createGroups = groups => mapObject(groups, (formName, {
+      createGroups = groupsObj => mapObject(groupsObj, (formName, {
         Com, field, count, formProps = {},
       } = {}) => ({
         [formName]: {
@@ -55,7 +41,7 @@ function createForm({
           Form: (props) => {
             const { ID, index } = props;
             return (
-              <Com ref={ ref => this.groups[formName].IDRefMap[ID] = ref } />
+              <Com ref={ (ref) => { this.groups[formName].IDRefMap[ID] = ref; } } />
             );
           },
         },
@@ -69,7 +55,7 @@ function createForm({
         getFields: this.getFields,
         getFieldsValues: this.getFieldsValues,
         verify: this.verify,
-        store,
+        store: this.store,
       })
 
       createFromItem = () => props => (
@@ -81,20 +67,20 @@ function createForm({
 
       setFieldsError = (obj) => {
         [...Object.entries(obj)].forEach(([field, error]) => {
-          store.update(field, { error });
+          this.store.update(field, { error });
         });
         this.setState({});
       }
 
       setFieldsValues = (obj) => {
         [...Object.entries(obj)].forEach(([field, newValue]) => {
-          store.update(field, { value: newValue });
+          this.store.update(field, { value: newValue });
         });
         this.setState({});
       }
 
       getFieldsValues = (...fields) => fields.map((field) => {
-        const scheme = store.get(field) || {};
+        const scheme = this.store.get(field) || {};
         return scheme.value;
       })
 
@@ -102,34 +88,63 @@ function createForm({
 
       getFields = () => {}
 
-      verify = () => Promise.resolve().then(() => {
+      verify = () => Promise.resolve().then(async () => {
         let hasError = false;
-        const fragmentsField = mapObject(store.get(), (field, scheme) => {
-          const {
-            rules = [], isMount, value, label,
-          } = scheme;
-          if (!isMount) { return {}; }
+        const fragmentsField = await mapObjectAsync(
+          this.store.get(),
+          async (
+            field,
+            scheme) => {
+            const {
+              rules = [], isMount, value, label,
+            } = scheme;
+            if (!isMount) { return {}; }
 
-          let error;
-          let isPass;
-          for (const rule of rules) {
-            isPass = rule.fun(value);
-            if (!isPass) {
-              hasError = true;
-              error = rule.error({ label, field });
-              this.setFieldsError({ [field]: error });
-              break;
+            let error;
+            let isPass;
+            for (const rule of rules) {
+              isPass = await rule.fun(value);
+              if (!isPass) {
+                hasError = true;
+                error = rule.error({ label, field });
+                this.setFieldsError({ [field]: error });
+                break;
+              }
             }
-          }
 
-          return { [field]: value };
-        });
+            return { [field]: value };
+          },
+        );
 
-        debugger;
-        const groupField = mapObject(this.groups, (groupName, ) => {
-        
-        });
-        debugger;
+        const groupField = await mapObjectAsync(
+          this.groups,
+          async (
+            groupName,
+            {
+              field,
+              IDRefMap = [], IDList,
+            }) => {
+            const values = [];
+
+            for (const ID of IDList) {
+              const result = await IDRefMap[ID].verify();
+              if (result.hasError) hasError = true;
+              values.push(result.data);
+            }
+
+            return {
+              [field]: values,
+            };
+          },
+        );
+
+        return {
+          hasError,
+          data: {
+            ...fragmentsField,
+            ...groupField,
+          },
+        };
       })
 
       addItem = () => {
@@ -137,6 +152,8 @@ function createForm({
       }
 
       deleteItem = () => {}
+
+      mapGroup = ({ Form, ID }) => <Form ID={ ID } />
 
       groupsAPI = () => mapObject(this.groups, (groupName, {
         Com,
