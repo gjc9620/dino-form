@@ -15,14 +15,20 @@ function createForm({
 
         this.store = createDinoFormStore();
         this.FromItem = this.createFromItem();
+        const that = this;
         this.fragments = mapObject(fragments, (comName, { Com, ...props } = {}) => ({
-          [comName]: runTimeProps => (
-            <Com
-              dinoForm={ this.createDinoFormApi() }
-              { ...props }
-              { ...runTimeProps }
-              />
-          ),
+          [comName]: class Fragment extends Component {
+            render() {
+              const { runTimeProps } = this.props;
+              return (
+                <Com
+                  dinoForm={ that.createDinoFormApi() }
+                  { ...props }
+                  { ...runTimeProps }
+                  />
+              );
+            }
+          },
         }));
 
         this.ID = 0;
@@ -92,7 +98,7 @@ function createForm({
         store: this.store,
       })
 
-      createFromItem = () => props => (
+      createFromItem = () => props => (  //todo rename
         <DinoFormItem
           dinoForm={ this.createDinoFormApi() }
           { ...props }
