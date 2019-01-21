@@ -27,6 +27,13 @@ function createForm({
 
         this.ID = 0;
         this.groups = this.createGroups(groups);
+        this.state = {
+          store: this.store,
+          FromItem: this.FromItem,
+          fragments: this.fragments,
+          ID: this.ID,
+          groups: this.groups,
+        };
       }
 
       createGroups = groupsObj => mapObject(groupsObj, (formName, {
@@ -45,7 +52,7 @@ function createForm({
           formProps,
           IDList: [...new Array(count)].map(() => this.ID++),
           Form: class extends Component {
-            constructor(props){
+            constructor(props) {
               super(props);
               const { ID, index } = props;
               that.groups[formName].IDRefMap[ID] = {};
@@ -73,12 +80,6 @@ function createForm({
           [formName]: group,
         });
       })
-
-      createCatchRef = () => {
-        if (ref) {
-          return this.groups[formName].IDRefMap[ID] = ref;
-        }
-      }
 
       createDinoFormApi = () => ({
         FromItem: this.FromItem,
@@ -186,15 +187,20 @@ function createForm({
 
       deleteItem = () => {}
 
-      mapGroup = ({ Form, ID, formProps = {} }) => <Form { ...formProps }  ID={ ID } />
+      mapGroup = ({ Form, ID, formProps = {} }) => (
+        <Form
+          { ...formProps }
+          ID={ ID }
+          />
+      )
 
-      groupsAPI = () => mapObject(this.groups, (groupName, {
+      groupsAPI = () => mapObject(this.groups, (formName, {
         Com,
         field,
         IDRefMap,
         IDList,
         Form,
-        formProps,
+        formProps = {},
       }) => {
         const group = {
           map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => mapGroup({
@@ -204,7 +210,14 @@ function createForm({
             field,
             IDRefMap,
             IDList,
-            Form,
+            Form: (props = {}) => (
+              <Form
+                { ...formProps }
+                { ...((this.groups[formName].IDRefMap[ID] || {}).props || {}) }
+                { ...props }
+                ID={ ID }
+                />
+            ),
             deleteIt: () => {},
             move: () => {},
             moveTo: () => {},
@@ -230,7 +243,7 @@ function createForm({
           }),
         };
 
-        return { [groupName]: group };
+        return { [formName]: group };
       })
 
       render() {

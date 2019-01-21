@@ -30,7 +30,7 @@ const workHistoryForm = createForm({
       formProps: { aa: 1 },
     },
   },
-})(class extends React.Component {
+})(class WorkHistory extends React.Component {
   render() {
     const {
       dinoForm: {
@@ -67,7 +67,7 @@ const workHistoryForm = createForm({
               }) => (
                 <div key={ ID }>
                   <div>{ID}</div>
-                  <Form ID={ ID } />
+                  <Form />
                   <button onClick={ deleteIt }>删除</button>
                   <button onClick={ () => move(-1) }>上</button>
                   <button onClick={ () => move(-2) }>下</button>

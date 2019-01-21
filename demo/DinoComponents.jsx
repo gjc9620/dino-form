@@ -6,7 +6,7 @@ import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import 'antd-mobile/dist/antd-mobile.css';
 
 function dinoFromItemify(Com) {
-  return class extends React.Component {
+  return class DinoComponent extends React.Component {
     // constructor(props) {
     //   super(props);
     //   this.state = {};
