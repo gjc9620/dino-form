@@ -163,7 +163,7 @@ class BigForm extends Component {
   }
 
   render() {
-    const { dinoForm: { verify, getFullValues }, renderDinoForm } = this.props;
+    const { dinoForm: { verify, getFullValues, renderDinoForm } } = this.props;
     return (
       <div>
         <div onClick={ this.clickSetData }>set</div>

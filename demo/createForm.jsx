@@ -4,32 +4,54 @@ import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
 import { mapObject, mapObjectAsync } from './util';
 
+const createfragments = ({ fragments, createDinoFormApi }) => mapObject(fragments, (comName, { Com, ...props } = {}) => ({
+  [comName]: class Fragment extends Component {
+    render() {
+      return (
+        <Com
+          dinoForm={ createDinoFormApi() }
+          { ...props }
+          { ...(this.props || {}) }
+          />
+      );
+    }
+  },
+}));
+
+const createFromItem = ({ createDinoFormApi }) => (
+  class DinoFormItemWrap extends Component {
+    render() {
+      return (
+        <DinoFormItem
+          dinoForm={ createDinoFormApi() }
+          { ...(this.props || {}) }
+          />
+      );
+    }
+  }
+);
+
+
 function createForm({
   fragments = {},
   groups = {},
 } = {}) {
   return function create(View) {
-    return function bindWrap(Wrap = ({ renderDinoForm }) => renderDinoForm()) {
+    return function bindWrap(Wrap = ({ dinoForm: { renderDinoForm } }) => renderDinoForm()) {
       return class DinoForm extends Component {
         constructor(constructorProps) {
           super(constructorProps);
 
           this.store = createDinoFormStore();
-          this.FromItem = this.createFromItem();
-          const that = this;
-          this.fragments = mapObject(fragments, (comName, { Com, ...props } = {}) => ({
-            [comName]: class Fragment extends Component {
-              render() {
-                return (
-                  <Com
-                    dinoForm={ that.createDinoFormApi() }
-                    { ...props }
-                    { ...(this.props || {}) }
-                    />
-                );
-              }
-            },
-          }));
+
+          this.FromItem = createFromItem({
+            createDinoFormApi: this.createDinoFormApi,
+          });
+
+          this.fragments = createfragments({
+            fragments,
+            createDinoFormApi: this.createDinoFormApi,
+          });
 
           this.ID = 0;
           this.groups = this.createGroups(groups);
@@ -57,7 +79,7 @@ function createForm({
             },
             formProps,
             IDList: [...new Array(count)].map(() => this.ID++),
-            Form: class extends Component {
+            Form: class DinoFormWrap extends Component {
               constructor(props) {
                 super(props);
                 const { ID, index } = props;
@@ -102,13 +124,6 @@ function createForm({
           verify: this.verify,
           store: this.store,
         })
-
-        createFromItem = () => props => ( // todo rename
-          <DinoFormItem
-            dinoForm={ this.createDinoFormApi() }
-            { ...props }
-            />
-        )
 
         setFieldsError = (obj) => {
           [...Object.entries(obj)].forEach(([field, error]) => {
@@ -337,17 +352,20 @@ function createForm({
         render() {
           return (
             <Wrap
-              dinoForm={ this.createDinoFormApi() }
-              renderDinoForm={ (props = {}) => (
-                <View
-                  dinoForm={ {
-                    ...this.createDinoFormApi(),
-                    fragments: this.fragments,
-                    groups: this.groupsAPI(),
-                  } }
-                  { ...props }
-                  />
-              ) }
+              dinoForm={ {
+                ...this.createDinoFormApi(),
+                renderDinoForm: (props = {}) => (
+                  <View
+                    dinoForm={ {
+                      ...this.createDinoFormApi(),
+                      fragments: this.fragments,
+                      groups: this.groupsAPI(),
+                    } }
+                    { ...props }
+                    />
+                ),
+              } }
+              { ...(this.props || {}) }
               />
           );
         }
