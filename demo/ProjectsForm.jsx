@@ -79,6 +79,6 @@ const ProjectsForm = createForm({
       </div>
     </div>
   );
-});
+})();
 
 export default ProjectsForm;

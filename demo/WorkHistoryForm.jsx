@@ -31,27 +31,6 @@ const workHistoryForm = createForm({
     },
   },
 })(class WorkHistory extends React.Component {
-  componentDidMount() {
-    const { dinoForm: { setFieldsValues } } = this.props;
-    setFieldsValues({
-      companyName: '123213',
-      time: '2123414',
-      projects: [{
-        projectsNameField: '234123',
-        time: 234123,
-        time1: '23412',
-        time2: '2019-01-22T03:43:36.000Z',
-        time3: '12321',
-      }, {
-        projectsNameField: '23432121',
-        time: 123,
-        time1: '1312',
-        time2: '2019-01-22T03:45:36.000Z',
-        time3: '12321312',
-      }],
-    });
-  }
-
   render() {
     const {
       dinoForm: {
@@ -80,7 +59,7 @@ const workHistoryForm = createForm({
         <div>
           <Time />
         </div>
-        <div className="groups">
+        <div className="groups" style={ { marginLeft: 30 } }>
           {
             render(
               children => <div>{children}</div>,
@@ -99,15 +78,9 @@ const workHistoryForm = createForm({
             )
           }
         </div>
-        <div onClick={ async () => {
-          const { hasError, data } = await verify();
-          console.log(hasError, data);
-          console.log(hasError, JSON.stringify(data));
-        } }>提交
-        </div>
       </div>
     );
   }
-});
+})();
 
 export default workHistoryForm;
