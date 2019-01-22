@@ -31,6 +31,27 @@ const workHistoryForm = createForm({
     },
   },
 })(class WorkHistory extends React.Component {
+  componentDidMount() {
+    const { dinoForm: { setFieldsValues } } = this.props;
+    setFieldsValues({
+      companyName: '123213',
+      time: '2123414',
+      projects: [{
+        projectsNameField: '234123',
+        time: 234123,
+        time1: '23412',
+        time2: '2019-01-22T03:43:36.000Z',
+        time3: '12321',
+      }, {
+        projectsNameField: '23432121',
+        time: 123,
+        time1: '1312',
+        time2: '2019-01-22T03:45:36.000Z',
+        time3: '12321312',
+      }],
+    });
+  }
+
   render() {
     const {
       dinoForm: {
@@ -44,6 +65,7 @@ const workHistoryForm = createForm({
             map,
             addItem,
             deleteItem,
+            copyItem,
           },
         },
         verify,
@@ -63,11 +85,11 @@ const workHistoryForm = createForm({
             render(
               children => <div>{children}</div>,
               map(({
-                Form, ID, index, deleteIt, move, moveTo, aa,
+                Form: { FormCom, formProps }, ID, index, deleteIt, move, moveTo,
               }) => (
                 <div key={ ID }>
                   <div>{ID}</div>
-                  <Form />
+                  <FormCom { ...formProps } />
                   <button onClick={ deleteIt }>删除</button>
                   <button onClick={ () => move(-1) }>上</button>
                   <button onClick={ () => move(-2) }>下</button>
@@ -80,6 +102,7 @@ const workHistoryForm = createForm({
         <div onClick={ async () => {
           const { hasError, data } = await verify();
           console.log(hasError, data);
+          console.log(hasError, JSON.stringify(data));
         } }>提交
         </div>
       </div>

@@ -70,8 +70,9 @@ function createForm({
             }
 
             catchRef = (ref) => {
-              const { ID, index } = this.props;
+              const { ID, index, catchRef = () => {} } = this.props;
               that.groups[formName].IDRefMap[ID].ref = ref;
+              catchRef(ref);
             }
 
             render() {
@@ -98,7 +99,7 @@ function createForm({
         store: this.store,
       })
 
-      createFromItem = () => props => (  //todo rename
+      createFromItem = () => props => ( // todo rename
         <DinoFormItem
           dinoForm={ this.createDinoFormApi() }
           { ...props }
@@ -216,14 +217,14 @@ function createForm({
             field,
             IDRefMap,
             IDList,
-            Form: (props = {}) => (
-              <Form
-                { ...formProps }
-                { ...((this.groups[formName].IDRefMap[ID] || {}).props || {}) }
-                { ...props }
-                ID={ ID }
-                />
-            ),
+            Form: {
+              FormCom: Form,
+              formProps: {
+                ...formProps,
+                ...((this.groups[formName].IDRefMap[ID] || {}).props || {}),
+                ID,
+              },
+            },
             deleteIt: () => {},
             move: () => {},
             moveTo: () => {},
