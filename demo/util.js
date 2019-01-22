@@ -28,9 +28,7 @@ export function isEventObj(obj) {
 
   return (
     obj.type !== undefined
-    && obj.eventPhase !== undefined
     && obj.target !== undefined
-    && typeof obj.stopPropagation === 'function'
     && typeof obj.preventDefault === 'function'
   );
 }

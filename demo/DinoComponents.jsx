@@ -19,7 +19,6 @@ function dinoFromItemify(Com) {
           setFields,
           getFields,
           verify,
-          If,
         },
         label,
         field,

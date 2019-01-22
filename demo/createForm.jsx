@@ -20,12 +20,11 @@ function createForm({
           this.fragments = mapObject(fragments, (comName, { Com, ...props } = {}) => ({
             [comName]: class Fragment extends Component {
               render() {
-                const { runTimeProps } = this.props;
                 return (
                   <Com
                     dinoForm={ that.createDinoFormApi() }
                     { ...props }
-                    { ...runTimeProps }
+                    { ...(this.props || {}) }
                     />
                 );
               }

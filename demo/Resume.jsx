@@ -21,6 +21,11 @@ const config = {
       label: 'Sex',
       field: 'gender',
     },
+    Sex2: {
+      Com: DinoInputNumber,
+      label: 'Sex2',
+      field: 'gender2',
+    },
   },
   groups: {
     WorkHistory: {
@@ -32,8 +37,9 @@ const config = {
   },
 };
 
-class Resume extends Component {
-  render() { // //todo rename
+
+export class Resume extends Component {
+  render() {
     const {
       dinoForm,
       dinoForm: {
@@ -83,10 +89,11 @@ class Resume extends Component {
   }
 }
 
+
 class BigForm extends Component {
   componentDidMount() {
     const { dinoForm: { setFieldsValues } } = this.props;
-    return
+    return;
     debugger;
     setFieldsValues({
       companyName: '123213',
