@@ -9,7 +9,7 @@ function createForm({
   groups = {},
 } = {}) {
   return function create(View) {
-    return function bindWrap(Wrap = ({ children }) => children) {
+    return function bindWrap(Wrap = ({ renderDinoForm }) => renderDinoForm()) {
       return class DinoForm extends Component {
         constructor(constructorProps) {
           super(constructorProps);
@@ -62,6 +62,8 @@ function createForm({
                 super(props);
                 const { ID, index } = props;
                 that.groups[formName].IDRefMap[ID] = {};
+                // if (!that.groups[formName].IDRefMap[ID]) {
+                // }
               }
 
               componentWillUnmount() {
@@ -94,6 +96,7 @@ function createForm({
           setFieldsValues: this.setFieldsValues,
           setFieldsError: this.setFieldsError,
           getFields: this.getFields,
+          setFullFieldsTranslate: this.setFullFieldsTranslate,
           getFullValues: this.getFullValues,
           getFieldsValues: this.getFieldsValues,
           verify: this.verify,
@@ -130,7 +133,7 @@ function createForm({
 
         getFields = () => {}
 
-        getFullValues = ()=> {
+        getFullValues = async () => {
           const fragmentsField = await mapObjectAsync(
             this.store.get(),
             async (
@@ -143,7 +146,7 @@ function createForm({
               return { [field]: value };
             },
           );
-  
+
           const groupField = await mapObjectAsync(
             this.groups,
             async (
@@ -153,23 +156,61 @@ function createForm({
                 IDRefMap = [], IDList,
               }) => {
               const values = [];
-      
+
               for (const ID of IDList) {
                 const result = await IDRefMap[ID].ref.getFullValue();
                 values.push(result.data);
               }
-      
+
               return {
                 [field]: values,
               };
             },
           );
-  
+
           return {
             ...fragmentsField,
             ...groupField,
           };
         }
+
+        setFullFieldsTranslate = (values = {}, maps = {}) => {
+          const findGroups = field => Object.values(this.groups).find(group => group.field === field);
+
+          mapObject(values, (field, value) => {
+            const group = findGroups(field);
+
+            if (!group) {
+              const { [field]: mapFun = _ => _ } = maps;
+              this.store.update(field, { value: mapFun(value) });
+              return;
+            }
+
+            const { IDRefMap, IDList } = group;
+            // todo delete IDRefMap IDList
+
+            IDList.forEach((ID, index) => {
+              const { ref } = IDRefMap[ID];
+              const groupItemValue = value[index] || [];
+              const {
+                [field]: fun = itemValue => ({
+                  mapObj: itemValue,
+                  props: {},
+                }),
+              } = maps;
+
+              const { mapObj = {}, props = {} } = fun(groupItemValue);
+
+              IDRefMap[ID].props = props;
+
+              ref.setFullFieldsTranslate(groupItemValue, mapObj);
+            });
+          });
+
+          this.setState({});
+          console.log(this.store.get());
+        }
+
         verify = () => Promise.resolve().then(async () => {
           let hasError = false;
           const fragmentsField = await mapObjectAsync(
@@ -297,15 +338,17 @@ function createForm({
         render() {
           return (
             <Wrap
-              dinoForm={ this.createDinoFormApi() }>
-              <View
-                dinoForm={ {
-                  ...this.createDinoFormApi(),
-                  fragments: this.fragments,
-                  groups: this.groupsAPI(),
-                } }
-                />
-            </Wrap>
+              dinoForm={ this.createDinoFormApi() }
+              renderDinoForm={ () => (
+                <View
+                  dinoForm={ {
+                    ...this.createDinoFormApi(),
+                    fragments: this.fragments,
+                    groups: this.groupsAPI(),
+                  } }
+                  />
+              ) }
+              />
           );
         }
       };

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import createForm from './createForm.jsx';
 import WorkHistoryForm from './WorkHistoryForm.jsx';
+import moment from 'moment';
+
 import {
   DinoInput,
   DinoInputNumber,
@@ -89,13 +91,19 @@ export class Resume extends Component {
   }
 }
 
+const ifValue = (value, fun) => {
+  if (value !== undefined) return fun(value);
+  return undefined;
+};
+
+const runFun = fun => fun();
 
 class BigForm extends Component {
-  componentDidMount() {
-    const { dinoForm: { setFieldsValues } } = this.props;
-    return;
-    debugger;
-    setFieldsValues({
+  clickSetData = () => {
+    const { dinoForm: { setFullFieldsTranslate } } = this.props;
+    // return;
+    // debugger;
+    setFullFieldsTranslate({
       name: '321',
       gender: 21321,
       workHistory: [{
@@ -132,28 +140,34 @@ class BigForm extends Component {
         }],
       }],
     }, {
-      gender: value => (`${value}666`),
+      gender: value => ifValue(value, () => `${value}666`),
       workHistory: (workHistory) => {
         const { companyName } = workHistory;
         return {
-          data: {
-            ...workHistory,
-            companyName: `${companyName}77777`,
+          mapObj: {
+            companyName: value => ifValue(value, () => `${value}77777`),
             projects: project => ({
-              ...project,
+              mapObj: {
+                time2: value => ifValue(value, () => moment(project.time2)),
+              },
+              props: runFun(() => {
+                if (project.time1 === '12321') { return { gg: 1 }; }
+                return {};
+              }),
             }),
           },
-          props: {},
+          props: { AA: 33 },
         };
       },
     });
   }
 
   render() {
-    const { dinoForm: { verify }, children } = this.props;
+    const { dinoForm: { verify }, renderDinoForm } = this.props;
     return (
       <div>
-        { children }
+        <div onClick={ this.clickSetData }>set</div>
+        { renderDinoForm() }
         <div onClick={ async () => {
           const { hasError, data } = await verify();
           console.log(hasError, data);
