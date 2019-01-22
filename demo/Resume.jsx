@@ -96,28 +96,54 @@ class BigForm extends Component {
     return;
     debugger;
     setFieldsValues({
-      companyName: '123213',
-      time: '2123414',
-      projects: [{
-        projectsNameField: '234123',
-        time: 234123,
-        time1: '23412',
-        time2: '2019-01-22T03:43:36.000Z',
-        time3: '12321',
+      name: '321',
+      gender: 21321,
+      workHistory: [{
+        companyName: '123123',
+        time: '12312',
+        projects: [{
+          projectsNameField: '12321',
+          time: 1231,
+          time1: '232132',
+          time2: '2019-01-22T09:15:35.000Z',
+          time3: '12321',
+        }, {
+          projectsNameField: '123',
+          time: 1232132,
+          time1: '21321231',
+          time2: '2019-01-22T09:15:35.000Z',
+          time3: '21321213',
+        }],
       }, {
-        projectsNameField: '23432121',
-        time: 123,
-        time1: '1312',
-        time2: '2019-01-22T03:45:36.000Z',
-        time3: '12321312',
+        companyName: '21321',
+        time: '21321321',
+        projects: [{
+          projectsNameField: '21321',
+          time: 12321,
+          time1: '12321',
+          time2: '2019-01-22T09:15:34.000Z',
+          time3: '21321321',
+        }, {
+          projectsNameField: '124214321',
+          time: 21321,
+          time1: '12321',
+          time2: '2019-01-22T09:15:34.000Z',
+          time3: '21321321',
+        }],
       }],
     }, {
-      companyName: companyName => (`${companyName}666`),
-      projects: (project) => {
-        const { time } = project;
+      gender: value => (`${value}666`),
+      workHistory: (workHistory) => {
+        const { companyName } = workHistory;
         return {
-          ...project,
-          time: new Date(time),
+          data: {
+            ...workHistory,
+            companyName: `${companyName}77777`,
+            projects: project => ({
+              ...project,
+            }),
+          },
+          props: {},
         };
       },
     });

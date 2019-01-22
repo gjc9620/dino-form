@@ -94,6 +94,7 @@ function createForm({
           setFieldsValues: this.setFieldsValues,
           setFieldsError: this.setFieldsError,
           getFields: this.getFields,
+          getFullValues: this.getFullValues,
           getFieldsValues: this.getFieldsValues,
           verify: this.verify,
           store: this.store,
@@ -129,6 +130,46 @@ function createForm({
 
         getFields = () => {}
 
+        getFullValues = ()=> {
+          const fragmentsField = await mapObjectAsync(
+            this.store.get(),
+            async (
+              field,
+              scheme) => {
+              const {
+                rules = [], isMount, value, label,
+              } = scheme;
+              if (!isMount) { return {}; }
+              return { [field]: value };
+            },
+          );
+  
+          const groupField = await mapObjectAsync(
+            this.groups,
+            async (
+              groupName,
+              {
+                field,
+                IDRefMap = [], IDList,
+              }) => {
+              const values = [];
+      
+              for (const ID of IDList) {
+                const result = await IDRefMap[ID].ref.getFullValue();
+                values.push(result.data);
+              }
+      
+              return {
+                [field]: values,
+              };
+            },
+          );
+  
+          return {
+            ...fragmentsField,
+            ...groupField,
+          };
+        }
         verify = () => Promise.resolve().then(async () => {
           let hasError = false;
           const fragmentsField = await mapObjectAsync(
