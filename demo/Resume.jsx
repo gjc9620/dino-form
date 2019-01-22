@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import createForm from './createForm.jsx';
 import WorkHistoryForm from './WorkHistoryForm.jsx';
-import moment from 'moment';
 
 import {
   DinoInput,
@@ -163,7 +163,7 @@ class BigForm extends Component {
   }
 
   render() {
-    const { dinoForm: { verify }, renderDinoForm } = this.props;
+    const { dinoForm: { verify, getFullValues }, renderDinoForm } = this.props;
     return (
       <div>
         <div onClick={ this.clickSetData }>set</div>
@@ -173,6 +173,12 @@ class BigForm extends Component {
           console.log(hasError, data);
           console.log(hasError, JSON.stringify(data));
         } }>提交
+        </div>
+        <div onClick={ () => {
+          const data = getFullValues();
+          console.log(data);
+        } }>
+          Get full value
         </div>
       </div>
     );

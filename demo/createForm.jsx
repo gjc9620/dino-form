@@ -133,33 +133,32 @@ function createForm({
 
         getFields = () => {}
 
-        getFullValues = async () => {
-          const fragmentsField = await mapObjectAsync(
+        getFullValues = () => {
+          const fragmentsField = mapObject(
             this.store.get(),
-            async (
+            (
               field,
-              scheme) => {
-              const {
-                rules = [], isMount, value, label,
-              } = scheme;
-              if (!isMount) { return {}; }
-              return { [field]: value };
+              scheme,
+            ) => {
+              const { isMount, value } = scheme;
+              return isMount ? { [field]: value } : {};
             },
           );
 
-          const groupField = await mapObjectAsync(
+          const groupField = mapObject(
             this.groups,
-            async (
+            (
               groupName,
               {
                 field,
                 IDRefMap = [], IDList,
-              }) => {
+              },
+            ) => {
               const values = [];
 
               for (const ID of IDList) {
-                const result = await IDRefMap[ID].ref.getFullValue();
-                values.push(result.data);
+                const result = IDRefMap[ID].ref.getFullValues();
+                values.push(result);
               }
 
               return {
