@@ -339,13 +339,14 @@ function createForm({
           return (
             <Wrap
               dinoForm={ this.createDinoFormApi() }
-              renderDinoForm={ () => (
+              renderDinoForm={ (props = {}) => (
                 <View
                   dinoForm={ {
                     ...this.createDinoFormApi(),
                     fragments: this.fragments,
                     groups: this.groupsAPI(),
                   } }
+                  { ...props }
                   />
               ) }
               />
