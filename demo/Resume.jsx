@@ -33,7 +33,7 @@ const config = {
     workHistory: {
       Com: WorkHistoryForm,
       field: 'workHistory',
-      count: 2,
+      count: 1,
       formProps: { aa: 1 },
     },
   },
