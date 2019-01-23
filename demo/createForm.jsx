@@ -4,19 +4,21 @@ import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
 import { mapObject, mapObjectAsync } from './util';
 
-const createfragments = ({ fragments, createDinoFormApi }) => mapObject(fragments, (comName, { Com, ...props } = {}) => ({
-  [comName]: class Fragment extends Component {
-    render() {
-      return (
-        <Com
-          dinoForm={ createDinoFormApi() }
-          { ...props }
-          { ...(this.props || {}) }
-          />
-      );
-    }
-  },
-}));
+const createFragments = ({ fragments, createDinoFormApi }) => (
+  mapObject(fragments, (comName, { Com, ...props } = {}) => ({
+    [comName]: class Fragment extends Component {
+      render() {
+        return (
+          <Com
+            dinoForm={ createDinoFormApi() }
+            { ...props }
+            { ...(this.props || {}) }
+            />
+        );
+      }
+    },
+  }))
+);
 
 const createFromItem = ({ createDinoFormApi }) => (
   class DinoFormItemWrap extends Component {
@@ -80,7 +82,7 @@ function createForm({
             createDinoFormApi: this.createDinoFormApi,
           });
 
-          this.fragments = createfragments({
+          this.fragments = createFragments({
             fragments,
             createDinoFormApi: this.createDinoFormApi,
           });

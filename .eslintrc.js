@@ -25,6 +25,7 @@ module.exports = {
     "react/props-validation": "off",
     "react/prop-types": "off",
     'react/button-has-type': 'off',
+    'react/prefer-stateless-function': 'off',
     "react/jsx-curly-spacing": [2, "always", {
       "allowMultiline": true,
       "spacing": {"objectLiterals": "always"}
