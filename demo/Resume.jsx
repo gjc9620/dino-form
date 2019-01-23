@@ -30,7 +30,7 @@ const config = {
     },
   },
   groups: {
-    WorkHistory: {
+    workHistory: {
       Com: WorkHistoryForm,
       field: 'workHistory',
       count: 2,
@@ -53,7 +53,7 @@ export class Resume extends Component {
           Sex,
         },
         groups: {
-          WorkHistory: {
+          workHistory: {
             render,
             map,
           },

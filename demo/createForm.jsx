@@ -80,22 +80,39 @@ function createForm({
             formProps,
             IDList: [...new Array(count)].map(() => this.ID++),
             Form: class DinoFormWrap extends Component {
-              constructor(props) {
-                super(props);
-                const { ID, index } = props;
-                that.groups[formName].IDRefMap[ID] = {};
-                // if (!that.groups[formName].IDRefMap[ID]) {
-                // }
-              }
+              // constructor(props) {
+              //   super(props);
+              //   const { ID, index } = props;
+              //   that.groups[formName].IDRefMap[ID] = {};
+              //   console.log('constructor', formName, ID);
+              //   // if (!that.groups[formName].IDRefMap[ID]) {
+              //   // }
+              // }
 
-              componentWillUnmount() {
-                const { ID, index } = this.props;
-                that.groups[formName].IDRefMap[ID] = undefined;
-              }
+              // componentDidMount() {
+              //   const { ID, index } = this.props;
+              //   console.log('componentDidMount', formName, ID);
+              // }
+              //
+              // componentWillUnmount() {
+              //   const { ID, index } = this.props;
+              //   that.groups[formName].IDRefMap[ID] = undefined;
+              //   console.log('componentWillUnmount', formName, ID);
+              // }
 
               catchRef = (ref) => {
                 const { ID, index, catchRef = () => {} } = this.props;
-                that.groups[formName].IDRefMap[ID].ref = ref;
+
+                if (ref) {
+                  if (!that.groups[formName].IDRefMap[ID]) {
+                    that.groups[formName].IDRefMap[ID] = {};
+                  }
+                  that.groups[formName].IDRefMap[ID].ref = ref;
+                  that.groups[formName].IDRefMap[ID].isMount = true;
+                } else {
+                  that.groups[formName].IDRefMap[ID] = undefined;
+                }
+                console.log('catchRef', formName, ID);
                 catchRef(ref);
               }
 
@@ -188,10 +205,12 @@ function createForm({
           };
         }
 
-        setFullFieldsTranslate = (values = {}, maps = {}) => {
+        setFullFieldsTranslate = async (values = {}, maps = {}) => {
           const findGroups = field => Object.values(this.groups).find(group => group.field === field);
 
-          mapObject(values, (field, value) => {
+          const render = () => new Promise(r => this.setState({}, () => r()));
+
+          await mapObjectAsync(values, async (field, value) => {
             const group = findGroups(field);
 
             if (!group) {
@@ -200,8 +219,16 @@ function createForm({
               return;
             }
 
+            if (!Array.isArray(value) || value.length < 1) return;
+
+            // delete IDList and add
+            group.IDList = [...new Array(value.length)].map(() => this.ID++);
+
+            // render
+            await render();
+
+            // group should mounted
             const { IDRefMap, IDList } = group;
-            // todo delete IDRefMap IDList
 
             IDList.forEach((ID, index) => {
               const { ref } = IDRefMap[ID];
@@ -222,7 +249,7 @@ function createForm({
           });
 
           this.setState({});
-          console.log(this.store.get());
+          console.log(this);
         }
 
         verify = () => Promise.resolve().then(async () => {
