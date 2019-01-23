@@ -224,8 +224,8 @@ function createForm({
               const { ref } = IDRefMap[ID];
               const groupItemValue = value[index] || [];
               const {
-                [field]: fun = itemValue => ({
-                  mapObj: itemValue,
+                [field]: fun = () => ({
+                  mapObj: {},
                   props: {},
                 }),
               } = maps;
@@ -239,7 +239,6 @@ function createForm({
           });
 
           this.setState({});
-          console.log(this);
         }
 
         verify = () => Promise.resolve().then(async () => {
