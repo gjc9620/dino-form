@@ -333,30 +333,38 @@ function createForm({
           formProps = {},
         }) => {
           const group = {
-            map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => mapGroup({
-              ID,
-              index,
-              Com,
-              field,
-              IDRefMap,
-              IDList,
-              Form: {
-                FormCom: Form,
-                formProps: {
-                  ...formProps,
-                  ...((this.groups[formName].IDRefMap[ID] || {}).props || {}),
-                  ID,
-                },
-              },
-              deleteIt: () => {},
-              move: () => {},
-              moveTo: () => {},
-              formProps,
-            })),
+            map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => (
+              <div
+                key={ ID }
+                className={ `dino-form-group-item-wrap-${field}` }>
+                {
+                  mapGroup({
+                    ID,
+                    index,
+                    Com,
+                    field,
+                    IDRefMap,
+                    IDList,
+                    Form: {
+                      FormCom: Form,
+                      formProps: {
+                        ...formProps,
+                        ...((this.groups[formName].IDRefMap[ID] || {}).props || {}),
+                        ID,
+                      },
+                    },
+                    deleteIt: () => {},
+                    move: () => {},
+                    moveTo: () => {},
+                    formProps,
+                  })
+                }
+              </div>
+            )),
             render: (
-              renderGroup = ele => <div className={ `dino-form-${field}-group` }>{ele}</div>,
+              renderGroup = ele => <div className={ `dino-form-group-${field}` }>{ele}</div>,
               children = group.map(),
-            ) => renderGroup(children),
+            ) => <div className={ `dino-form-group-wrap-${field}` }>{renderGroup(children)}</div>,
             addItem: (add = this.addItem) => add({
               Com,
               field,
