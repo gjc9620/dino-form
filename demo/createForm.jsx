@@ -220,7 +220,7 @@ function createForm({
 
             // group should mounted
             const { IDRefMap, IDList, formName } = group;
-
+            
             IDList.forEach((ID, index) => {
               const {
                 [ID]: {
