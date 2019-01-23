@@ -31,6 +31,38 @@ const createFromItem = ({ createDinoFormApi }) => (
   }
 );
 
+const createDinoFormWrap = ({ setIDRefMap, Com }) => (
+  class DinoFormWrap extends Component {
+    constructor(props) {
+      super(props);
+      this.Com = undefined;
+    }
+
+    componentDidMount() {
+      const { ID, index } = this.props;
+      setIDRefMap(ID, { ref: this.Com });
+    }
+
+    componentWillUnmount() {
+      const { ID, index } = this.props;
+      setIDRefMap(ID, { ref: undefined });
+    }
+
+    catchRef = (ref) => {
+      const { ID, catchRef = () => {} } = this.props;
+      this.Com = ref;
+      catchRef(ref);
+    }
+
+    render() {
+      const { ID, index } = this.props;
+      return (
+        <Com ref={ this.catchRef } />
+      );
+    }
+  }
+);
+
 
 function createForm({
   fragments = {},
@@ -67,63 +99,22 @@ function createForm({
         createGroups = groupsObj => mapObject(groupsObj, (formName, {
           Com, field, count, formProps = {},
         } = {}) => {
-          const that = this;
+          const IDRefMap = {};
+          const IDList = [...new Array(count)].map(() => this.ID++);
+          const Form = createDinoFormWrap({
+            setIDRefMap: (ID, value) => { this.groups[formName].IDRefMap[ID] = value; },
+            Com,
+          });
+
           const group = {
             Com,
             field,
-            IDRefMap: {
-              // 0: {
-              //   ref: {},
-              //   props: {}
-              // }
-            },
             formProps,
-            IDList: [...new Array(count)].map(() => this.ID++),
-            Form: class DinoFormWrap extends Component {
-              // constructor(props) {
-              //   super(props);
-              //   const { ID, index } = props;
-              //   that.groups[formName].IDRefMap[ID] = {};
-              //   console.log('constructor', formName, ID);
-              //   // if (!that.groups[formName].IDRefMap[ID]) {
-              //   // }
-              // }
-
-              // componentDidMount() {
-              //   const { ID, index } = this.props;
-              //   console.log('componentDidMount', formName, ID);
-              // }
-              //
-              // componentWillUnmount() {
-              //   const { ID, index } = this.props;
-              //   that.groups[formName].IDRefMap[ID] = undefined;
-              //   console.log('componentWillUnmount', formName, ID);
-              // }
-
-              catchRef = (ref) => {
-                const { ID, index, catchRef = () => {} } = this.props;
-
-                if (ref) {
-                  if (!that.groups[formName].IDRefMap[ID]) {
-                    that.groups[formName].IDRefMap[ID] = {};
-                  }
-                  that.groups[formName].IDRefMap[ID].ref = ref;
-                  that.groups[formName].IDRefMap[ID].isMount = true;
-                } else {
-                  that.groups[formName].IDRefMap[ID] = undefined;
-                }
-                console.log('catchRef', formName, ID);
-                catchRef(ref);
-              }
-
-              render() {
-                const { ID, index } = this.props;
-                return (
-                  <Com ref={ this.catchRef } />
-                );
-              }
-            },
+            IDRefMap,
+            IDList,
+            Form,
           };
+
           return ({
             [formName]: group,
           });
@@ -131,15 +122,14 @@ function createForm({
 
         createDinoFormApi = () => ({
           FromItem: this.FromItem,
-          setFields: this.setFields,
           setFieldsValues: this.setFieldsValues,
           setFieldsError: this.setFieldsError,
-          getFields: this.getFields,
           setFullFieldsTranslate: this.setFullFieldsTranslate,
           getFullValues: this.getFullValues,
           getFieldsValues: this.getFieldsValues,
           verify: this.verify,
           store: this.store,
+          dinoFormRef: this,
         })
 
         setFieldsError = (obj) => {
@@ -161,11 +151,7 @@ function createForm({
           return scheme.value;
         })
 
-        setFields = () => {}
-
-        getFields = () => {}
-
-        getFullValues = () => {
+        getFullValues = ({ onlyGetMount = true } = {}) => {
           const fragmentsField = mapObject(
             this.store.get(),
             (
@@ -173,7 +159,9 @@ function createForm({
               scheme,
             ) => {
               const { isMount, value } = scheme;
-              return isMount ? { [field]: value } : {};
+              return onlyGetMount
+                ? isMount ? { [field]: value } : {}
+                : { [field]: value };
             },
           );
 
