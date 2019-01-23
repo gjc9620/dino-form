@@ -53,10 +53,10 @@ export class Resume extends Component {
           Sex,
         },
         groups: {
-          workHistory: {
-            render,
-            map,
-          },
+          // workHistory: {
+          //   render,
+          //   map,
+          // },
         },
       },
     } = this.props;
@@ -68,6 +68,7 @@ export class Resume extends Component {
           <Sex />
         </div>
         <div>
+{/*
           {
             render(
               children => <div style={ { marginLeft: 20 } }>{children}</div>,
@@ -85,6 +86,7 @@ export class Resume extends Component {
               )),
             )
           }
+*/}
         </div>
       </div>
     );

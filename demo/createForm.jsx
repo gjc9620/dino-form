@@ -112,6 +112,7 @@ function createForm({
             Com,
             field,
             formProps,
+            formName,
             IDRefMap,
             IDList,
             Form,
@@ -218,10 +219,20 @@ function createForm({
             await render();
 
             // group should mounted
-            const { IDRefMap, IDList } = group;
+            const { IDRefMap, IDList, formName } = group;
 
             IDList.forEach((ID, index) => {
-              const { ref } = IDRefMap[ID];
+              const {
+                [ID]: {
+                  ref,
+                } = {},
+              } = IDRefMap;
+
+              if (!ref) {
+                console.warn(`[dino-form] ${formName} should be mounted but the Ref is not registered, maybe you not render this group.`);
+                return;
+              }
+
               const groupItemValue = value[index] || [];
               const {
                 [field]: fun = () => ({
