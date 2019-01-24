@@ -66,7 +66,7 @@ const workHistoryForm = createForm({
               map(({
                 Form: { FormCom, formProps }, ID, index, deleteIt, move, moveTo,
               }) => (
-                <div key={ ID }>
+                <div>
                   <div>{ID}</div>
                   <FormCom { ...formProps } />
                   <button onClick={ deleteIt }>删除</button>
