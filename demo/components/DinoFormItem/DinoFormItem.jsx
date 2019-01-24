@@ -86,9 +86,9 @@ class DinoFormItem extends React.Component {
       const { validateTrigger = [], fun, error } = rule;
       validateTrigger.forEach((eventName) => {
         const preTrigger = trigger[eventName] || (() => {});
-        trigger[eventName] = (firstArg, ...arg) => {
+        trigger[eventName] = async(firstArg, ...arg) => {
           const value = isEventObj(firstArg) ? getValueFromEvent(firstArg) : firstArg;
-          if (fun(value, ...arg)) {
+          if (await fun(value, ...arg)) {
             setFieldsError({ [field]: undefined });
             preTrigger(value, ...arg);
             return;

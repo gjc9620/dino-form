@@ -16,7 +16,8 @@ const ProjectsForm = createForm({
       field: 'projectsNameField',
       rules: [{
         validateTrigger: ['onChange', 'onBlur'],
-        fun: value => value === '12',
+        fun: value => Promise.resolve().then(()=>value === '12'),
+        // fun: value => value === '12',
         error: ({ label, field }) => `${label} !== 12`,
       }],
     },
