@@ -36,7 +36,7 @@ const createFromItem = ({ createDinoFormApi }) => (
   }
 );
 
-const createDinoFormWrap = ({ setIDRefMap, Com }) => (
+const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => (
   class DinoFormWrap extends Component {
     constructor(props) {
       super(props);
@@ -62,7 +62,11 @@ const createDinoFormWrap = ({ setIDRefMap, Com }) => (
     render() {
       const { ID, index } = this.props;
       return (
-        <Com ref={ this.catchRef } />
+        <Com
+          ref={ this.catchRef }
+          topFormRender={ topFormRender }
+          subGroupForm
+          />
       );
     }
   }
@@ -106,8 +110,9 @@ function createForm({
         } = {}) => {
           const IDRefMap = {};
           const IDList = [...new Array(count)].map(() => this.ID++);
-          const Form = createDinoFormWrap({
+          const Form = createDinoFormGroupWrap({
             setIDRefMap: (ID, value) => { this.groups[formName].IDRefMap[ID] = value; },
+            topFormRender: this.topFormRender,
             Com,
           });
 
@@ -125,6 +130,13 @@ function createForm({
             [formName]: group,
           });
         })
+
+        topFormRender = () => {
+          if (this.props.topFormRender) {
+            return this.props.topFormRender();
+          }
+          return this.setState({});
+        }
 
         createDinoFormApi = () => ({
           FromItem: this.FromItem,
@@ -149,7 +161,8 @@ function createForm({
           [...Object.entries(obj)].forEach(([field, newValue]) => {
             this.store.update(field, { value: newValue });
           });
-          this.setState({});
+
+          this.topFormRender();
         }
 
         getFieldsValues = (...fields) => fields.map((field) => {
