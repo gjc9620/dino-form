@@ -74,7 +74,7 @@ export class Resume extends Component {
         </div>
         <div>
           { render() }
-{/*
+          {/*
           {
             render(
               children => <div style={ { marginLeft: 20 } }>{children}</div>,
@@ -107,7 +107,7 @@ export class Resume extends Component {
             )
           }
 */}
-          {/*<button onClick={ () => addItem() }>+</button>*/}
+          {/* <button onClick={ () => addItem() }>+</button> */}
 
         </div>
       </div>

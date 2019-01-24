@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Resume from './Resume.jsx';
+import ResumeForm from './Resume.jsx';
 // import ProjectsForm from './ProjectsForm.jsx';
 // import WorkHistoryForm from './WorkHistoryForm.jsx';
 import './style.css';
 
 const App = () => (
   <div>
-    <Resume />
+    <ResumeForm />
     {/* <hr /> */}
     {/* <hr /> */}
     {/* <hr /> */}
