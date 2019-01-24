@@ -72,13 +72,20 @@ const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => (
   }
 );
 
+class WrapCom extends Component {
+  render() {
+    const { dinoForm: { renderDinoForm } } = this.props;
+    return renderDinoForm();
+  }
+}
+
 
 function createForm({
   fragments = {},
   groups = {},
 } = {}) {
   return function create(View) {
-    return function bindWrap(Wrap = ({ dinoForm: { renderDinoForm } }) => renderDinoForm()) {
+    return function bindWrap(Wrap = WrapCom) {
       return class DinoForm extends Component {
         constructor(constructorProps) {
           super(constructorProps);
@@ -327,11 +334,32 @@ function createForm({
           };
         })
 
-        addItem = () => {
-
+        addItem = ({ getGroup, render }) => {
+          getGroup().IDList.push(this.ID++);
+          render();
         }
 
-        deleteItem = () => {}
+        deleteItem = ({ ID: deleteID, getGroup, render }) => {
+          const group = getGroup();
+          group.IDList = group.IDList.filter(ID => ID !== deleteID);
+          render();
+        }
+
+        moveItem = ({
+          ID, offset, getGroup, render,
+        }) => {
+          const group = getGroup();
+          const index = group.IDList.indexOf(ID);
+          group.IDList.splice(index, 1);
+          if (offset === -Infinity) {
+            group.IDList.splice(0, 0, ID);
+          } else if (offset === Infinity) {
+            group.IDList.splice(0, group.IDList.length - 1, ID);
+          } else {
+            group.IDList.splice(index + offset, 0, ID);
+          }
+          render();
+        }
 
         mapGroup = ({ Form, ID, formProps = {} }) => (
           <Form
@@ -340,14 +368,48 @@ function createForm({
             />
         )
 
-        groupsAPI = () => mapObject(this.groups, (formName, {
-          Com,
-          field,
-          IDRefMap,
-          IDList,
-          Form,
-          formProps = {},
-        }) => {
+        groupsAPI = () => mapObject(this.groups, (formName, groupValue) => {
+          const {
+            Com,
+            field,
+            IDRefMap,
+            IDList,
+            Form,
+            formProps = {},
+          } = groupValue;
+
+          const addItem = (
+            add = this.addItem,
+          ) => add({
+            getGroup: () => groupValue,
+            render: this.topFormRender,
+          });
+
+          const deleteItem = (
+            ID,
+            deleteItemFun = this.deleteItem,
+          ) => deleteItemFun({
+            ID,
+            getGroup: () => groupValue,
+            render: this.topFormRender,
+          });
+
+          const moveItem = (
+            ID,
+            offset,
+            move = this.moveItem,
+          ) => move({
+            ID,
+            offset,
+            getGroup: () => groupValue,
+            render: this.topFormRender,
+          });
+
+          const doAction = fun => fun({
+            getGroup: () => groupValue,
+            render: this.topFormRender,
+          });
+
           const group = {
             map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => (
               <div
@@ -369,9 +431,8 @@ function createForm({
                         ID,
                       },
                     },
-                    deleteIt: () => {},
-                    move: () => {},
-                    moveTo: () => {},
+                    deleteIt: () => deleteItem(ID),
+                    moveIt: offset => moveItem(ID, offset),
                     formProps,
                   })
                 }
@@ -381,20 +442,10 @@ function createForm({
               renderGroup = ele => <div className={ `dino-form-group-${field}` }>{ele}</div>,
               children = group.map(),
             ) => <div className={ `dino-form-group-wrap-${field}` }>{renderGroup(children)}</div>,
-            addItem: (add = this.addItem) => add({
-              Com,
-              field,
-              IDRefMap,
-              IDList,
-              Form,
-            }),
-            deleteItem: (add = this.deleteItem) => add({
-              Com,
-              field,
-              IDRefMap,
-              IDList,
-              Form,
-            }),
+            addItem,
+            deleteItem,
+            moveItem,
+            doAction,
           };
 
           return { [formName]: group };

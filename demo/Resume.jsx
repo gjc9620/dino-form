@@ -57,6 +57,8 @@ export class Resume extends Component {
           workHistory: {
             render,
             map,
+            addItem,
+            doAction,
           },
         },
       },
@@ -75,19 +77,34 @@ export class Resume extends Component {
             render(
               children => <div style={ { marginLeft: 20 } }>{children}</div>,
               map(({
-                Form: { FormCom, formProps }, ID, index, deleteIt, move, moveTo,
+                Form: {
+                  FormCom,
+                  formProps,
+                },
+                ID,
+                IDList,
+                index,
+                deleteIt,
+                moveIt,
               }) => (
                 <div>
                   <div>{ID}</div>
                   <FormCom { ...formProps } />
                   <button onClick={ deleteIt }>删除</button>
-                  <button onClick={ () => move(-1) }>上</button>
-                  <button onClick={ () => move(-2) }>下</button>
+                  {
+                    index !== 0
+                    && <button onClick={ () => moveIt(-1) }>上</button>
+                  }
+                  {
+                    index !== IDList.length - 1
+                    && <button onClick={ () => moveIt(1) }>下</button>
+                  }
                   <hr />
                 </div>
               )),
             )
           }
+          <button onClick={ () => addItem() }>+</button>
 
         </div>
       </div>
