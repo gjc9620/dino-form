@@ -276,64 +276,68 @@ function createForm({
           this.setState({});
         }
 
-        verify = () => Promise.resolve().then(async () => {
-          let hasError = false;
-          const fragmentsField = await mapObjectAsync(
-            this.store.get(),
-            async (
-              field,
-              scheme) => {
-              const {
-                rules = [], isMount, value, label,
-              } = scheme;
-              if (!isMount) { return {}; }
-
-              let error;
-              let isPass;
-              for (const rule of rules) {
-                isPass = await rule.fun(value);
-                if (!isPass) {
-                  hasError = true;
-                  error = rule.error({ label, field });
-                  this.setFieldsError({ [field]: error });
-                  break;
-                }
-              }
-
-              return { [field]: value };
-            },
-          );
-
-          const groupField = await mapObjectAsync(
-            this.groups,
-            async (
-              groupName,
-              {
+        verify = ({
+          first = false, //todo
+          scroll = true, //todo
+        }) => (
+          Promise.resolve().then(async () => {
+            let hasError = false;
+            const fragmentsField = await mapObjectAsync(
+              this.store.get(),
+              async (
                 field,
-                IDRefMap = [], IDList,
-              }) => {
-              const values = [];
+                scheme) => {
+                const {
+                  rules = [], isMount, value, label,
+                } = scheme;
+                if (!isMount) { return {}; }
 
-              for (const ID of IDList) {
-                const result = await IDRefMap[ID].ref.verify();
-                if (result.hasError) hasError = true;
-                values.push(result.data);
-              }
+                for (const rule of rules) {
+                  const isPass = await rule.fun(value);
+                  if (!isPass) {
+                    hasError = true;
+                    const error = rule.error({ label, field });
+                    this.setFieldsError({ [field]: error });
+                    break;
+                  }
+                }
 
-              return {
-                [field]: values,
-              };
-            },
-          );
+                return { [field]: value };
+              },
+            );
 
-          return {
-            hasError,
-            data: {
-              ...fragmentsField,
-              ...groupField,
-            },
-          };
-        })
+            const groupField = await mapObjectAsync(
+              this.groups,
+              async (
+                groupName,
+                {
+                  field,
+                  IDRefMap = [], IDList,
+                }) => {
+                const values = [];
+
+                for (const ID of IDList) {
+                  const result = await IDRefMap[ID].ref.verify();
+                  if (result.hasError) hasError = true;
+                  values.push(result.data);
+                }
+
+                return {
+                  [field]: values,
+                };
+              },
+            );
+
+            return {
+              hasError,
+              data: {
+                ...fragmentsField,
+                ...groupField,
+              },
+            };
+          })
+
+        )
 
         addItem = ({ getGroup, render }) => {
           getGroup().IDList.push(this.ID++);

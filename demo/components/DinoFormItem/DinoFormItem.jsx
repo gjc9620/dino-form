@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { mapObject, getValueFromEvent } from '../../util';
 import { isEventObj } from '../../util';
 
-// 注册规则
-// 卸载标记
 class DinoFormItem extends React.Component {
   constructor(props) {
     super(props);

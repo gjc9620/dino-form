@@ -50,36 +50,40 @@ const ProjectsForm = createForm({
       onErrorClick: () => console.log('DDDDD'),
     },
   },
-})((props) => { // //todo rename
-  const {
-    dinoForm,
-    dinoForm: {
-      setFields,
-      getFields,
-      verify,
-      fragments: {
-        ProjectsName,
-        Time,
-        Time1,
-        Time2,
-        Time3,
-      },
-    },
-  } = props;
+})(
+  class Projects extends Component {
+    render() {
+      const {
+        dinoForm,
+        dinoForm: {
+          setFields,
+          getFields,
+          verify,
+          fragments: {
+            ProjectsName,
+            Time,
+            Time1,
+            Time2,
+            Time3,
+          },
+        },
+      } = this.props;
 
-  return (
-    <div>
-      <div>
-        <ProjectsName />
-      </div>
-      <div>
-        <Time />
-        <Time1 />
-        <Time2 />
-        <Time3 />
-      </div>
-    </div>
-  );
-})();
+      return (
+        <div>
+          <div>
+            <ProjectsName />
+          </div>
+          <div>
+            <Time />
+            <Time1 />
+            <Time2 />
+            <Time3 />
+          </div>
+        </div>
+      );
+    }
+  },
+)();
 
 export default ProjectsForm;
