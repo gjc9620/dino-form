@@ -371,32 +371,30 @@ function createForm({
           index,
           deleteIt,
           moveIt,
-        }) => (
-          <div>
-            <FormCom { ...formProps } />
-            <div className={ prefix('group-actions') }>
-              <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
-              {
+        }) => ([
+          <FormCom { ...formProps } />,
+          <div className={ prefix('group-actions') }>
+            <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
+            {
                 index !== 0
                 && (
-                <div
-                  className={ prefix('group-action-move-up') }
-                  onClick={ () => moveIt(-1) }
-                  />
+                  <div
+                    className={ prefix('group-action-move-up') }
+                    onClick={ () => moveIt(-1) }
+                    />
                 )
               }
-              {
+            {
                 index !== IDList.length - 1
                 && (
-                <div
-                  className={ prefix('group-action-move-down') }
-                  onClick={ () => moveIt(1) }
-                  />
+                  <div
+                    className={ prefix('group-action-move-down') }
+                    onClick={ () => moveIt(1) }
+                    />
                 )
               }
-            </div>
-          </div>
-        )
+          </div>,
+        ])
 
         groupsAPI = () => mapObject(this.groups, (formName, groupValue) => {
           const {
