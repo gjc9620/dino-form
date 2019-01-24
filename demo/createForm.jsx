@@ -75,7 +75,7 @@ const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => (
 class WrapCom extends Component {
   render() {
     const { dinoForm: { renderDinoForm } } = this.props;
-    return renderDinoForm();
+    return renderDinoForm(this.props);
   }
 }
 
@@ -502,7 +502,7 @@ function createForm({
           const { catchRef = () => {}, ...others } = this.props;
           return (
             <Wrap
-              catchRef={ catchRef }
+              ref={ catchRef }
               dinoForm={ {
                 ...this.createDinoFormApi(),
                 renderDinoForm: (props = {}) => (

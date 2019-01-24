@@ -30,6 +30,12 @@ const config = {
       field: 'gender2',
     },
   },
+  subForm: [{
+    JustForm: {
+      Com: WorkHistoryForm,
+      withPig: true,
+    },
+  }],
   groups: {
     workHistory: {
       Com: WorkHistoryForm,
