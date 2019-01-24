@@ -367,13 +367,14 @@ function createForm({
             FormCom,
             formProps,
           },
+          ID,
           IDList,
           index,
           deleteIt,
           moveIt,
         }) => ([
-          <FormCom { ...formProps } />,
-          <div className={ prefix('group-actions') }>
+          <FormCom { ...formProps } key={ ID } />,
+          <div className={ prefix('group-actions') } key="group-actions">
             <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
             {
                 index !== 0
