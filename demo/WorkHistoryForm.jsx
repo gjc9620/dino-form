@@ -59,6 +59,8 @@ const workHistoryForm = createForm({
         <div>
           <Time />
         </div>
+        { render() }
+{/*
         {
           render(
             children => <div style={ { marginLeft: 30 } }>{children}</div>,
@@ -90,7 +92,8 @@ const workHistoryForm = createForm({
             )),
           )
         }
-        <button onClick={ () => addItem() }>+</button>
+*/}
+        {/*<button onClick={ () => addItem() }>+</button>*/}
       </div>
     );
   }

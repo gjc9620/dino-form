@@ -1,0 +1,38 @@
+
+body {
+  padding: 10px;
+}
+
+.dino-form-group-actions {
+  display: flex;
+}
+.dino-form-group-actions > * {
+  margin-right: 15px;
+}
+
+.dino-form-group-action-add:before {
+  content: 'Add';
+}
+
+.dino-form-group-action-delete:before {
+  content: 'Delete';
+}
+
+.dino-form-group-action-move-up:before {
+  content: 'moveUp';
+}
+
+.dino-form-group-action-move-down:before {
+  content: 'moveDown';
+}
+
+
+.dino-form-group-wrap {
+  padding-left: 30px;
+  margin-bottom: 20px;
+  border-left: 1px solid black;
+}
+.dino-form-group-item-wrap {
+  margin-bottom: 20px;
+  border-left: 1px solid black;
+}

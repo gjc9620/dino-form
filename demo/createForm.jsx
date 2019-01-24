@@ -79,6 +79,7 @@ class WrapCom extends Component {
   }
 }
 
+const prefix = className => `dino-form-${className}`;
 
 function createForm({
   fragments = {},
@@ -361,11 +362,40 @@ function createForm({
           render();
         }
 
-        mapGroup = ({ Form, ID, formProps = {} }) => (
-          <Form
-            { ...formProps }
-            ID={ ID }
-            />
+        mapGroup = ({
+          Form: {
+            FormCom,
+            formProps,
+          },
+          IDList,
+          index,
+          deleteIt,
+          moveIt,
+        }) => (
+          <div>
+            <FormCom { ...formProps } />
+            <div className={ prefix('group-actions') }>
+              <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
+              {
+                index !== 0
+                && (
+                <div
+                  className={ prefix('group-action-move-up') }
+                  onClick={ () => moveIt(-1) }
+                  />
+                )
+              }
+              {
+                index !== IDList.length - 1
+                && (
+                <div
+                  className={ prefix('group-action-move-down') }
+                  onClick={ () => moveIt(1) }
+                  />
+                )
+              }
+            </div>
+          </div>
         )
 
         groupsAPI = () => mapObject(this.groups, (formName, groupValue) => {
@@ -414,7 +444,7 @@ function createForm({
             map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => (
               <div
                 key={ ID }
-                className={ `dino-form-group-item-wrap-${field}` }>
+                className={ `${prefix('group-item-wrap')}` }>
                 {
                   mapGroup({
                     ID,
@@ -439,9 +469,23 @@ function createForm({
               </div>
             )),
             render: (
-              renderGroup = ele => <div className={ `dino-form-group-${field}` }>{ele}</div>,
+              renderGroup = ele => (
+                <div className={ `${prefix('group')}` }>
+                  <div className={ `${prefix('group-ele')}` }>
+                    {ele}
+                  </div>
+                  <div
+                    className={ prefix('group-action-add') }
+                    onClick={ () => addItem() }
+                    />
+                </div>
+              ),
               children = group.map(),
-            ) => <div className={ `dino-form-group-wrap-${field}` }>{renderGroup(children)}</div>,
+            ) => (
+              <div className={ `${prefix('group-wrap')}` }>
+                {renderGroup(children)}
+              </div>
+            ),
             addItem,
             deleteItem,
             moveItem,
