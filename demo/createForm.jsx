@@ -6,17 +6,20 @@ import { mapObject, mapObjectAsync } from './util';
 
 const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
-    [comName]: class Fragment extends Component {
-      render() {
-        return (
-          <Com
-            dinoForm={ createDinoFormApi() }
-            { ...props }
-            { ...(this.props || {}) }
-            />
-        );
-      }
-    },
+    [comName]: Object.assign(
+      class Fragment extends Component {
+        render() {
+          return (
+            <Com
+              dinoForm={ createDinoFormApi() }
+              { ...props }
+              { ...(this.props || {}) }
+              />
+          );
+        }
+      },
+      props,
+    ),
   }))
 );
 
@@ -385,8 +388,10 @@ function createForm({
         })
 
         render() {
+          const { catchRef = () => {}, ...others } = this.props;
           return (
             <Wrap
+              catchRef={ catchRef }
               dinoForm={ {
                 ...this.createDinoFormApi(),
                 renderDinoForm: (props = {}) => (
@@ -400,7 +405,7 @@ function createForm({
                     />
                 ),
               } }
-              { ...(this.props || {}) }
+              { ...others }
               />
           );
         }

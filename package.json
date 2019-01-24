@@ -3,6 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "browserslist": [
+    "cover 99.5%",
+    "maintained node versions",
+    "ie 6-8",
+    "Safari >= 7",
+    "iOS >= 7",
+    "Firefox > 20",
+    "Chrome > 50",
+    "not dead"
+  ],
   "scripts": {
     "dev": "cd demo && webpack-dev-server --config ./devServer.js --watch --open --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"

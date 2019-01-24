@@ -10,6 +10,7 @@ import {
   DinoTimePicker,
 } from './DinoComponents.jsx';
 
+
 const config = {
   fragments: {
     Name: {
@@ -46,7 +47,7 @@ export class Resume extends Component {
       dinoForm,
       dinoForm: {
         setFields,
-        getFields,
+        getFieldsValues,
         verify,
         fragments: {
           Name,
@@ -61,11 +62,13 @@ export class Resume extends Component {
       },
     } = this.props;
 
+    const [name] = getFieldsValues(Name.field);
+
     return (
       <div>
         <div>
           <Name />
-          <Sex />
+          { name === 'asd' && <Sex /> }
         </div>
         <div>
           {
@@ -177,6 +180,12 @@ class BigForm extends Component {
         </div>
         <div onClick={ () => {
           const data = getFullValues();
+          console.log(data);
+        } }>
+          Get full value (only mounted)
+        </div>
+        <div onClick={ () => {
+          const data = getFullValues({ onlyGetMount: false });
           console.log(data);
         } }>
           Get full value
