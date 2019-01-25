@@ -242,9 +242,20 @@ function createForm({
             },
           );
 
+          const subFormField = mapObject(
+            this.subForms,
+            (formName, subForm) => {
+              const { ref, field } = subForm;
+              return {
+                [field]: ref.getFullValues(),
+              };
+            },
+          );
+
           return {
             ...fragmentsField,
             ...groupField,
+            ...subFormField,
           };
         }
 
