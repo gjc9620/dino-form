@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import DinoForm from './components/DinoForm';
 import DinoFormItem from './components/DinoFormItem';
 import createDinoFormStore from './components/DinoFormStore';
-import { mapObject, mapObjectAsync } from './util';
+import { mapObject, mapObjectAsync, prefix } from './util';
 
 const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
@@ -79,7 +79,6 @@ class WrapCom extends Component {
   }
 }
 
-const prefix = className => `dino-form-${className}`;
 
 function createForm({
   fragments = {},
@@ -279,7 +278,7 @@ function createForm({
         verify = ({
           first = false, //todo
           scroll = true, //todo
-        }) => (
+        } = {}) => (
           Promise.resolve().then(async () => {
             let hasError = false;
             const fragmentsField = await mapObjectAsync(
@@ -507,12 +506,12 @@ function createForm({
                 ...this.createDinoFormApi(),
                 renderDinoForm: (props = {}) => (
                   <View
+                    { ...props }
                     dinoForm={ {
                       ...this.createDinoFormApi(),
                       fragments: this.fragments,
                       groups: this.groupsAPI(),
                     } }
-                    { ...props }
                     />
                 ),
               } }

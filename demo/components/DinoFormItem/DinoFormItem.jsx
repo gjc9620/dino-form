@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { mapObject, getValueFromEvent } from '../../util';
-import { isEventObj } from '../../util';
+import { isEventObj, prefix } from '../../util';
 
 class DinoFormItem extends React.Component {
   constructor(props) {
@@ -84,7 +84,7 @@ class DinoFormItem extends React.Component {
       const { validateTrigger = [], fun, error } = rule;
       validateTrigger.forEach((eventName) => {
         const preTrigger = trigger[eventName] || (() => {});
-        trigger[eventName] = async(firstArg, ...arg) => {
+        trigger[eventName] = async (firstArg, ...arg) => {
           const value = isEventObj(firstArg) ? getValueFromEvent(firstArg) : firstArg;
           if (await fun(value, ...arg)) {
             setFieldsError({ [field]: undefined });
@@ -122,6 +122,25 @@ class DinoFormItem extends React.Component {
     };
   }
 
+  defaultRender = ({
+    label,
+    error,
+    renderCom,
+  } = {}) => (
+    <section className={ `${prefix('item')} ${error ? 'has-error' : ''}` }>
+      <div
+        onClick={ this.clickLabel }
+        className={ `${prefix('item-label')}` }>{ label }
+      </div>
+      <div className={ `${prefix('item-com-error')}` }>
+        <div className={ `${prefix('item-com')}` }>
+          { renderCom() }
+        </div>
+        { error && <div className={ `${prefix('item-error')}` }>{error}</div> }
+      </div>
+    </section>
+  )
+
   render() {
     const {
       dinoForm: {
@@ -136,6 +155,7 @@ class DinoFormItem extends React.Component {
       Com,
       comProps = {},
       rules = [],
+      render = this.defaultRender,
     } = this.props;
 
     this.syncToStore({ isMount: true });
@@ -143,25 +163,21 @@ class DinoFormItem extends React.Component {
     const { error } = store.get(field);
     const [value] = getFieldsValues(field);
 
-    return (
-      <section className="dino-form-item">
-        <div onClick={ this.clickLabel }>{ label }</div>
-        <div>
-          <div className={ `${error ? 'has-error' : ''}` }>
-            <Com
-              { ...comProps }
-              value={ value }
-              error={ error }
-              {
-                ...this.setRule()
-              }
-              ref={ ref => this.com = ref }
-              />
-          </div>
-          { error && <div>{error}</div> }
-        </div>
-      </section>
-    );
+    return render({
+      label,
+      error,
+      renderCom: () => (
+        <Com
+          { ...comProps }
+          value={ value }
+          error={ error }
+          {
+            ...this.setRule()
+          }
+          ref={ (ref) => { this.com = ref; } }
+          />
+      ),
+    });
   }
 }
 

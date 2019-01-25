@@ -32,3 +32,5 @@ export function isEventObj(obj) {
     && typeof obj.preventDefault === 'function'
   );
 }
+
+export const prefix = className => `dino-form-${className}`;
