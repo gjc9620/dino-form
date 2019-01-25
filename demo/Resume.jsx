@@ -30,7 +30,7 @@ const config = {
       field: 'gender2',
     },
   },
-  subForms: { // todo think about it
+  subForms: {
     JustForm: {
       Form: WorkHistoryForm,
       field: 'workHistorySubForm',
