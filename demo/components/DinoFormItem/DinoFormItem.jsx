@@ -155,7 +155,7 @@ class DinoFormItem extends React.Component {
       Com,
       comProps = {},
       rules = [],
-      render = this.defaultRender,
+      renderDinoForm = this.defaultRender,
     } = this.props;
 
     this.syncToStore({ isMount: true });
@@ -163,7 +163,7 @@ class DinoFormItem extends React.Component {
     const { error } = store.get(field);
     const [value] = getFieldsValues(field);
 
-    return render({
+    return renderDinoForm({
       label,
       error,
       renderCom: () => (
