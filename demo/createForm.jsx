@@ -176,11 +176,14 @@ function createForm({
 
         createDinoFormApi = () => ({
           FromItem: this.FromItem,
-          setFieldsValues: this.setFieldsValues,
+
+          setFieldsValue: this.setFieldsValue,
+          setFullValues: this.setFullValues,
           setFieldsError: this.setFieldsError,
-          setFullFieldsTranslate: this.setFullFieldsTranslate,
+
           getFullValues: this.getFullValues,
-          getFieldsValues: this.getFieldsValues,
+          getFieldsValue: this.getFieldsValue,
+
           verify: this.verify,
           store: this.store,
           dinoFormRef: this,
@@ -193,7 +196,7 @@ function createForm({
           this.setState({});
         }
 
-        setFieldsValues = (obj) => {
+        setFieldsValue = (obj) => {
           [...Object.entries(obj)].forEach(([field, newValue]) => {
             this.store.update(field, { value: newValue });
           });
@@ -201,7 +204,7 @@ function createForm({
           this.topFormRender();
         }
 
-        getFieldsValues = (...fields) => fields.map((field) => {
+        getFieldsValue = (...fields) => fields.map((field) => {
           const scheme = this.store.get(field) || {};
           return scheme.value;
         })
@@ -258,14 +261,28 @@ function createForm({
             ...subFormField,
           };
         }
+  
+        setFullValues = async (values = {}, maps = {}) => {
+          const findGroups = field => Object.values(
+            this.groups,
+          ).find(group => group.field === field);
 
-        setFullFieldsTranslate = async (values = {}, maps = {}) => {
-          const findGroups = field => Object.values(this.groups).find(group => group.field === field);
+          const findSubForms = field => Object.values(
+            this.subForms,
+          ).find(subForm => subForm.field === field);
 
           const render = () => new Promise(r => this.setState({}, () => r()));
 
           await mapObjectAsync(values, async (field, value) => {
             const group = findGroups(field);
+            const subForm = findSubForms(field);
+
+            if (subForm) {
+              const { [field]: subFormMapObj } = maps;
+              const { ref } = subForm;
+              ref.setFullValues(value, subFormMapObj);
+              return;
+            }
 
             if (!group) {
               const { [field]: mapFun = _ => _ } = maps;
@@ -308,7 +325,7 @@ function createForm({
 
               IDRefMap[ID].props = props;
 
-              ref.setFullFieldsTranslate(groupItemValue, mapObj);
+              ref.setFullValues(groupItemValue, mapObj);
             });
           });
 

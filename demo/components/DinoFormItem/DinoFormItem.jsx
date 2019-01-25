@@ -24,7 +24,7 @@ class DinoFormItem extends React.Component {
     const {
       dinoForm: {
         store,
-        getFieldsValues,
+        getFieldsValue,
       },
       field,
       rules,
@@ -32,7 +32,7 @@ class DinoFormItem extends React.Component {
       initValue,
     } = this.props;
 
-    const [value] = getFieldsValues(field);
+    const [value] = getFieldsValue(field);
 
     store.update(field, {
       value,
@@ -50,14 +50,14 @@ class DinoFormItem extends React.Component {
       dinoForm: {
         store,
         setFields,
-        setFieldsValues,
+        setFieldsValue,
       },
       field,
     } = this.props;
 
     const value = isEventObj(arg) ? getValueFromEvent(arg) : arg;
 
-    setFieldsValues({
+    setFieldsValue({
       [field]: value,
     });
   }
@@ -70,7 +70,7 @@ class DinoFormItem extends React.Component {
     const {
       dinoForm: {
         store,
-        getFieldsValues,
+        getFieldsValue,
         setFieldsError,
       },
       label,
@@ -147,7 +147,7 @@ class DinoFormItem extends React.Component {
       dinoForm: {
         setFields,
         getFields,
-        getFieldsValues,
+        getFieldsValue,
         verify,
         store,
       },
@@ -162,7 +162,7 @@ class DinoFormItem extends React.Component {
     this.syncToStore({ isMount: true });
 
     const { error } = store.get(field);
-    const [value] = getFieldsValues(field);
+    const [value] = getFieldsValue(field);
 
     return renderDinoForm({
       label,

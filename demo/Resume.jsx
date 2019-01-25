@@ -54,7 +54,7 @@ export class Resume extends Component {
       dinoForm,
       dinoForm: {
         setFields,
-        getFieldsValues,
+        getFieldsValue,
         verify,
         fragments: {
           Name,
@@ -74,7 +74,7 @@ export class Resume extends Component {
       },
     } = this.props;
 
-    const [name] = getFieldsValues(Name.field);
+    const [name] = getFieldsValue(Name.field);
 
     return (
       <div>
@@ -137,12 +137,23 @@ const runFun = fun => fun();
 
 class BigForm extends Component {
   clickSetData = () => {
-    const { dinoForm: { setFullFieldsTranslate } } = this.props;
+    const { dinoForm: { setFullValues } } = this.props;
     // return;
     // debugger;
-    setFullFieldsTranslate({
+    setFullValues({
       name: '321',
       gender: 21321,
+      workHistorySubForm: {
+        companyName: '123',
+        time: '123',
+        projects: [{
+          projectsNameField: '213',
+          time: 3333,
+          time1: '4444',
+          time2: '2019-01-25T06:39:11.000Z',
+          time3: '475456',
+        }],
+      },
       workHistory: [{
         companyName: '123123',
         time: '12312',
@@ -178,6 +189,15 @@ class BigForm extends Component {
       }],
     }, {
       gender: value => ifValue(value, () => `${value}666`),
+      workHistorySubForm: {
+        companyName: value => ifValue(value, () => `${value}yeah`),
+        projects: project => ({
+          mapObj: {
+            time2: value => ifValue(value, () => moment(project.time2)),
+          },
+          props: { very: 'good' },
+        }),
+      },
       workHistory: (workHistory) => {
         const { companyName } = workHistory;
         return {
