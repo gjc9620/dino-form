@@ -130,7 +130,8 @@ class DinoFormItem extends React.Component {
     <section className={ `${prefix('item')} ${error ? 'has-error' : ''}` }>
       <div
         onClick={ this.clickLabel }
-        className={ `${prefix('item-label')}` }>{ label }
+        className={ `${prefix('item-label')}` }>
+        { label }
       </div>
       <div className={ `${prefix('item-com-error')}` }>
         <div className={ `${prefix('item-com')}` }>
