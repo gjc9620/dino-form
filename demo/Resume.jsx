@@ -30,12 +30,13 @@ const config = {
       field: 'gender2',
     },
   },
-  // subForm: { //todo think about it
-  //   JustForm: {
-  //     Com: WorkHistoryForm,
-  //     withPig: true,
-  //   },
-  // },
+  subForms: { // todo think about it
+    JustForm: {
+      Form: WorkHistoryForm,
+      field: 'workHistorySubForm',
+      formProps: { withPig: true },
+    },
+  },
   groups: {
     workHistory: {
       Com: WorkHistoryForm,
@@ -59,6 +60,9 @@ export class Resume extends Component {
           Name,
           Sex,
         },
+        subForms: {
+          JustForm,
+        },
         groups: {
           workHistory: {
             render,
@@ -74,6 +78,9 @@ export class Resume extends Component {
 
     return (
       <div>
+        <div>JustForm</div>
+        <JustForm />
+        <div>JustForm</div>
         <div>
           <Name />
           { name === 'asd' && <Sex /> }

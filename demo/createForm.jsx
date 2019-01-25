@@ -72,6 +72,31 @@ const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => (
   }
 );
 
+const createDinoFormSubForm = subForms => (
+  mapObject(subForms, (formName, form) => {
+    const { Form, field, formProps = {} } = form;
+    const subForm = {
+      field,
+      formProps,
+      ref: undefined,
+      Form: class DinoSubForm extends Component {
+        render() {
+          return (
+            <Form
+              { ...formProps }
+              { ...this.props }
+              ref={ (ref) => { subForm.ref = ref; } }
+              />
+          );
+        }
+      },
+    };
+    return {
+      [formName]: subForm,
+    };
+  })
+);
+
 class WrapCom extends Component {
   render() {
     const { dinoForm: { renderDinoForm } } = this.props;
@@ -83,6 +108,7 @@ class WrapCom extends Component {
 function createForm({
   fragments = {},
   groups = {},
+  subForms = {},
 } = {}) {
   return function create(View) {
     return function bindWrap(Wrap = WrapCom) {
@@ -91,6 +117,7 @@ function createForm({
           super(constructorProps);
 
           this.store = createDinoFormStore();
+          this.subForms = createDinoFormSubForm(subForms);
 
           this.FromItem = createFromItem({
             createDinoFormApi: this.createDinoFormApi,
@@ -103,11 +130,13 @@ function createForm({
 
           this.ID = 0;
           this.groups = this.createGroups(groups);
+
           this.state = {
             store: this.store,
             FromItem: this.FromItem,
-            fragments: this.fragments,
             ID: this.ID,
+            fragments: this.fragments,
+            subForms: this.subForms,
             groups: this.groups,
           };
         }
@@ -276,8 +305,8 @@ function createForm({
         }
 
         verify = ({
-          first = false, //todo
-          scroll = true, //todo
+          first = false, // todo
+          scroll = true, // todo
         } = {}) => (
           Promise.resolve().then(async () => {
             let hasError = false;
@@ -327,11 +356,24 @@ function createForm({
               },
             );
 
+            const subFormField = await mapObjectAsync(
+              this.subForms,
+              async (formName, subForm) => {
+                const { ref, field } = subForm;
+                const { data, hasError: subFormHasError } = await ref.verify();
+                hasError = subFormHasError;
+                return {
+                  [field]: data,
+                };
+              },
+            );
+
             return {
               hasError,
               data: {
                 ...fragmentsField,
                 ...groupField,
+                ...subFormField,
               },
             };
           })
@@ -497,6 +539,10 @@ function createForm({
           return { [formName]: group };
         })
 
+        subFormsAPI = () => mapObject(this.subForms, (formName, { Form }) => ({
+          [formName]: Form,
+        }))
+
         render() {
           const { catchRef = () => {}, ...others } = this.props;
           return (
@@ -511,6 +557,7 @@ function createForm({
                       ...this.createDinoFormApi(),
                       fragments: this.fragments,
                       groups: this.groupsAPI(),
+                      subForms: this.subFormsAPI(),
                     } }
                     />
                 ),
