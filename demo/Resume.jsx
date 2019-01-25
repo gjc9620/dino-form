@@ -203,26 +203,45 @@ class BigForm extends Component {
     const { dinoForm: { verify, getFullValues, renderDinoForm } } = this.props;
     return (
       <div>
+        <style>  {
+          `
+            .body {
+              margin-bottom: 100px;
+            }
+            footer {
+              position: fixed;
+              bottom: 0px;
+              width: 100%;
+              background: white;
+            }
+          
+          `
+        }
+        </style>
         <div onClick={ this.clickSetData }>set</div>
-        { renderDinoForm() }
-        <div onClick={ async () => {
-          const { hasError, data } = await verify();
-          console.log(hasError, data);
-          console.log(hasError, JSON.stringify(data));
-        } }>提交
+        <div className="body">
+          { renderDinoForm() }
         </div>
-        <div onClick={ () => {
-          const data = getFullValues();
-          console.log(data);
-        } }>
-          Get full value (only mounted)
-        </div>
-        <div onClick={ () => {
-          const data = getFullValues({ onlyGetMount: false });
-          console.log(data);
-        } }>
-          Get full value
-        </div>
+        <footer>
+          <div onClick={ async () => {
+            const { hasError, data } = await verify();
+            console.log(hasError, data);
+            console.log(hasError, JSON.stringify(data));
+          } }>提交
+          </div>
+          <div onClick={ () => {
+            const data = getFullValues();
+            console.log(data);
+          } }>
+            Get full value (only mounted)
+          </div>
+          <div onClick={ () => {
+            const data = getFullValues({ onlyGetMount: false });
+            console.log(data);
+          } }>
+            Get full value
+          </div>
+        </footer>
       </div>
     );
   }
