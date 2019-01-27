@@ -2,7 +2,6 @@
   "name": "dino-form",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "browserslist": [
     "cover 99.5%",
     "maintained node versions",
@@ -13,9 +12,12 @@
     "Chrome > 50",
     "not dead"
   ],
+  "main": "lib/index",
+  "module": "es/index",
   "scripts": {
     "dev": "webpack-dev-server --config ./devServer.js --watch --open --mode development",
     "build:es": "rm -rf ./es/* && npx babel ./src --out-dir ./es --source-maps inline",
+    "build:cjs": "rm -rf ./lib/* && npx babel ./src --out-dir ./lib --source-maps inline",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

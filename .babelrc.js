@@ -6,9 +6,11 @@ module.exports = {
     [
       "@babel/preset-env",
       {
+        modules: false, //es
+        // modules: "commonjs", //commonjs
         "targets": {
           "esmodules": true,
-          // "browsers": package.browserslist,
+          "browsers": package.browserslist,
         }
       }
     ]
