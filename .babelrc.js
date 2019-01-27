@@ -7,9 +7,8 @@ module.exports = {
       "@babel/preset-env",
       {
         "targets": {
-          "esmodules": false,
-          "node": true,
-          "browsers": package.browserslist,
+          "esmodules": true,
+          // "browsers": package.browserslist,
         }
       }
     ]
@@ -22,7 +21,7 @@ module.exports = {
         "corejs": 2,
         "helpers": true,
         "regenerator": true,
-        "useESModules": false
+        "useESModules": true
       }
     ]
   ]
