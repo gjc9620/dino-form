@@ -25,6 +25,7 @@ function dinoFromItemify(Com) {
         required = false,
         initValue,
         rules = [],
+        resetWhenUnmount,
         ...others
       } = this.props;
 
@@ -35,6 +36,7 @@ function dinoFromItemify(Com) {
           initValue={ initValue }
           Com={ Com }
           comProps={ others }
+          resetWhenUnmount={ resetWhenUnmount }
           rules={ [
             ...(
               required

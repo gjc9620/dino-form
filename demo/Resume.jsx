@@ -21,6 +21,7 @@ const config = {
     },
     Sex: {
       Com: DinoInputNumber,
+      required: true,
       label: 'Sex',
       field: 'gender',
     },

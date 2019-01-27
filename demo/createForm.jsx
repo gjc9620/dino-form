@@ -261,7 +261,7 @@ function createForm({
             ...subFormField,
           };
         }
-  
+
         setFullValues = async (values = {}, maps = {}) => {
           const findGroups = field => Object.values(
             this.groups,

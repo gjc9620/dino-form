@@ -15,6 +15,21 @@ class DinoFormItem extends React.Component {
   }
 
   componentWillUnmount() {
+    const {
+      dinoForm: {
+        store,
+        // getFieldsValue,
+      },
+      field,
+      resetWhenUnmount = true,
+    } = this.props;
+
+    if (resetWhenUnmount) {
+      store.update(field, {
+        value: undefined,
+        error: undefined,
+      });
+    }
     this.syncToStore({ isMount: false });
   }
 
