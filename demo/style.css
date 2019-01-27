@@ -26,6 +26,13 @@ body {
   content: 'moveDown';
 }
 
+.dino-form-group-action-move-to-first:before {
+  content: 'moveToFirst';
+}
+.dino-form-group-action-move-to-last:before {
+  content: 'moveToLast';
+}
+
 
 .dino-form-group-wrap {
   padding-left: 30px;

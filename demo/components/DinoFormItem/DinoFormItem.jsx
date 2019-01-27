@@ -1,14 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import { mapObject, getValueFromEvent } from '../../util';
-import { isEventObj, prefix } from '../../util';
+import { mapObject, getValueFromEvent, isEventObj, prefix } from '../../util';
 
 class DinoFormItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // message: undefined,
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     // message: undefined,
+  //   };
+  // }
 
   componentDidMount() {
     this.syncToStore({ isMount: true });

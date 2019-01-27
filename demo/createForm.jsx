@@ -284,7 +284,7 @@ function createForm({
               return;
             }
 
-            if (!group) {
+            if (!group) { // fragment
               const { [field]: mapFun = _ => _ } = maps;
               this.store.update(field, { value: mapFun(value) });
               return;
@@ -428,7 +428,7 @@ function createForm({
           if (offset === -Infinity) {
             group.IDList.splice(0, 0, ID);
           } else if (offset === Infinity) {
-            group.IDList.splice(0, group.IDList.length - 1, ID);
+            group.IDList.splice(group.IDList.length, 0, ID);
           } else {
             group.IDList.splice(index + offset, 0, ID);
           }
@@ -450,23 +450,41 @@ function createForm({
           <div className={ prefix('group-actions') } key="group-actions">
             <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
             {
-                index !== 0
-                && (
-                  <div
-                    className={ prefix('group-action-move-up') }
-                    onClick={ () => moveIt(-1) }
-                    />
-                )
-              }
+              index !== 0
+              && (
+                <div
+                  className={ prefix('group-action-move-up') }
+                  onClick={ () => moveIt(-1) }
+                  />
+              )
+            }
             {
-                index !== IDList.length - 1
-                && (
-                  <div
-                    className={ prefix('group-action-move-down') }
-                    onClick={ () => moveIt(1) }
-                    />
-                )
-              }
+              index !== IDList.length - 1
+              && (
+                <div
+                  className={ prefix('group-action-move-down') }
+                  onClick={ () => moveIt(1) }
+                  />
+              )
+            }
+            {
+              index !== 0
+              && (
+                <div
+                  className={ prefix('group-action-move-to-first') }
+                  onClick={ () => moveIt(-Infinity) }
+                  />
+              )
+            }
+            {
+              index !== IDList.length - 1
+              && (
+                <div
+                  className={ prefix('group-action-move-to-last') }
+                  onClick={ () => moveIt(Infinity) }
+                  />
+              )
+            }
           </div>,
         ])
 
