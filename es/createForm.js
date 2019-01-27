@@ -9,9 +9,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/extends"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/objectWithoutProperties"));
 
 var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
@@ -19,13 +19,13 @@ var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/pr
 
 var _values = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/values"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectSpread"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/objectSpread"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/slicedToArray"));
 
 var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/defineProperty"));
 
 var _react = _interopRequireWildcard(require("react"));
 

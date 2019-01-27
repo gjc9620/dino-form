@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createDinoFormStore;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectSpread"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/objectSpread"));
 
 const schemeaa = {
   value: undefined,

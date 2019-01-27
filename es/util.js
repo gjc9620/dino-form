@@ -15,7 +15,7 @@ var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/obj
 
 var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/esm/slicedToArray"));
 
 function mapObject(obj, callback) {
   const mapedObj = {};
