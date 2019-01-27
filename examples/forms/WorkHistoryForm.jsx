@@ -1,12 +1,12 @@
 import React from 'react';
-import createForm from './createForm.jsx';
+import createForm from '../../src/createForm.jsx';
 import ProjectsForm from './ProjectsForm.jsx';
 import {
   DinoInput,
   DinoInputNumber,
   DinoInputItem,
   DinoTimePicker,
-} from './DinoComponents.jsx';
+} from '../DinoComponents.jsx';
 
 const workHistoryForm = createForm({
   fragments: {

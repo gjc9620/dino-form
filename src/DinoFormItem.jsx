@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { mapObject, getValueFromEvent, isEventObj, prefix } from '../../util';
+import { mapObject, getValueFromEvent, isEventObj, prefix } from './util';
 
 class DinoFormItem extends React.Component {
   // constructor(props) {

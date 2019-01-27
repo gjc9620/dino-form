@@ -14,7 +14,7 @@
     "not dead"
   ],
   "scripts": {
-    "dev": "cd demo && webpack-dev-server --config ./devServer.js --watch --open --mode development",
+    "dev": "webpack-dev-server --config ./devServer.js --watch --open --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

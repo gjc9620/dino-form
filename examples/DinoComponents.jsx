@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Input, InputNumber, TimePicker } from 'antd';
 import { InputItem } from 'antd-mobile';
-import { isEventObj, getValueFromEvent } from './util';
+import { isEventObj, getValueFromEvent } from '../src/util';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import 'antd-mobile/dist/antd-mobile.css';
 

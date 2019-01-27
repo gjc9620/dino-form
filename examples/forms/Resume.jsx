@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import createForm from './createForm.jsx';
+import createForm from '../../src/createForm.jsx';
 import WorkHistoryForm from './WorkHistoryForm.jsx';
 
 import {
@@ -8,7 +8,7 @@ import {
   DinoInputNumber,
   DinoInputItem,
   DinoTimePicker,
-} from './DinoComponents.jsx';
+} from '../DinoComponents.jsx';
 
 
 const config = {

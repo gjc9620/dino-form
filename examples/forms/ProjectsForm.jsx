@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import createForm from './createForm.jsx';
+import createForm from '../../src/createForm.jsx';
 import {
   DinoInput,
   DinoInputNumber,
   DinoInputItem,
   DinoTimePicker,
-} from './DinoComponents.jsx';
+} from '../DinoComponents.jsx';
 
 const ProjectsForm = createForm({
   fragments: {
