@@ -1,106 +1,15 @@
 import React, { Component } from 'react';
-// import DinoForm from './components/DinoForm';
-import DinoFormItem from './DinoFormItem.jsx';
 import createDinoFormStore from './DinoFormStore.js';
 import {
+  createFromItem,
+  createDinoFormSubForm,
+  createDinoFormGroupWrap,
+  createFragments,
   groupsAPI,
   subFormsAPI,
 } from './DinoFormHelper.jsx';
 
 import { mapObject, mapObjectAsync } from './util.js';
-
-const createFragments = ({ fragments, createDinoFormApi }) => (
-  mapObject(fragments, (comName, { Com, ...props } = {}) => ({
-    [comName]: Object.assign(
-      class Fragment extends Component {
-        render() {
-          return (
-            <Com
-              dinoForm={ createDinoFormApi() }
-              { ...props }
-              { ...(this.props || {}) }
-              />
-          );
-        }
-      },
-      props,
-    ),
-  }))
-);
-
-const createFromItem = ({ createDinoFormApi }) => (
-  class DinoFormItemWrap extends Component {
-    render() {
-      return (
-        <DinoFormItem
-          dinoForm={ createDinoFormApi() }
-          { ...(this.props || {}) }
-          />
-      );
-    }
-  }
-);
-
-const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => (
-  class DinoFormWrap extends Component {
-    constructor(props) {
-      super(props);
-      this.Com = undefined;
-    }
-
-    componentDidMount() {
-      const { ID, index } = this.props;
-      setIDRefMap(ID, { ref: this.Com });
-    }
-
-    componentWillUnmount() {
-      const { ID, index } = this.props;
-      setIDRefMap(ID, { ref: undefined });
-    }
-
-    catchRef = (ref) => {
-      const { ID, catchRef = () => {} } = this.props;
-      this.Com = ref;
-      catchRef(ref);
-    }
-
-    render() {
-      const { ID, index } = this.props;
-      return (
-        <Com
-          ref={ this.catchRef }
-          topFormRender={ topFormRender }
-          subGroupForm
-          />
-      );
-    }
-  }
-);
-
-const createDinoFormSubForm = subForms => (
-  mapObject(subForms, (formName, form) => {
-    const { Form, field, formProps = {} } = form;
-    const subForm = {
-      field,
-      formProps,
-      ref: undefined,
-      Form: class DinoSubForm extends Component {
-        render() {
-          return (
-            <Form
-              { ...formProps }
-              { ...this.props }
-              ref={ (ref) => { subForm.ref = ref; } }
-              />
-          );
-        }
-      },
-    };
-    return {
-      [formName]: subForm,
-    };
-  })
-);
 
 class WrapCom extends Component {
   render() {
@@ -108,7 +17,6 @@ class WrapCom extends Component {
     return renderDinoForm(this.props);
   }
 }
-
 
 function createForm({
   fragments = {},
