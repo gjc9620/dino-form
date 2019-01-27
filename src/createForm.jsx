@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 // import DinoForm from './components/DinoForm';
 import DinoFormItem from './DinoFormItem.jsx';
 import createDinoFormStore from './DinoFormStore.js';
-import { mapObject, mapObjectAsync, prefix } from './util.js';
+import {
+  groupsAPI,
+  subFormsAPI,
+} from './DinoFormHelper.jsx';
+
+import { mapObject, mapObjectAsync } from './util.js';
 
 const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
@@ -408,187 +413,6 @@ function createForm({
 
         )
 
-        addItem = ({ getGroup, render }) => {
-          getGroup().IDList.push(this.ID++);
-          render();
-        }
-
-        deleteItem = ({ ID: deleteID, getGroup, render }) => {
-          const group = getGroup();
-          group.IDList = group.IDList.filter(ID => ID !== deleteID);
-          render();
-        }
-
-        moveItem = ({
-          ID, offset, getGroup, render,
-        }) => {
-          const group = getGroup();
-          const index = group.IDList.indexOf(ID);
-          group.IDList.splice(index, 1);
-          if (offset === -Infinity) {
-            group.IDList.splice(0, 0, ID);
-          } else if (offset === Infinity) {
-            group.IDList.splice(group.IDList.length, 0, ID);
-          } else {
-            group.IDList.splice(index + offset, 0, ID);
-          }
-          render();
-        }
-
-        mapGroup = ({
-          Form: {
-            FormCom,
-            formProps,
-          },
-          ID,
-          IDList,
-          index,
-          deleteIt,
-          moveIt,
-        }) => ([
-          <FormCom { ...formProps } key={ ID } />,
-          <div className={ prefix('group-actions') } key="group-actions">
-            <div className={ prefix('group-action-delete') } onClick={ deleteIt } />
-            {
-              index !== 0
-              && (
-                <div
-                  className={ prefix('group-action-move-up') }
-                  onClick={ () => moveIt(-1) }
-                  />
-              )
-            }
-            {
-              index !== IDList.length - 1
-              && (
-                <div
-                  className={ prefix('group-action-move-down') }
-                  onClick={ () => moveIt(1) }
-                  />
-              )
-            }
-            {
-              index !== 0
-              && (
-                <div
-                  className={ prefix('group-action-move-to-first') }
-                  onClick={ () => moveIt(-Infinity) }
-                  />
-              )
-            }
-            {
-              index !== IDList.length - 1
-              && (
-                <div
-                  className={ prefix('group-action-move-to-last') }
-                  onClick={ () => moveIt(Infinity) }
-                  />
-              )
-            }
-          </div>,
-        ])
-
-        groupsAPI = () => mapObject(this.groups, (formName, groupValue) => {
-          const {
-            Com,
-            field,
-            IDRefMap,
-            IDList,
-            Form,
-            formProps = {},
-          } = groupValue;
-
-          const addItem = (
-            add = this.addItem,
-          ) => add({
-            getGroup: () => groupValue,
-            render: this.topFormRender,
-          });
-
-          const deleteItem = (
-            ID,
-            deleteItemFun = this.deleteItem,
-          ) => deleteItemFun({
-            ID,
-            getGroup: () => groupValue,
-            render: this.topFormRender,
-          });
-
-          const moveItem = (
-            ID,
-            offset,
-            move = this.moveItem,
-          ) => move({
-            ID,
-            offset,
-            getGroup: () => groupValue,
-            render: this.topFormRender,
-          });
-
-          const doAction = fun => fun({
-            getGroup: () => groupValue,
-            render: this.topFormRender,
-          });
-
-          const group = {
-            map: (mapGroup = this.mapGroup) => IDList.map((ID, index) => (
-              <div
-                key={ ID }
-                className={ `${prefix('group-item-wrap')}` }>
-                {
-                  mapGroup({
-                    ID,
-                    index,
-                    Com,
-                    field,
-                    IDRefMap,
-                    IDList,
-                    Form: {
-                      FormCom: Form,
-                      formProps: {
-                        ...formProps,
-                        ...((this.groups[formName].IDRefMap[ID] || {}).props || {}),
-                        ID,
-                      },
-                    },
-                    deleteIt: () => deleteItem(ID),
-                    moveIt: offset => moveItem(ID, offset),
-                    formProps,
-                  })
-                }
-              </div>
-            )),
-            render: (
-              renderGroup = ele => (
-                <div className={ `${prefix('group')}` }>
-                  <div className={ `${prefix('group-ele')}` }>
-                    {ele}
-                  </div>
-                  <div
-                    className={ prefix('group-action-add') }
-                    onClick={ () => addItem() }
-                    />
-                </div>
-              ),
-              children = group.map(),
-            ) => (
-              <div className={ `${prefix('group-wrap')}` }>
-                {renderGroup(children)}
-              </div>
-            ),
-            addItem,
-            deleteItem,
-            moveItem,
-            doAction,
-          };
-
-          return { [formName]: group };
-        })
-
-        subFormsAPI = () => mapObject(this.subForms, (formName, { Form }) => ({
-          [formName]: Form,
-        }))
-
         render() {
           const { catchRef = () => {}, ...others } = this.props;
           return (
@@ -602,8 +426,13 @@ function createForm({
                     dinoForm={ {
                       ...this.createDinoFormApi(),
                       fragments: this.fragments,
-                      groups: this.groupsAPI(),
-                      subForms: this.subFormsAPI(),
+                      groups: groupsAPI({
+                        groups: this.groups,
+                        render: this.topFormRender,
+                        setID: () => this.ID,
+                        getID: (ID) => { this.ID = ID; },
+                      }),
+                      subForms: subFormsAPI({ subForms: this.subForms }),
                     } }
                     />
                 ),
