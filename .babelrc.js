@@ -1,15 +1,18 @@
 const package =  require('./package.json');
 
+const BABEL_ENV = process.env.BABEL_ENV;
+console.log(process.env.BABEL_ENV);
+const isESM = BABEL_ENV === 'es';
+
 module.exports = {
   "presets": [
     "@babel/preset-react",
     [
       "@babel/preset-env",
       {
-        modules: false, //es
-        // modules: "commonjs", //commonjs
+        modules: isESM ? false : 'commonjs',
         "targets": {
-          "esmodules": true,
+          "esmodules": isESM,
           "browsers": package.browserslist,
         }
       }
@@ -23,7 +26,7 @@ module.exports = {
         "corejs": 2,
         "helpers": true,
         "regenerator": true,
-        "useESModules": true
+        "useESModules": isESM
       }
     ]
   ]

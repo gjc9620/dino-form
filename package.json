@@ -14,10 +14,11 @@
   ],
   "main": "lib/index",
   "module": "es/index",
+  "jsnext:main": "es/index",
   "scripts": {
     "dev": "webpack-dev-server --config ./devServer.js --watch --open --mode development",
-    "build:es": "rm -rf ./es/* && npx babel ./src --out-dir ./es --source-maps inline",
-    "build:cjs": "rm -rf ./lib/* && npx babel ./src --out-dir ./lib --source-maps inline",
+    "build:es": "rm -rf ./es/* && BABEL_ENV=es npx babel ./src --out-dir ./es --source-maps inline",
+    "build:cjs": "rm -rf ./lib/* && BABEL_ENV=cjs npx babel ./src --out-dir ./lib --source-maps inline",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
