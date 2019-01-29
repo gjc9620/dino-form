@@ -1,2 +1,6 @@
 # dino-form
 
+##todo
+  getValue
+
+
