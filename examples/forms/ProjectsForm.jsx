@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import createForm from '../../src/createForm.jsx';
+import createForm from '../../es';
+
 import {
   DinoInput,
   DinoInputNumber,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import createForm from '../../src/createForm.jsx';
+import createForm from '../../es';
 import WorkHistoryForm from './WorkHistoryForm.jsx';
 
 import {

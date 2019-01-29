@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import createDinoFormStore from './DinoFormStore.js';
+import createDinoFormStore from './DinoFormStore';
 import {
   createFromItem,
   createDinoFormSubForm,
@@ -7,9 +7,9 @@ import {
   createFragments,
   groupsAPI,
   subFormsAPI,
-} from './DinoFormHelper.jsx';
+} from './DinoFormHelper';
 
-import { mapObject, mapObjectAsync } from './util.js';
+import { mapObject, mapObjectAsync } from './util';
 
 class WrapCom extends Component {
   render() {

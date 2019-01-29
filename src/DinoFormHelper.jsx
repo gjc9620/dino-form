@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { prefix, mapObject } from './util';
-import DinoFormItem from './DinoFormItem.jsx';
+import DinoFormItem from './DinoFormItem';
 
 export const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
