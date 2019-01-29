@@ -1,7 +1,7 @@
 {
   "name": "dino-form",
   "version": "0.0.3",
-  "description": "",
+  "description": "\uD83E\uDD2AReact form solution! Use it to reduce duplicate code!\uD83D\uDE80 https://codesandbox.io/s/23rl65mnzr\n",
   "browserslist": [
     "cover 99.5%",
     "maintained node versions",
