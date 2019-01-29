@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Input, InputNumber, TimePicker } from 'antd';
 import { InputItem } from 'antd-mobile';
-import dinoFromItemify from '../es/dinoFromItemify';
+import { dinoFromItemify } from '../es';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import 'antd-mobile/dist/antd-mobile.css';
 
