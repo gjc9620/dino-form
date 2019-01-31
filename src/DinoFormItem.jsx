@@ -118,7 +118,7 @@ class DinoFormItem extends React.Component {
         if (event) {
           return {
             [propsKey](value, ...args) {
-              propsValue();
+              propsValue(value, ...args);
               return event(value, ...args);
             },
           };
