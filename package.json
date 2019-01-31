@@ -21,7 +21,7 @@
     "build:cjs": "rm -rf ./lib/* && BABEL_ENV=cjs npx babel ./src --out-dir ./lib --source-maps inline",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:es && npm run build:cjs",
-    "buildToTest": "npm run build && cp -rf /Users/gujiacheng/myobj/dino-form/es/* /Users/gujiacheng/obj/icare-magi/node_modules/dino-form/es"
+    "buildToTest": "npm run build && cp -rf /Users/gujiacheng/myobj/dino-form/es/* /Users/gujiacheng/obj/icare-magi/node_modules/dino-form/es && cp -rf /Users/gujiacheng/myobj/dino-form/lib/* /Users/gujiacheng/obj/icare-magi/node_modules/dino-form/lib"
   },
   "repository": {
     "type": "git",
