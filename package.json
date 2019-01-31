@@ -19,7 +19,9 @@
     "dev": "webpack-dev-server --config ./devServer.js --watch --open --mode development",
     "build:es": "rm -rf ./es/* && BABEL_ENV=es npx babel ./src --out-dir ./es --source-maps inline",
     "build:cjs": "rm -rf ./lib/* && BABEL_ENV=cjs npx babel ./src --out-dir ./lib --source-maps inline",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:es && npm run build:cjs",
+    "buildToTest": "npm run build && cp -rf /Users/gujiacheng/myobj/dino-form/es/* /Users/gujiacheng/obj/icare-magi/node_modules/dino-form/es"
   },
   "repository": {
     "type": "git",
