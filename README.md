@@ -17,8 +17,8 @@
 * dinoFormRef
 
 #### createForm
-`
+```
   import createForm from 'dino-form';
   createForm(parts)(View)(Wrap)
-`
+```
 
