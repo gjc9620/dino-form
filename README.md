@@ -1,11 +1,11 @@
-# dino-form
+# Dino-form
 
-##todo
+## Todo
   getValue
 
 
 
-#### dinoForm
+#### DinoForm
 * FromItem
 * setFieldsValue
 * setFullValues
@@ -16,9 +16,11 @@
 * store
 * dinoFormRef
 
-#### createForm
+#### CreateForm
 ```
   import createForm from 'dino-form';
   createForm(parts)(View)(Wrap)
 ```
+
+#### Why?
 
