@@ -22,6 +22,7 @@ export default function dinoFromItemify(Com) {
         initValue,
         rules = [],
         resetWhenUnmount,
+        renderDinoFormItem,
         ...others
       } = this.props;
 
@@ -33,6 +34,7 @@ export default function dinoFromItemify(Com) {
           Com={ Com }
           comProps={ others }
           resetWhenUnmount={ resetWhenUnmount }
+          renderDinoFormItem={ renderDinoFormItem }
           rules={ [
             ...(
               required
