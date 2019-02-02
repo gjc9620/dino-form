@@ -1,7 +1,7 @@
 import React from 'react';
 import { isEventObj, getValueFromEvent } from './util';
 
-export default function dinoFromItemify(Com, fromItemInitProps = {}, comInitProps = {}) {
+export default function dinoFromItemify(Com) {
   return class DinoComponent extends React.Component {
     // constructor(props) {
     //   super(props);
@@ -27,15 +27,11 @@ export default function dinoFromItemify(Com, fromItemInitProps = {}, comInitProp
 
       return (
         <FromItem
-          { ...fromItemInitProps }
           label={ label }
           field={ field }
           initValue={ initValue }
           Com={ Com }
-          comProps={ {
-            ...comInitProps,
-            ...others,
-          } }
+          comProps={ others }
           resetWhenUnmount={ resetWhenUnmount }
           rules={ [
             ...(
