@@ -1,7 +1,7 @@
 import React from 'react';
 import { isEventObj, getValueFromEvent } from './util';
 
-export default function dinoFromItemify(Com) {
+export default function dinoFromItemify(Com, fromItemInitProps = {}, comInitProps = {}) {
   return class DinoComponent extends React.Component {
     // constructor(props) {
     //   super(props);
