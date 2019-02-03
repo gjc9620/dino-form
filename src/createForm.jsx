@@ -176,6 +176,7 @@ function createForm({
         }
 
         setFullValues = async (values = {}, maps = {}) => {
+          
           const findGroups = field => Object.values(
             this.groups,
           ).find(group => group.field === field);
