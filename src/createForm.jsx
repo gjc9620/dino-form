@@ -337,8 +337,8 @@ function createForm({
                       groups: groupsAPI({
                         groups: this.groups,
                         render: this.topFormRender,
-                        setID: () => this.ID,
-                        getID: (ID) => { this.ID = ID; },
+                        getID: () => this.ID,
+                        setID: (ID) => { this.ID = ID; },
                       }),
                       subForms: subFormsAPI({ subForms: this.subForms }),
                     } }

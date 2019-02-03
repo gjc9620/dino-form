@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import createForm from '../../es';
+import createForm from '../../src';
 
 import {
   DinoInput,
