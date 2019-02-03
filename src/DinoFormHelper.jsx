@@ -241,6 +241,7 @@ export const groupsAPI = ({
   });
 
   const group = {
+    IDList,
     map: (mapGroup = dinoFormMapGroup) => IDList.map((ID, index) => (
       <div
         key={ ID }
