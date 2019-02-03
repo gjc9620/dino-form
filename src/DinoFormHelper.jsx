@@ -107,6 +107,7 @@ export const dinoFormAddItem = ({
   getGroup().IDList.push(ID);
   setID(ID + 1);
   render();
+  return ID;
 };
 
 export const dinoFormDeleteItem = ({ ID: deleteID, getGroup, render }) => {
