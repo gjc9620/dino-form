@@ -3,6 +3,7 @@ body {
   padding: 10px;
   user-select: none;
   -webkit-user-select: none;
+  overflow-x: hidden;
 }
 
 .dino-form-group-actions {

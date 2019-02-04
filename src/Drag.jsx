@@ -41,15 +41,15 @@ export default class Drag extends Component {
   addListener = ({ move = true } = {}) => {
     move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleMouseUp);
-    // window.addEventListener('mousemove', this.handleMouseMove);
-    // window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mouseup', this.handleMouseUp);
   }
 
   removeListener = () => {
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleMouseUp);
-    // window.removeEventListener('mousemove', this.handleMouseMove);
-    // window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   handleStart = (e, func = () => {}) => {
@@ -73,6 +73,7 @@ export default class Drag extends Component {
       const event = e.touches[0];
       const { pageY } = event;
 
+      console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
         mouseY: pressY,
@@ -87,6 +88,7 @@ export default class Drag extends Component {
     const { pageY } = e;
 
     this.handleStart(e, () => {
+      console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
         mouseY: pressY,
@@ -100,6 +102,8 @@ export default class Drag extends Component {
     console.log('handleTouchMove');
     const { isPressed } = this.state;
 
+    pressTimer = clearTimeout(pressTimer);
+
     if (isPressed) {
       e.preventDefault();
       this.handleMouseMove(e.touches[0]);
@@ -110,6 +114,8 @@ export default class Drag extends Component {
     console.log('handleMouseMove');
     const { pageY } = event;
 
+    // pressTimer = clearTimeout(pressTimer);
+
     const {
       isPressed, topDeltaY, originalPosOfLastPressed,
     } = this.state;
@@ -117,6 +123,7 @@ export default class Drag extends Component {
     const { order = [], children } = this.props;
 
     if (isPressed) {
+      // console.log(pageY,  topDeltaY);
       const mouseY = pageY - topDeltaY;
       const currentRow = clamp(Math.round(mouseY / height), 0, itemsCount - 1);
       let newOrder = order;
