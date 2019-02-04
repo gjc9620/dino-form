@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.2.0",
+    "react-beautiful-dnd": "^6.0.2",
     "react-motion": "^0.5.2"
   }
 }

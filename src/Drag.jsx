@@ -1,192 +1,106 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion';
-import { prefix } from './util';
+import ReactDOM from 'react-dom';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-function reinsert(arr, from, to) {
-  const _arr = arr.slice(0);
-  const val = _arr[from];
-  _arr.splice(from, 1);
-  _arr.splice(to, 0, val);
-  return _arr;
-}
+// fake data generator
+const getItems = count =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k}`,
+    content: `item ${k}`,
+  }));
 
-function clamp(n, min, max) {
-  return Math.max(Math.min(n, max), min);
-}
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  
+  return result;
+};
 
-const height = 310;
+const grid = 8;
 
-const springConfig = { stiffness: 200, damping: 20 };
-const itemsCount = 4;
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: 'none',
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+  
+  // change background colour if dragging
+  background: isDragging ? 'lightgreen' : 'grey',
+  
+  // styles we need to apply on draggables
+  ...draggableStyle,
+});
 
-let pressTimer;
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  padding: grid,
+  width: 250,
+});
 
-export default class Drag extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
-    // const { IDList } = props;
     this.state = {
-      topDeltaY: 0,
-      mouseY: 0,
-      isPressed: false,
-      originalPosOfLastPressed: 0,
-      // order: IDList,
+      items: getItems(10),
     };
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
-
-  componentDidMount() {
-
-  }
-
-  addListener = ({ move = true } = {}) => {
-    move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-    window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
-  }
-
-  removeListener = () => {
-    window.removeEventListener('touchmove', this.handleTouchMove);
-    window.removeEventListener('touchend', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleMouseUp);
-  }
-
-  handleStart = (e, func = () => {}) => {
-    this.removeListener();
-    this.addListener();
-
-    const a = +new Date();
-    if (!pressTimer) {
-      pressTimer = window.setTimeout(() => {
-        pressTimer = window.clearTimeout(pressTimer);
-        console.log(+new Date() - a);
-        func();
-      }, 700);
+  
+  onDragEnd(result) {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
     }
-  }
-
-  handleTouchStart = (e, key, pressY) => {
-    console.log('handleTouchStart');
-    e.persist();
-    this.handleStart(e, () => {
-      const event = e.touches[0];
-      const { pageY } = event;
-
-      console.log(pageY, pressY);
-      this.setState({
-        topDeltaY: pageY - pressY,
-        mouseY: pressY,
-        isPressed: true,
-        originalPosOfLastPressed: key,
-      });
+    
+    const items = reorder(
+      this.state.items,
+      result.source.index,
+      result.destination.index
+    );
+    
+    this.setState({
+      items,
     });
-  };
-
-  handleMouseDown = (e, pos, pressY) => {
-    console.log('handleMouseDown');
-    const { pageY } = e;
-
-    this.handleStart(e, () => {
-      console.log(pageY, pressY);
-      this.setState({
-        topDeltaY: pageY - pressY,
-        mouseY: pressY,
-        isPressed: true,
-        originalPosOfLastPressed: pos,
-      });
-    });
-  };
-
-  handleTouchMove = (e) => {
-    console.log('handleTouchMove');
-    const { isPressed } = this.state;
-
-    pressTimer = clearTimeout(pressTimer);
-
-    if (isPressed) {
-      e.preventDefault();
-      this.handleMouseMove(e.touches[0]);
-    }
-  };
-
-  handleMouseMove = (event) => {
-    console.log('handleMouseMove');
-    const { pageY } = event;
-
-    // pressTimer = clearTimeout(pressTimer);
-
-    const {
-      isPressed, topDeltaY, originalPosOfLastPressed,
-    } = this.state;
-
-    const { order = [], children } = this.props;
-
-    if (isPressed) {
-      // console.log(pageY,  topDeltaY);
-      const mouseY = pageY - topDeltaY;
-      const currentRow = clamp(Math.round(mouseY / height), 0, itemsCount - 1);
-      let newOrder = order;
-
-      if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
-        newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
-      }
-
-      this.setState({ mouseY, order: newOrder });
-    }
-  };
-
-  handleMouseUp = (e) => {
-    console.log('handleMouseUp');
-
-    pressTimer = window.clearTimeout(pressTimer);
-    this.setState({ isPressed: false, topDeltaY: 0 });
-    this.removeListener();
-  };
-
+  }
+  
+  // Normally you would want to split things out into separate components.
+  // But in this example everything is just done in one place for simplicity
   render() {
-    const {
-      mouseY, isPressed, originalPosOfLastPressed,
-    } = this.state;
-
-    const { order = [], children } = this.props;
-
     return (
-      <div className="demo8">
-        {order.map((ID, index) => {
-          const style = originalPosOfLastPressed === ID && isPressed
-            ? {
-              scale: spring(1.1, springConfig),
-              shadow: spring(16, springConfig),
-              y: mouseY,
-            }
-            : {
-              scale: spring(1, springConfig),
-              shadow: spring(0, springConfig),
-              y: spring(0, springConfig),
-            };
-          return (
-            <Motion style={ style } key={ ID }>
-              {({ scale, shadow, y }) => (
-                <div
-                  onMouseDown={ (event) => {
-                    this.handleMouseDown(event, ID, y);
-                  } }
-                  onTouchStart={ event => this.handleTouchStart(event, ID, y) }
-                  className={ `${prefix('group-item-wrap')}` }
-                  style={ {
-                    boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
-                    transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                    WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                    zIndex: ID === originalPosOfLastPressed ? 99 : ID,
-                  } }>
-                  { children[index] }
-                </div>
-              )}
-            </Motion>
-          );
-        })}
-      </div>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
+              {this.state.items.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getItemStyle(
+                        snapshot.isDragging,
+                        provided.draggableProps.style
+                      )}
+                    >
+                      {item.content}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     );
   }
 }
+
+// Put the thing into the DOM!
+ReactDOM.render(<App />, document.getElementById('root'));

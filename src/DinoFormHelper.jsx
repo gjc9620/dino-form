@@ -245,31 +245,28 @@ export const groupsAPI = ({
   const group = {
     IDList,
     map: (mapGroup = dinoFormMapGroup) => (
-      <Drag order={ IDList } action={moveItem}>
-        {
-          IDList.map((ID, index) => (
-            mapGroup({
+      IDList.map((ID, index) => (
+        mapGroup({
+          ID,
+          index,
+          Com,
+          field,
+          IDRefMap,
+          IDList,
+          Form: {
+            FormCom: Form,
+            formProps: {
+              ...formProps,
+              ...((groups[formName].IDRefMap[ID] || {}).props || {}),
               ID,
-              index,
-              Com,
-              field,
-              IDRefMap,
-              IDList,
-              Form: {
-                FormCom: Form,
-                formProps: {
-                  ...formProps,
-                  ...((groups[formName].IDRefMap[ID] || {}).props || {}),
-                  ID,
-                },
-              },
-              deleteIt: () => deleteItem(ID),
-              moveIt: offset => moveItem(ID, offset),
-              formProps,
-            })
-          ))
-        }
-      </Drag>
+            },
+          },
+          deleteIt: () => deleteItem(ID),
+          moveIt: offset => moveItem(ID, offset),
+          formProps,
+        })
+      ))
+
     ),
     render: (
       renderGroup = ele => (
