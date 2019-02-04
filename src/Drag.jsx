@@ -16,7 +16,7 @@ function clamp(n, min, max) {
 
 const height = 310;
 
-const springConfig = { stiffness: 300, damping: 20 };
+const springConfig = { stiffness: 200, damping: 20 };
 const itemsCount = 4;
 
 let pressTimer;
@@ -40,8 +40,8 @@ export default class Drag extends Component {
 
   addListener = ({ move = true } = {}) => {
     move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-    move && window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('touchend', this.handleMouseUp);
+    window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
   }
 
@@ -53,19 +53,20 @@ export default class Drag extends Component {
   }
 
   handleStart = (e, func = () => {}) => {
-    this.addListener({ move: true });
+    this.addListener();
 
-    var a = +new Date();
+    const a = +new Date();
     if (!pressTimer) {
       pressTimer = window.setTimeout(() => {
         pressTimer = window.clearTimeout(pressTimer);
         console.log(+new Date() - a);
         func();
-      }, 350);
+      }, 800);
     }
   }
 
   handleTouchStart = (e, key, pressY) => {
+    console.log('handleTouchStart');
     e.persist();
     this.handleStart(e, () => {
       const event = e.touches[0];
@@ -81,6 +82,7 @@ export default class Drag extends Component {
   };
 
   handleMouseDown = (e, pos, pressY) => {
+    console.log('handleMouseDown');
     const { pageY } = e;
 
     this.handleStart(e, () => {
@@ -94,6 +96,7 @@ export default class Drag extends Component {
   };
 
   handleTouchMove = (e) => {
+    console.log('handleTouchMove');
     const { isPressed } = this.state;
 
     if (isPressed) {
@@ -103,6 +106,7 @@ export default class Drag extends Component {
   };
 
   handleMouseMove = (event) => {
+    console.log('handleMouseMove');
     const { pageY } = event;
 
     const {
@@ -125,6 +129,8 @@ export default class Drag extends Component {
   };
 
   handleMouseUp = (e) => {
+    console.log('handleMouseUp');
+
     pressTimer = window.clearTimeout(pressTimer);
     this.setState({ isPressed: false, topDeltaY: 0 });
     this.removeListener();
