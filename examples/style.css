@@ -1,6 +1,7 @@
 
 body {
   padding: 10px;
+  user-select: none;
 }
 
 .dino-form-group-actions {
@@ -42,4 +43,6 @@ body {
 .dino-form-group-item-wrap {
   margin-bottom: 20px;
   border-left: 1px solid black;
+  background: beige;
+  position: relative;
 }

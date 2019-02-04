@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { prefix, mapObject } from './util';
 import DinoFormItem from './DinoFormItem';
+import Drag from './Drag';
 
 export const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
@@ -243,33 +244,33 @@ export const groupsAPI = ({
 
   const group = {
     IDList,
-    map: (mapGroup = dinoFormMapGroup) => IDList.map((ID, index) => (
-      <div
-        key={ ID }
-        className={ `${prefix('group-item-wrap')}` }>
+    map: (mapGroup = dinoFormMapGroup) => (
+      <Drag order={ IDList } action={moveItem}>
         {
-          mapGroup({
-            ID,
-            index,
-            Com,
-            field,
-            IDRefMap,
-            IDList,
-            Form: {
-              FormCom: Form,
-              formProps: {
-                ...formProps,
-                ...((groups[formName].IDRefMap[ID] || {}).props || {}),
-                ID,
+          IDList.map((ID, index) => (
+            mapGroup({
+              ID,
+              index,
+              Com,
+              field,
+              IDRefMap,
+              IDList,
+              Form: {
+                FormCom: Form,
+                formProps: {
+                  ...formProps,
+                  ...((groups[formName].IDRefMap[ID] || {}).props || {}),
+                  ID,
+                },
               },
-            },
-            deleteIt: () => deleteItem(ID),
-            moveIt: offset => moveItem(ID, offset),
-            formProps,
-          })
+              deleteIt: () => deleteItem(ID),
+              moveIt: offset => moveItem(ID, offset),
+              formProps,
+            })
+          ))
         }
-      </div>
-    )),
+      </Drag>
+    ),
     render: (
       renderGroup = ele => (
         <div className={ `${prefix('group')}` }>

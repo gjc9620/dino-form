@@ -1,7 +1,7 @@
 {
   "name": "dino-form",
   "version": "0.0.3",
-  "description": "\uD83E\uDD2AReact form solution! Use it to reduce duplicate code!\uD83D\uDE80 https://codesandbox.io/s/23rl65mnzr\n",
+  "description": "🤪React form solution! Use it to reduce duplicate code!🚀 https://codesandbox.io/s/23rl65mnzr\n",
   "browserslist": [
     "cover 99.5%",
     "maintained node versions",
@@ -68,6 +68,7 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.2.0"
+    "@babel/runtime-corejs2": "^7.2.0",
+    "react-motion": "^0.5.2"
   }
 }
