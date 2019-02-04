@@ -2,9 +2,7 @@
 body {
   padding: 10px;
   user-select: none;
-}
-
-html {
+  -webkit-user-select: none;
 }
 
 .dino-form-group-actions {
