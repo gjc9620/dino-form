@@ -55,11 +55,13 @@ export default class Drag extends Component {
   handleStart = (e, func = () => {}) => {
     this.addListener({ move: true });
 
+    var a = +new Date();
     if (!pressTimer) {
       pressTimer = window.setTimeout(() => {
         pressTimer = window.clearTimeout(pressTimer);
+        console.log(+new Date() - a);
         func();
-      }, 500);
+      }, 350);
     }
   }
 
