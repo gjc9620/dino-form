@@ -19,6 +19,8 @@ const height = 310;
 const springConfig = { stiffness: 300, damping: 20 };
 const itemsCount = 4;
 
+let pressTimer;
+
 export default class Drag extends Component {
   constructor(props) {
     super(props);
@@ -30,17 +32,16 @@ export default class Drag extends Component {
       originalPosOfLastPressed: 0,
       // order: IDList,
     };
-    this.pressTimer = undefined;
   }
 
   componentDidMount() {
 
   }
 
-  addListener = () => {
-    window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+  addListener = ({ move = true } = {}) => {
+    move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    move && window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
   }
 
@@ -52,22 +53,17 @@ export default class Drag extends Component {
   }
 
   handleStart = (e, func = () => {}) => {
-    console.log(e.target.attributes.dinoFormResponded);
-    if (e.target.attributes.dinoFormResponded) return;
-    e.target.attributes.dinoFormResponded = true;
-    this.addListener();
+    this.addListener({ move: true });
 
-    console.log(this.pressTimer);
-    if (!this.pressTimer) {
-      this.pressTimer = window.setTimeout(() => {
-        console.log(this);
+    if (!pressTimer) {
+      pressTimer = window.setTimeout(() => {
+        pressTimer = window.clearTimeout(pressTimer);
         func();
       }, 500);
     }
   }
 
   handleTouchStart = (e, key, pressY) => {
-    console.log('handleTouchStart', e);
     e.persist();
     this.handleStart(e, () => {
       const event = e.touches[0];
@@ -83,7 +79,6 @@ export default class Drag extends Component {
   };
 
   handleMouseDown = (e, pos, pressY) => {
-    console.log('handleMouseDown', e);
     const { pageY } = e;
 
     this.handleStart(e, () => {
@@ -128,8 +123,7 @@ export default class Drag extends Component {
   };
 
   handleMouseUp = (e) => {
-    console.log('handleMouseUp');
-    clearTimeout(this.pressTimer);
+    pressTimer = window.clearTimeout(pressTimer);
     this.setState({ isPressed: false, topDeltaY: 0 });
     this.removeListener();
   };
@@ -140,8 +134,6 @@ export default class Drag extends Component {
     } = this.state;
 
     const { order = [], children } = this.props;
-
-    // console.log(order);
 
     return (
       <div className="demo8">
@@ -163,7 +155,6 @@ export default class Drag extends Component {
               {({ scale, shadow, y }) => (
                 <div
                   onMouseDown={ (event) => {
-                    console.log(event);
                     this.handleMouseDown(event, ID, y);
                   } }
                   onTouchStart={ event => this.handleTouchStart(event, ID, y) }
