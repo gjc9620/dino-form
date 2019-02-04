@@ -30,6 +30,7 @@ export default class Drag extends Component {
       originalPosOfLastPressed: 0,
       // order: IDList,
     };
+    this.pressTimer = undefined;
   }
 
   componentDidMount() {
@@ -50,24 +51,58 @@ export default class Drag extends Component {
     window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
-  handleTouchStart = (key, pressLocation, e) => {
-    this.handleMouseDown(key, pressLocation, e.touches[0]);
+  handleStart = (e, func = () => {}) => {
+    console.log(e.target.attributes.dinoFormResponded);
+    if (e.target.attributes.dinoFormResponded) return;
+    e.target.attributes.dinoFormResponded = true;
     this.addListener();
+
+    console.log(this.pressTimer);
+    if (!this.pressTimer) {
+      this.pressTimer = window.setTimeout(() => {
+        console.log(this);
+        func();
+      }, 500);
+    }
+  }
+
+  handleTouchStart = (e, key, pressY) => {
+    console.log('handleTouchStart', e);
+    e.persist();
+    this.handleStart(e, () => {
+      const event = e.touches[0];
+      const { pageY } = event;
+
+      this.setState({
+        topDeltaY: pageY - pressY,
+        mouseY: pressY,
+        isPressed: true,
+        originalPosOfLastPressed: key,
+      });
+    });
   };
 
-  handleMouseDown = (pos, pressY, { pageY }) => {
-    this.setState({
-      topDeltaY: pageY - pressY,
-      mouseY: pressY,
-      isPressed: true,
-      originalPosOfLastPressed: pos,
+  handleMouseDown = (e, pos, pressY) => {
+    console.log('handleMouseDown', e);
+    const { pageY } = e;
+
+    this.handleStart(e, () => {
+      this.setState({
+        topDeltaY: pageY - pressY,
+        mouseY: pressY,
+        isPressed: true,
+        originalPosOfLastPressed: pos,
+      });
     });
-    this.addListener();
   };
 
   handleTouchMove = (e) => {
-    e.preventDefault();
-    this.handleMouseMove(e.touches[0]);
+    const { isPressed } = this.state;
+
+    if (isPressed) {
+      e.preventDefault();
+      this.handleMouseMove(e.touches[0]);
+    }
   };
 
   handleMouseMove = (event) => {
@@ -92,7 +127,9 @@ export default class Drag extends Component {
     }
   };
 
-  handleMouseUp = () => {
+  handleMouseUp = (e) => {
+    console.log('handleMouseUp');
+    clearTimeout(this.pressTimer);
     this.setState({ isPressed: false, topDeltaY: 0 });
     this.removeListener();
   };
@@ -125,8 +162,11 @@ export default class Drag extends Component {
             <Motion style={ style } key={ ID }>
               {({ scale, shadow, y }) => (
                 <div
-                  onMouseDown={ this.handleMouseDown.bind(null, ID, y) }
-                  onTouchStart={ this.handleTouchStart.bind(null, ID, y) }
+                  onMouseDown={ (event) => {
+                    console.log(event);
+                    this.handleMouseDown(event, ID, y);
+                  } }
+                  onTouchStart={ event => this.handleTouchStart(event, ID, y) }
                   className={ `${prefix('group-item-wrap')}` }
                   style={ {
                     boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
