@@ -4,6 +4,9 @@ body {
   user-select: none;
 }
 
+html {
+}
+
 .dino-form-group-actions {
   display: flex;
 }

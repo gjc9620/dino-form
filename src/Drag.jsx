@@ -41,18 +41,19 @@ export default class Drag extends Component {
   addListener = ({ move = true } = {}) => {
     move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
+    // window.addEventListener('mousemove', this.handleMouseMove);
+    // window.addEventListener('mouseup', this.handleMouseUp);
   }
 
   removeListener = () => {
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    // window.removeEventListener('mousemove', this.handleMouseMove);
+    // window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   handleStart = (e, func = () => {}) => {
+    this.removeListener();
     this.addListener();
 
     const a = +new Date();
@@ -61,7 +62,7 @@ export default class Drag extends Component {
         pressTimer = window.clearTimeout(pressTimer);
         console.log(+new Date() - a);
         func();
-      }, 800);
+      }, 700);
     }
   }
 
@@ -155,8 +156,7 @@ export default class Drag extends Component {
             : {
               scale: spring(1, springConfig),
               shadow: spring(0, springConfig),
-              // y: spring(order.indexOf(ID) * height, springConfig),
-              y: 0,
+              y: spring(0, springConfig),
             };
           return (
             <Motion style={ style } key={ ID }>
