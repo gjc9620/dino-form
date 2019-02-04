@@ -32,6 +32,7 @@ module.exports = {
     ],
   },
   devServer: {
+    disableHostCheck: true,
     compress: true,
     port: 9000,
   },
