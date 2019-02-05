@@ -17,7 +17,7 @@ function clamp(n, min, max) {
 const height = 310;
 
 const springConfig = { stiffness: 200, damping: 20 };
-const itemsCount = 3;
+const itemsCount = 4;
 
 let pressTimer;
 
@@ -130,12 +130,17 @@ export default class Drag extends Component {
       if (mouseY < 0) {
         row = (itemsCount - 1) * height + mouseY;
         row = Math.round(row / height);
-        console.log('row', row);
       }
+      console.log('row', row);
 
       const currentRow = clamp(row, 0, itemsCount - 1);
       console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
       // console.log(mouseY, mouseY / height, currentRow);
+  
+      event
+      this.container
+      debugger
+      const { containerHeight, containerTop } = this.container;
 
       const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
 
@@ -171,6 +176,10 @@ export default class Drag extends Component {
     this.removeListener();
   };
 
+  getContainer = (ref) => {
+    this.container = ref;
+  }
+
   render() {
     const {
       mouseY, isPressed, originalPosOfLastPressed, newOrder,
@@ -180,7 +189,7 @@ export default class Drag extends Component {
 
 
     return (
-      <div className="demo8">
+      <div className="demo8" ref={this.getContainer}>
         {order.map((ID, index) => {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
