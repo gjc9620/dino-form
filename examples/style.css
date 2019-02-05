@@ -43,8 +43,10 @@ body {
   border-left: 1px solid black;
 }
 .dino-form-group-item-wrap {
-  margin-bottom: 20px;
-  border-left: 1px solid black;
+  /*margin-bottom: 20px;*/
+  border: 1px solid black;
   background: beige;
   position: relative;
+  height: 200px;
+  overflow: auto;
 }

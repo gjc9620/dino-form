@@ -14,7 +14,7 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const height = 310;
+const height = 200;
 
 const springConfig = { stiffness: 200, damping: 20 };
 const itemsCount = 4;
@@ -30,12 +30,22 @@ export default class Drag extends Component {
       mouseY: 0,
       isPressed: false,
       originalPosOfLastPressed: 0,
-      newOrder: order,
+      order,
+      newOrder: [...order],
     };
   }
 
   componentDidMount() {
 
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { order } = this.state;
+
+    if (JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
+      this.setState({ newOrder: nextProps.order });
+      this.changeDone();
+    }
   }
 
   addListener = ({ move = true } = {}) => {
@@ -60,20 +70,20 @@ export default class Drag extends Component {
     if (!pressTimer) {
       pressTimer = window.setTimeout(() => {
         pressTimer = window.clearTimeout(pressTimer);
-        console.log(+new Date() - a);
+        // console.log(+new Date() - a);
         func();
       }, 700);
     }
   }
 
   handleTouchStart = (e, key, pressY) => {
-    console.log('handleTouchStart');
+    // console.log('handleTouchStart');
     e.persist();
     this.handleStart(e, () => {
       const event = e.touches[0];
       const { pageY } = event;
 
-      console.log(pageY, pressY);
+      // console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
         mouseY: pressY,
@@ -84,11 +94,11 @@ export default class Drag extends Component {
   };
 
   handleMouseDown = (e, pos, pressY) => {
-    console.log('handleMouseDown');
+    // console.log('handleMouseDown');
     const { pageY } = e;
 
     this.handleStart(e, () => {
-      console.log(pageY, pressY);
+      // console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
         mouseY: pressY,
@@ -99,20 +109,19 @@ export default class Drag extends Component {
   };
 
   handleTouchMove = (e) => {
-    console.log('handleTouchMove');
+    // console.log('handleTouchMove');
     const { isPressed } = this.state;
 
     pressTimer = clearTimeout(pressTimer);
 
     if (isPressed) {
-      const { onDrop = () => {} } = this.props;
       e.preventDefault();
       this.handleMouseMove(e.touches[0]);
     }
   };
 
   handleMouseMove = (event) => {
-    console.log('handleMouseMove');
+    // console.log('handleMouseMove');
     const { pageY } = event;
 
     // pressTimer = clearTimeout(pressTimer);
@@ -131,16 +140,16 @@ export default class Drag extends Component {
         row = (itemsCount - 1) * height + mouseY;
         row = Math.round(row / height);
       }
-      console.log('row', row);
+      // console.log('row', row);
 
       const currentRow = clamp(row, 0, itemsCount - 1);
-      console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
+      // console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
       // console.log(mouseY, mouseY / height, currentRow);
-  
-      event
-      this.container
-      debugger
-      const { containerHeight, containerTop } = this.container;
+
+      // event
+      // this.container
+      // debugger
+      // const { containerHeight, containerTop } = this.container;
 
       const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
 
@@ -168,8 +177,24 @@ export default class Drag extends Component {
     }
   };
 
+  changeDone = () => {
+    const { onDrop = () => {} } = this.props;
+    const { newOrder } = this.state;
+
+    this.setState({ newOrder: [...newOrder], order: [...newOrder] });
+    setTimeout(() => {
+      onDrop(newOrder);
+    }, 300);
+  }
+
   handleMouseUp = (e) => {
-    console.log('handleMouseUp');
+    // console.log('handleMouseUp');
+    const { isPressed } = this.state;
+
+    if (isPressed) {
+      // console.log('onDrop');
+      this.changeDone();
+    }
 
     pressTimer = window.clearTimeout(pressTimer);
     this.setState({ isPressed: false, topDeltaY: 0 });
@@ -182,14 +207,13 @@ export default class Drag extends Component {
 
   render() {
     const {
-      mouseY, isPressed, originalPosOfLastPressed, newOrder,
+      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [],
     } = this.state;
 
-    const { order = [], children } = this.props;
-
+    const { children } = this.props;
 
     return (
-      <div className="demo8" ref={this.getContainer}>
+      <div className="demo8" ref={ this.getContainer }>
         {order.map((ID, index) => {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
@@ -208,26 +232,30 @@ export default class Drag extends Component {
             : {
               scale: spring(1, springConfig),
               shadow: spring(0, springConfig),
-              y: spring(y, springConfig),
+              y: index !== newIndex ? spring(y, springConfig) : y,
             };
           return (
             <Motion style={ style } key={ ID }>
-              {({ scale, shadow, y }) => (
-                <div
-                  onMouseDown={ (event) => {
-                    this.handleMouseDown(event, ID, y);
-                  } }
-                  onTouchStart={ event => this.handleTouchStart(event, ID, y) }
-                  className={ `${prefix('group-item-wrap')}` }
-                  style={ {
-                    boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
-                    transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                    WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                    zIndex: ID === originalPosOfLastPressed ? 99 : ID,
-                  } }>
-                  { children[index] }
-                </div>
-              )}
+              {// console.log(`translate3d(0, ${y}px, 0) scale(${scale})`);
+               ({ scale, shadow, y }) => (
+                 <div
+                   onMouseDown={ (event) => {
+                     this.handleMouseDown(event, ID, y);
+                   } }
+                   onTouchStart={ event => this.handleTouchStart(event, ID, y) }
+                   className={ `${prefix('group-item-wrap')}` }
+                   style={ {
+                     boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
+                     transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                     WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                     zIndex: ID === originalPosOfLastPressed ? 99 : ID,
+                   } }>
+                   {/* { children[index] } */}
+                   {/* <div>{ID}</div> */}
+                   { children(ID, index) }
+                 </div>
+               )
+              }
             </Motion>
           );
         })}
@@ -235,3 +263,7 @@ export default class Drag extends Component {
     );
   }
 }
+
+Drag.defaultProps = {
+  onDrop: () => {},
+};

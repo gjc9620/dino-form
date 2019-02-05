@@ -245,9 +245,9 @@ export const groupsAPI = ({
   const group = {
     IDList,
     map: (mapGroup = dinoFormMapGroup) => (
-      <Drag order={ IDList } doAction={doAction}>
+      <Drag order={ IDList } onDrop={ (newIDList) => { groupValue.IDList = newIDList; render(); } }>
         {
-          IDList.map((ID, index) => (
+          (ID, index) => (
             mapGroup({
               ID,
               index,
@@ -267,7 +267,7 @@ export const groupsAPI = ({
               moveIt: offset => moveItem(ID, offset),
               formProps,
             })
-          ))
+          )
         }
       </Drag>
     ),
