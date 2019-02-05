@@ -47,6 +47,6 @@ body {
   border: 1px solid black;
   background: beige;
   position: relative;
-  height: 200px;
-  overflow: auto;
+  height: 350px;
+  /*overflow: auto;*/
 }

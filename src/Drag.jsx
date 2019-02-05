@@ -14,7 +14,7 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const height = 200;
+const height = 350;
 
 const springConfig = { stiffness: 200, damping: 20 };
 const itemsCount = 4;
@@ -217,6 +217,8 @@ export default class Drag extends Component {
         {order.map((ID, index) => {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
+
+          if (newIndex === -1) return null;
 
           if (index !== newIndex) {
             y = (newIndex - index) * height;
