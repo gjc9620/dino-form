@@ -42,9 +42,11 @@ export default class Drag extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { order } = this.state;
 
-    if (JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
+    if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
       this.setState({ newOrder: nextProps.order });
       this.changeDone();
+    }else {
+      this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
     }
   }
 
@@ -218,8 +220,6 @@ export default class Drag extends Component {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
 
-          if (newIndex === -1) return null;
-
           if (index !== newIndex) {
             y = (newIndex - index) * height;
           }
@@ -234,7 +234,7 @@ export default class Drag extends Component {
             : {
               scale: spring(1, springConfig),
               shadow: spring(0, springConfig),
-              y: index !== newIndex ? spring(y, springConfig) : y,
+              y: newIndex !== -1 && index !== newIndex ? spring(y, springConfig) : y,
             };
           return (
             <Motion style={ style } key={ ID }>
@@ -254,7 +254,7 @@ export default class Drag extends Component {
                    } }>
                    {/* { children[index] } */}
                    {/* <div>{ID}</div> */}
-                   { children(ID, index) }
+                   { children[ID] }
                  </div>
                )
               }
