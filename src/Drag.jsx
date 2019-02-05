@@ -105,6 +105,7 @@ export default class Drag extends Component {
     pressTimer = clearTimeout(pressTimer);
 
     if (isPressed) {
+      const { onDrop = () => {} } = this.props;
       e.preventDefault();
       this.handleMouseMove(e.touches[0]);
     }
@@ -123,15 +124,23 @@ export default class Drag extends Component {
     const { order = [], children } = this.props;
 
     if (isPressed) {
-      // console.log(pageY,  topDeltaY);
       const mouseY = pageY - topDeltaY;
-      const currentRow = clamp(Math.round(mouseY / height), 0, itemsCount - 1);
+
+      let row = Math.round(mouseY / height);
+      if (mouseY < 0) {
+        row = (itemsCount - 1) * height + mouseY;
+        row = Math.round(row / height);
+        console.log('row', row);
+      }
+
+      const currentRow = clamp(row, 0, itemsCount - 1);
+      console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
       // console.log(mouseY, mouseY / height, currentRow);
 
       const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
 
       // console.log(currentRow);
-      console.log(newOrder);
+      // console.log(newOrder);
 
       this.setState({ newOrder });
       this.setState({ mouseY });
