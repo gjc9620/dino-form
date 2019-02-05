@@ -17,20 +17,20 @@ function clamp(n, min, max) {
 const height = 310;
 
 const springConfig = { stiffness: 200, damping: 20 };
-const itemsCount = 4;
+const itemsCount = 3;
 
 let pressTimer;
 
 export default class Drag extends Component {
   constructor(props) {
     super(props);
-    // const { IDList } = props;
+    const { order } = props;
     this.state = {
       topDeltaY: 0,
       mouseY: 0,
       isPressed: false,
       originalPosOfLastPressed: 0,
-      // order: IDList,
+      newOrder: order,
     };
   }
 
@@ -126,25 +126,31 @@ export default class Drag extends Component {
       // console.log(pageY,  topDeltaY);
       const mouseY = pageY - topDeltaY;
       const currentRow = clamp(Math.round(mouseY / height), 0, itemsCount - 1);
-      let newOrder = order;
+      // console.log(mouseY, mouseY / height, currentRow);
 
-      if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
-        newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
+      const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
 
-        console.log(newOrder);
-        const { doAction } = this.props;
-        doAction(({
-          getGroup,
-          setID,
-          getID,
-          render,
-        }) => {
-          getGroup().IDList = newOrder;
-          render();
-        });
-      }
+      // console.log(currentRow);
+      console.log(newOrder);
 
+      this.setState({ newOrder });
       this.setState({ mouseY });
+
+      // if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
+      //
+      //   // return
+      //   // console.log(newOrder);
+      //   // const { doAction } = this.props;
+      //   // doAction(({
+      //   //   getGroup,
+      //   //   setID,
+      //   //   getID,
+      //   //   render,
+      //   // }) => {
+      //   //   getGroup().IDList = newOrder;
+      //   //   render();
+      //   // });
+      // }
     }
   };
 
@@ -158,14 +164,23 @@ export default class Drag extends Component {
 
   render() {
     const {
-      mouseY, isPressed, originalPosOfLastPressed,
+      mouseY, isPressed, originalPosOfLastPressed, newOrder,
     } = this.state;
 
     const { order = [], children } = this.props;
 
+
     return (
       <div className="demo8">
         {order.map((ID, index) => {
+          let y = 0;
+          const newIndex = newOrder.indexOf(ID);
+
+          if (index !== newIndex) {
+            y = (newIndex - index) * height;
+          }
+
+
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
               scale: spring(1.1, springConfig),
@@ -175,7 +190,7 @@ export default class Drag extends Component {
             : {
               scale: spring(1, springConfig),
               shadow: spring(0, springConfig),
-              y: spring(0, springConfig),
+              y: spring(y, springConfig),
             };
           return (
             <Motion style={ style } key={ ID }>
