@@ -48,7 +48,7 @@ export default class Drag extends Component {
 
     if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
       this.setState({ newOrder: nextProps.order });
-      this.changeDone();
+      this.changeDone(); //todo change movedownbug moveupbug
     } else {
       this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
     }
@@ -215,7 +215,7 @@ export default class Drag extends Component {
     setTimeout(() => {
       this.nextRenderClearMotions = true;
       this.setState({}, r);
-    }, 300);
+    }, 500);
   })
 
   getContainer = (ref) => {
