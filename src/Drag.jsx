@@ -26,6 +26,8 @@ export default class Drag extends Component {
     super(props);
     const { order } = props;
 
+    console.log('Drag constructor');
+
     this.Motions = {};
     this.nextRenderClearMotions = false;
 
@@ -34,7 +36,7 @@ export default class Drag extends Component {
       mouseY: 0,
       isPressed: false,
       originalPosOfLastPressed: 0,
-      order,
+      order: [...order],
       newOrder: [...order],
     };
   }
@@ -46,10 +48,10 @@ export default class Drag extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { order } = this.state;
 
-    return
+    return;
     if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
       this.setState({ newOrder: nextProps.order });
-      this.changeDone(); //todo change movedownbug moveupbug
+      this.changeDone(); // todo change movedownbug moveupbug
     } else {
       this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
     }
@@ -167,7 +169,7 @@ export default class Drag extends Component {
       // console.log(currentRow);
       // console.log(newOrder);
 
-      this.setState({ newOrder });
+      this.setState({ newOrder: [...newOrder] });
       this.setState({ mouseY });
 
       // if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
@@ -242,6 +244,8 @@ export default class Drag extends Component {
             y = (newIndex - index) * height;
           }
 
+          console.log(y);
+          console.log(order, newOrder);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
               scale: spring(1.1, springConfig),
