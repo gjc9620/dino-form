@@ -46,6 +46,7 @@ export default class Drag extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { order } = this.state;
 
+    return
     if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
       this.setState({ newOrder: nextProps.order });
       this.changeDone(); //todo change movedownbug moveupbug
