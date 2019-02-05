@@ -25,6 +25,10 @@ export default class Drag extends Component {
   constructor(props) {
     super(props);
     const { order } = props;
+
+    this.Motions = {};
+    this.nextRenderClearMotions = false;
+
     this.state = {
       topDeltaY: 0,
       mouseY: 0,
@@ -45,9 +49,13 @@ export default class Drag extends Component {
     if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
       this.setState({ newOrder: nextProps.order });
       this.changeDone();
-    }else {
+    } else {
       this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
     }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    this.nextRenderClearMotions = false;
   }
 
   addListener = ({ move = true } = {}) => {
@@ -183,25 +191,32 @@ export default class Drag extends Component {
     const { onDrop = () => {} } = this.props;
     const { newOrder } = this.state;
 
-    this.setState({ newOrder: [...newOrder], order: [...newOrder] });
-    setTimeout(() => {
+    this.clearMotions().then(() => {
+      this.setState({ newOrder: [...newOrder], order: [...newOrder] });
       onDrop(newOrder);
-    }, 300);
+    });
   }
 
   handleMouseUp = (e) => {
     // console.log('handleMouseUp');
     const { isPressed } = this.state;
 
+    pressTimer = window.clearTimeout(pressTimer);
+    this.setState({ isPressed: false, topDeltaY: 0 });
+    this.removeListener();
+
     if (isPressed) {
       // console.log('onDrop');
       this.changeDone();
     }
-
-    pressTimer = window.clearTimeout(pressTimer);
-    this.setState({ isPressed: false, topDeltaY: 0 });
-    this.removeListener();
   };
+
+  clearMotions =() => new Promise((r) => {
+    setTimeout(() => {
+      this.nextRenderClearMotions = true;
+      this.setState({}, r);
+    }, 300);
+  })
 
   getContainer = (ref) => {
     this.container = ref;
@@ -211,6 +226,8 @@ export default class Drag extends Component {
     const {
       mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [],
     } = this.state;
+
+    const { nextRenderClearMotions } = this;
 
     const { children } = this.props;
 
@@ -224,21 +241,29 @@ export default class Drag extends Component {
             y = (newIndex - index) * height;
           }
 
-
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
               scale: spring(1.1, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
-            : {
+            : nextRenderClearMotions ? {
+              scale: 1,
+              shadow: 0,
+              y: 0,
+            } : {
               scale: spring(1, springConfig),
               shadow: spring(0, springConfig),
-              y: newIndex !== -1 && index !== newIndex ? spring(y, springConfig) : y,
+              y: spring(y, springConfig),
             };
           return (
-            <Motion style={ style } key={ ID }>
-              {// console.log(`translate3d(0, ${y}px, 0) scale(${scale})`);
+            <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>
+              {
+               // console.log(ID, ' ', y);
+               // console.trace(ID, ' ', y);
+               // console.log('scale', ' ', scale);
+               // console.log('shadow', ' ', shadow);
+               // console.log('shadow', ' ', shadow);
                ({ scale, shadow, y }) => (
                  <div
                    onMouseDown={ (event) => {
@@ -257,6 +282,7 @@ export default class Drag extends Component {
                    { children[ID] }
                  </div>
                )
+
               }
             </Motion>
           );
