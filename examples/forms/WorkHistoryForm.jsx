@@ -59,7 +59,7 @@ const workHistoryForm = createForm({
         <div>
           <Time />
         </div>
-        { render() }
+        { render(ele => <div className="project-forms">{ele}</div>) }
         {/*
         {
           render(

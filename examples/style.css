@@ -47,6 +47,9 @@ body {
   border: 1px solid black;
   background: beige;
   position: relative;
-  height: 350px;
   /*overflow: auto;*/
+}
+
+.project-forms  .dino-form-group-item-wrap {
+  height: 350px;
 }

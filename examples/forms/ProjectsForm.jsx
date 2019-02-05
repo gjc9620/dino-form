@@ -71,7 +71,7 @@ const ProjectsForm = createForm({
       } = this.props;
 
       return (
-        <div>
+        <div className="project">
           <div>
             <ProjectsName />
           </div>
@@ -85,6 +85,11 @@ const ProjectsForm = createForm({
       );
     }
   },
-)();
+)(class WrapCom extends Component {
+  render() {
+    const { dinoForm: { renderDinoForm } } = this.props;
+    return <div className="project-form">{renderDinoForm(this.props)}</div>;
+  }
+});
 
 export default ProjectsForm;
