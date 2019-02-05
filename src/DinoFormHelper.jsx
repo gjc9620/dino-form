@@ -245,7 +245,7 @@ export const groupsAPI = ({
   const group = {
     IDList,
     map: (mapGroup = dinoFormMapGroup) => (
-      <Drag order={ IDList } action={moveItem}>
+      <Drag order={ IDList } doAction={doAction}>
         {
           IDList.map((ID, index) => (
             mapGroup({

@@ -130,9 +130,21 @@ export default class Drag extends Component {
 
       if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
         newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
+
+        console.log(newOrder);
+        const { doAction } = this.props;
+        doAction(({
+          getGroup,
+          setID,
+          getID,
+          render,
+        }) => {
+          getGroup().IDList = newOrder;
+          render();
+        });
       }
 
-      this.setState({ mouseY, order: newOrder });
+      this.setState({ mouseY });
     }
   };
 
