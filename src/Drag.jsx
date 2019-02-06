@@ -40,7 +40,6 @@ export default class Drag extends Component {
       order: [...order],
       newOrder: [...order],
     };
-    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   componentDidMount() {
@@ -204,6 +203,7 @@ export default class Drag extends Component {
       //   // });
       // }
     }
+  };
 
   changeDone = () => {
     const { onDrop = () => {} } = this.props;
