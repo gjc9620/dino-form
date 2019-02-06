@@ -53,6 +53,10 @@ const ProjectsForm = createForm({
   },
 })(
   class Projects extends Component {
+    // constructor(props){
+    //   super(props);
+    //   console.log(props.ID);
+    // }
     render() {
       const {
         dinoForm,
@@ -71,7 +75,7 @@ const ProjectsForm = createForm({
       } = this.props;
 
       return (
-        <div>
+        <div className="project">
           <div>
             <ProjectsName />
           </div>
@@ -85,6 +89,11 @@ const ProjectsForm = createForm({
       );
     }
   },
-)();
+)(class WrapCom extends Component {
+  render() {
+    const { dinoForm: { renderDinoForm } } = this.props;
+    return <div className="project-form">{renderDinoForm(this.props)}</div>;
+  }
+});
 
 export default ProjectsForm;

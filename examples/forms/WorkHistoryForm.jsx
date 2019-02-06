@@ -26,7 +26,7 @@ const workHistoryForm = createForm({
     projects: {
       Com: ProjectsForm,
       field: 'projects',
-      count: 1,
+      count: 4,
       formProps: { aa: 1 },
     },
   },
@@ -59,7 +59,8 @@ const workHistoryForm = createForm({
         <div>
           <Time />
         </div>
-        { render() }
+        <div className="project-forms">{ render() }</div>
+        
         {/*
         {
           render(

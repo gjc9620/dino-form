@@ -1,109 +1,317 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Motion, spring } from 'react-motion';
+import { prefix } from './util';
 
-// fake data generator
-const getItems = count => Array.from({ length: count }, (v, k) => k).map(k => ({
-  id: `item-${k}`,
-  content: `item ${k}`,
-}));
+function reinsert(arr, from, to) {
+  const _arr = arr.slice(0);
+  const val = _arr[from];
+  _arr.splice(from, 1);
+  _arr.splice(to, 0, val);
+  return _arr;
+}
 
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+function clamp(n, min, max) {
+  return Math.max(Math.min(n, max), min);
+}
 
-  return result;
-};
+const height = 400;
+const animDuration = 500;
 
-const grid = 8;
+const springConfig = { stiffness: 200, damping: 20 };
+const itemsCount = 4;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
+let pressTimer;
 
-  // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'grey',
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
-
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  padding: grid,
-  width: 250,
-});
-
-class App extends Component {
+export default class Drag extends Component {
   constructor(props) {
     super(props);
+    const { order } = props;
+
+    console.log('Drag constructor');
+
+    this.Motions = {};
+    this.nextRenderClearMotions = false;
+
     this.state = {
-      items: getItems(10),
+      topDeltaY: 0,
+      mouseY: 0,
+      isPressed: false,
+      originalPosOfLastPressed: 0,
+      order: [...order],
+      newOrder: [...order],
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
-  onDragEnd(result) {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
+  componentDidMount() {
+
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { order } = this.state;
+
+    if (
+      order.length === nextProps.order.length
+      && JSON.stringify(order) !== JSON.stringify(nextProps.order)
+    ) {
+      this.clearMotions().then(() => {
+        this.setState({ newOrder: [...nextProps.order] });
+        this.clearMotions(animDuration).then(() => {
+          this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+        });
+      });
+
+      // setTimeout(()=>{
+      //   this.clearMotions();
+      // }, 1000)
     }
 
-    const items = reorder(
-      this.state.items,
-      result.source.index,
-      result.destination.index,
-    );
+    if (order.length !== nextProps.order.length) {
+      this.clearMotions().then(() => {
+        this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+      });
+    }
+  }
 
-    this.setState({
-      items,
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    this.nextRenderClearMotions = false;
+  }
+
+  addListener = ({ move = true } = {}) => {
+    move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    window.addEventListener('touchend', this.handleMouseUp);
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  removeListener = () => {
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleMouseUp);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  handleStart = (e, func = () => {}) => {
+    this.removeListener();
+    this.addListener();
+
+    const a = +new Date();
+    if (!pressTimer) {
+      pressTimer = window.setTimeout(() => {
+        pressTimer = window.clearTimeout(pressTimer);
+        // console.log(+new Date() - a);
+        func();
+      }, 700);
+    }
+  }
+
+  handleTouchStart = (e, key, pressY) => {
+    // console.log('handleTouchStart');
+    e.persist();
+    this.handleStart(e, () => {
+      const event = e.touches[0];
+      const { pageY } = event;
+
+      // console.log(pageY, pressY);
+      this.setState({
+        topDeltaY: pageY - pressY,
+        mouseY: pressY,
+        isPressed: true,
+        originalPosOfLastPressed: key,
+      });
+    });
+  };
+
+  handleMouseDown = (e, pos, pressY) => {
+    // console.log('handleMouseDown');
+    const { pageY } = e;
+
+    this.handleStart(e, () => {
+      // console.log(pageY, pressY);
+      this.setState({
+        topDeltaY: pageY - pressY,
+        mouseY: pressY,
+        isPressed: true,
+        originalPosOfLastPressed: pos,
+      });
+    });
+  };
+
+  handleTouchMove = (e) => {
+    // console.log('handleTouchMove');
+    const { isPressed } = this.state;
+
+    pressTimer = clearTimeout(pressTimer);
+
+    if (isPressed) {
+      e.preventDefault();
+      this.handleMouseMove(e.touches[0]);
+    }
+  };
+
+  handleMouseMove = (event) => {
+    // console.log('handleMouseMove');
+    const { pageY } = event;
+
+    // pressTimer = clearTimeout(pressTimer);
+
+    const {
+      isPressed, topDeltaY, originalPosOfLastPressed,
+    } = this.state;
+
+    const { order = [], children } = this.props;
+
+    if (isPressed) {
+      const mouseY = pageY - topDeltaY;
+
+      let row = Math.round(mouseY / height);
+      if (mouseY < 0) {
+        row = (itemsCount - 1) * height + mouseY;
+        row = Math.round(row / height);
+      }
+      // console.log('row', row);
+
+      const currentRow = clamp(row, 0, itemsCount - 1);
+      // console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
+      // console.log(mouseY, mouseY / height, currentRow);
+
+      // event
+      // this.container
+      // debugger
+      // const { containerHeight, containerTop } = this.container;
+
+      const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
+
+      // console.log(currentRow);
+      // console.log(newOrder);
+
+      this.setState({ newOrder: [...newOrder] });
+      this.setState({ mouseY });
+
+      // if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
+      //
+      //   // return
+      //   // console.log(newOrder);
+      //   // const { doAction } = this.props;
+      //   // doAction(({
+      //   //   getGroup,
+      //   //   setID,
+      //   //   getID,
+      //   //   render,
+      //   // }) => {
+      //   //   getGroup().IDList = newOrder;
+      //   //   render();
+      //   // });
+      // }
+    }
+
+  changeDone = () => {
+    const { onDrop = () => {} } = this.props;
+
+    this.clearMotions(animDuration).then(() => {
+      const { newOrder } = this.state;
+      this.setState({ newOrder: [...newOrder], order: [...newOrder] });
+      onDrop(newOrder);
     });
   }
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+  handleMouseUp = (e) => {
+    // console.log('handleMouseUp');
+    const { isPressed } = this.state;
+
+    pressTimer = window.clearTimeout(pressTimer);
+    this.setState({ isPressed: false, topDeltaY: 0 });
+    this.removeListener();
+
+    if (isPressed) {
+      // console.log('onDrop');
+      this.changeDone();
+    }
+  };
+
+  clearMotions =delay => new Promise((r) => {
+    setTimeout(() => {
+      this.nextRenderClearMotions = true;
+      this.setState({}, r);
+    }, delay);
+  })
+
+  getContainer = (ref) => {
+    this.container = ref;
+  }
+
   render() {
+    const {
+      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [],
+    } = this.state;
+
+    const { nextRenderClearMotions } = this;
+
+    const { children } = this.props;
+
     return (
-      <DragDropContext onDragEnd={ this.onDragEnd }>
-        <Droppable droppableId="droppable">
-          {
-            (provided, snapshot) => (
-              <div
-                ref={ provided.innerRef }
-                style={ getListStyle(snapshot.isDraggingOver) }>
+      <div className="demo8" ref={ this.getContainer }>
+        {order.map((ID, index) => {
+          let y = 0;
+          const newIndex = newOrder.indexOf(ID);
 
-                {
-                  this.state.items.map((item, index) => (
-                    <Draggable key={ item.id } draggableId={ item.id } index={ index }>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={ provided.innerRef }
-                          { ...provided.draggableProps }
-                          { ...provided.dragHandleProps }
-                          style={ getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style,
-                          ) }>
-                          {item.content}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                }
-
-                {provided.placeholder}
-              </div>
-            )
+          if (index !== newIndex) {
+            y = (newIndex - index) * height;
           }
-        </Droppable>
-      </DragDropContext>
+
+          const style = originalPosOfLastPressed === ID && isPressed
+            ? {
+              scale: spring(1.1, springConfig),
+              shadow: spring(16, springConfig),
+              y: mouseY,
+            }
+            : nextRenderClearMotions
+              ? {
+                scale: 1,
+                shadow: 0,
+                y: 0,
+              } : {
+                scale: spring(1, springConfig),
+                shadow: spring(0, springConfig),
+                y: spring(y, springConfig),
+              };
+          return (
+            <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>
+              {
+               // console.log(ID, ' ', y);
+               // console.trace(ID, ' ', y);
+               // console.log('scale', ' ', scale);
+               // console.log('shadow', ' ', shadow);
+               ({ scale, shadow, y }) => {
+                 1111
+                 return (
+                   <div
+                     onMouseDown={ (event) => {
+                       this.handleMouseDown(event, ID, y);
+                     } }
+                     onTouchStart={ event => this.handleTouchStart(event, ID, y) }
+                     className={ `${prefix('group-item-wrap')}` }
+                     style={ {
+                       boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
+                       transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                       WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                       zIndex: ID === originalPosOfLastPressed ? 99 : ID,
+                     } }>
+                     {/* { children[index] } */}
+                     {/* <div>{ID}</div> */}
+                     { children[ID] }
+                   </div>
+                 );
+               }
+              }
+            </Motion>
+          );
+        })}
+      </div>
     );
   }
 }
 
-// Put the thing into the DOM!
-ReactDOM.render(<App />, document.getElementById('root2'));
+Drag.defaultProps = {
+  onDrop: () => {},
+};

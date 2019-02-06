@@ -63,6 +63,8 @@ export const createDinoFormGroupWrap = ({ setIDRefMap, Com, topFormRender }) => 
       const { ID, index } = this.props;
       return (
         <Com
+          ID={ ID }
+          index={ index }
           ref={ this.catchRef }
           topFormRender={ topFormRender }
           subGroupForm
@@ -245,28 +247,31 @@ export const groupsAPI = ({
   const group = {
     IDList,
     map: (mapGroup = dinoFormMapGroup) => (
-      IDList.map((ID, index) => (
-        mapGroup({
-          ID,
-          index,
-          Com,
-          field,
-          IDRefMap,
-          IDList,
-          Form: {
-            FormCom: Form,
-            formProps: {
-              ...formProps,
-              ...((groups[formName].IDRefMap[ID] || {}).props || {}),
+      <Drag order={ IDList } onDrop={ (newIDList) => { groupValue.IDList = newIDList; render(); } }>
+        {
+          mapObject(IDList, (index, ID) => ({
+            [ID]: mapGroup({
               ID,
-            },
-          },
-          deleteIt: () => deleteItem(ID),
-          moveIt: offset => moveItem(ID, offset),
-          formProps,
-        })
-      ))
-
+              index: +index,
+              Com,
+              field,
+              IDRefMap,
+              IDList,
+              Form: {
+                FormCom: Form,
+                formProps: {
+                  ...formProps,
+                  ...((groups[formName].IDRefMap[ID] || {}).props || {}),
+                  ID,
+                },
+              },
+              deleteIt: () => deleteItem(ID),
+              moveIt: offset => moveItem(ID, offset),
+              formProps,
+            }),
+          }))
+        }
+      </Drag>
     ),
     render: (
       renderGroup = ele => (

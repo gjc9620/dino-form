@@ -231,6 +231,7 @@ class BigForm extends Component {
             }
             footer {
               position: fixed;
+              z-index: 9999;
               bottom: 0px;
               width: 100%;
               background: white;
@@ -248,7 +249,7 @@ class BigForm extends Component {
             const { hasError, data } = await verify();
             console.log(hasError, data);
             console.log(hasError, JSON.stringify(data));
-          } }>提交
+          } }>submit
           </div>
           <div onClick={ () => {
             const data = getFullValues();
