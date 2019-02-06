@@ -5,6 +5,8 @@ import { prefix } from './util';
 
 // todo auto scroll
 // todo auto height
+// todo react-beautiful-dnd control scroll when touch
+
 function reinsert(arr, from, to) {
   const _arr = arr.slice(0);
   const val = _arr[from];
