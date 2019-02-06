@@ -252,7 +252,7 @@ export const groupsAPI = ({
           mapObject(IDList, (index, ID) => ({
             [ID]: mapGroup({
               ID,
-              index,
+              index: +index,
               Com,
               field,
               IDRefMap,

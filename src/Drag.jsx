@@ -14,7 +14,8 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const height = 350;
+const height = 400;
+const animDuration = 500;
 
 const springConfig = { stiffness: 200, damping: 20 };
 const itemsCount = 4;
@@ -48,12 +49,26 @@ export default class Drag extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { order } = this.state;
 
-    return;
-    if (order.length === nextProps.order.length && JSON.stringify(order) !== JSON.stringify(nextProps.order)) {
-      this.setState({ newOrder: nextProps.order });
-      this.changeDone(); // todo change movedownbug moveupbug
-    } else {
-      this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+    if (
+      order.length === nextProps.order.length
+      && JSON.stringify(order) !== JSON.stringify(nextProps.order)
+    ) {
+      this.clearMotions().then(() => {
+        this.setState({ newOrder: [...nextProps.order] });
+        this.clearMotions(animDuration).then(() => {
+          this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+        });
+      });
+
+      // setTimeout(()=>{
+      //   this.clearMotions();
+      // }, 1000)
+    }
+
+    if (order.length !== nextProps.order.length) {
+      this.clearMotions().then(() => {
+        this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+      });
     }
   }
 
@@ -192,9 +207,9 @@ export default class Drag extends Component {
 
   changeDone = () => {
     const { onDrop = () => {} } = this.props;
-    const { newOrder } = this.state;
 
-    this.clearMotions().then(() => {
+    this.clearMotions(animDuration).then(() => {
+      const { newOrder } = this.state;
       this.setState({ newOrder: [...newOrder], order: [...newOrder] });
       onDrop(newOrder);
     });
@@ -214,11 +229,11 @@ export default class Drag extends Component {
     }
   };
 
-  clearMotions =() => new Promise((r) => {
+  clearMotions =delay => new Promise((r) => {
     setTimeout(() => {
       this.nextRenderClearMotions = true;
       this.setState({}, r);
-    }, 500);
+    }, delay);
   })
 
   getContainer = (ref) => {
@@ -244,23 +259,22 @@ export default class Drag extends Component {
             y = (newIndex - index) * height;
           }
 
-          console.log(y);
-          console.log(order, newOrder);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
               scale: spring(1.1, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
-            : nextRenderClearMotions ? {
-              scale: 1,
-              shadow: 0,
-              y: 0,
-            } : {
-              scale: spring(1, springConfig),
-              shadow: spring(0, springConfig),
-              y: spring(y, springConfig),
-            };
+            : nextRenderClearMotions
+              ? {
+                scale: 1,
+                shadow: 0,
+                y: 0,
+              } : {
+                scale: spring(1, springConfig),
+                shadow: spring(0, springConfig),
+                y: spring(y, springConfig),
+              };
           return (
             <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>
               {
@@ -268,26 +282,27 @@ export default class Drag extends Component {
                // console.trace(ID, ' ', y);
                // console.log('scale', ' ', scale);
                // console.log('shadow', ' ', shadow);
-               // console.log('shadow', ' ', shadow);
-               ({ scale, shadow, y }) => (
-                 <div
-                   onMouseDown={ (event) => {
-                     this.handleMouseDown(event, ID, y);
-                   } }
-                   onTouchStart={ event => this.handleTouchStart(event, ID, y) }
-                   className={ `${prefix('group-item-wrap')}` }
-                   style={ {
-                     boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
-                     transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                     WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                     zIndex: ID === originalPosOfLastPressed ? 99 : ID,
-                   } }>
-                   {/* { children[index] } */}
-                   {/* <div>{ID}</div> */}
-                   { children[ID] }
-                 </div>
-               )
-
+               ({ scale, shadow, y }) => {
+                 1111
+                 return (
+                   <div
+                     onMouseDown={ (event) => {
+                       this.handleMouseDown(event, ID, y);
+                     } }
+                     onTouchStart={ event => this.handleTouchStart(event, ID, y) }
+                     className={ `${prefix('group-item-wrap')}` }
+                     style={ {
+                       boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
+                       transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                       WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                       zIndex: ID === originalPosOfLastPressed ? 99 : ID,
+                     } }>
+                     {/* { children[index] } */}
+                     {/* <div>{ID}</div> */}
+                     { children[ID] }
+                   </div>
+                 );
+               }
               }
             </Motion>
           );
