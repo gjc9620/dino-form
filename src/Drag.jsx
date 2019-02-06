@@ -277,7 +277,7 @@ export default class Drag extends Component {
                        this.handleMouseDown(event, ID, y);
                      } }
                      onTouchStart={ event => this.handleTouchStart(event, ID, y) }
-                     className={ `${prefix('group-item-wrap')}` }
+                     className={ `${prefix('group-item-wrap')} ${originalPosOfLastPressed === ID && isPressed ? prefix('group-item-wrap-pressed') : ''}` }
                      style={ {
                        boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
                        transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
