@@ -9,7 +9,7 @@ body {
 
 .dino-form-drag-container {
   height: 500px;
-  overflow: auto;
+  overflow-y: auto;
 }
 /*footer {*/
   /*display: none;*/

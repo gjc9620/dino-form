@@ -48,7 +48,9 @@ export default class Drag extends Component {
   }
 
   componentDidMount() {
-
+    [this.container, window].forEach((dom) => {
+      dom.addEventListener('scroll', this.onScroll);
+    });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -75,6 +77,15 @@ export default class Drag extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     this.nextRenderClearMotions = false;
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+  }
+
+  onScroll = () => {
+    clearTimeout(pressTimer);
+    this.setState({ isPressed: false });
   }
 
   addListener = ({ move = true } = {}) => {
@@ -141,7 +152,7 @@ export default class Drag extends Component {
     // console.log('handleTouchMove');
     const { isPressed } = this.state;
 
-    pressTimer = clearTimeout(pressTimer);
+    // pressTimer = clearTimeout(pressTimer);
 
     if (isPressed) {
       e.preventDefault();
