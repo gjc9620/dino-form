@@ -223,7 +223,7 @@ export default class Drag extends Component {
     const { children } = this.props;
 
     return (
-      <div className="demo8" ref={ this.getContainer }>
+      <div className={ `${prefix('drag-container')} ${prefix('map-container')}` } ref={ this.getContainer }>
         {order.map((ID, index) => {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);

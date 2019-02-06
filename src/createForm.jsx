@@ -55,7 +55,7 @@ function createForm({
         }
 
         createGroups = groupsObj => mapObject(groupsObj, (formName, {
-          Com, field, count, formProps = {},
+          Com, field, count, formProps = {}, needDrag = false,
         } = {}) => {
           const IDRefMap = {};
           const IDList = [...new Array(count)].map(() => this.ID++);
@@ -70,6 +70,7 @@ function createForm({
             field,
             formProps,
             formName,
+            needDrag,
             IDRefMap,
             IDList,
             Form,
@@ -176,7 +177,6 @@ function createForm({
         }
 
         setFullValues = async (values = {}, maps = {}) => {
-          
           const findGroups = field => Object.values(
             this.groups,
           ).find(group => group.field === field);
