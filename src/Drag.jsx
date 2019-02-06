@@ -4,7 +4,7 @@ import { prefix } from './util';
 
 
 // todo auto scroll
-// auto height
+// todo auto height
 function reinsert(arr, from, to) {
   const _arr = arr.slice(0);
   const val = _arr[from];
