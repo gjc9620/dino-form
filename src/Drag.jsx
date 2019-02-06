@@ -171,37 +171,11 @@ export default class Drag extends Component {
       // console.log('row', row);
 
       const currentRow = clamp(row, 0, itemsCount - 1);
-      // console.log('mouseY', mouseY, 'pageY', pageY, 'topDeltaY', topDeltaY, 'currentRow', Math.abs(currentRow));
-      // console.log(mouseY, mouseY / height, currentRow);
-
-      // event
-      // this.container
-      // debugger
-      // const { containerHeight, containerTop } = this.container;
 
       const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
 
-      // console.log(currentRow);
-      // console.log(newOrder);
-
       this.setState({ newOrder: [...newOrder] });
       this.setState({ mouseY });
-
-      // if (currentRow !== order.indexOf(originalPosOfLastPressed)) {
-      //
-      //   // return
-      //   // console.log(newOrder);
-      //   // const { doAction } = this.props;
-      //   // doAction(({
-      //   //   getGroup,
-      //   //   setID,
-      //   //   getID,
-      //   //   render,
-      //   // }) => {
-      //   //   getGroup().IDList = newOrder;
-      //   //   render();
-      //   // });
-      // }
     }
   };
 
@@ -283,7 +257,8 @@ export default class Drag extends Component {
                // console.log('scale', ' ', scale);
                // console.log('shadow', ' ', shadow);
                ({ scale, shadow, y }) => {
-                 1111
+                 1111;
+
                  return (
                    <div
                      onMouseDown={ (event) => {
