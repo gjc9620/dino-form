@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
 import { prefix } from './util';
 
+
+// todo auto scroll
+// auto height
 function reinsert(arr, from, to) {
   const _arr = arr.slice(0);
   const val = _arr[from];
@@ -59,10 +62,6 @@ export default class Drag extends Component {
           this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
         });
       });
-
-      // setTimeout(()=>{
-      //   this.clearMotions();
-      // }, 1000)
     }
 
     if (order.length !== nextProps.order.length) {
