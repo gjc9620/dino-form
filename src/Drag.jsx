@@ -186,9 +186,10 @@ export default class Drag extends Component {
 
       console.log(newOrder);
 
-      if (isPressed) {
-        const mouseY = pageY - topDeltaY;
+      const mouseY = pageY - topDeltaY;
+      this.setState({ mouseY });
 
+      if (isPressed && !this.moveing) {
         // let row = Math.round(mouseY / height);
         // if (mouseY < 0) {
         //   row = (itemsCount - 2) * height + mouseY;
@@ -230,22 +231,16 @@ export default class Drag extends Component {
         // return
         // const currentRow = clamp(row, 0, itemsCount - 1);
         // console.log(realRow);
-
-        if (!this.moveing) {
-          const originIndex = newOrder.indexOf(originalPosOfLastPressed);
-          if (originIndex !== realRow) {
-            const nextNewOrder = reinsert(newOrder, originIndex, realRow);
-            console.log('nextNewOrder', nextNewOrder);
-            this.setState({ newOrder: [...nextNewOrder] });
-            this.moveing = true;
-            setTimeout(() => {
-              this.moveing = false;
-            }, 700);
-          }
+        const originIndex = newOrder.indexOf(originalPosOfLastPressed);
+        if (originIndex !== realRow) {
+          const nextNewOrder = reinsert(newOrder, originIndex, realRow);
+          console.log('nextNewOrder', nextNewOrder);
+          this.setState({ newOrder: [...nextNewOrder] });
+          this.moveing = true;
+          setTimeout(() => {
+            this.moveing = false;
+          }, animDuration);
         }
-
-        // console.log(pageY);
-        this.setState({ mouseY });
       }
     });
   };
