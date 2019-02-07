@@ -132,7 +132,7 @@ export default class Drag extends Component {
   handleTouchStart = (e, ID, pressY) => {
     // console.log('handleTouchStart');
     e.persist();
-    const { top } = e.currentTarget.getBoundingClientRect();
+    // const { top } = e.currentTarget.getBoundingClientRect();
 
     this.handleStart(e, () => {
       const event = e.touches[0];
@@ -177,7 +177,7 @@ export default class Drag extends Component {
 
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const { pageY } = event;
       // pressTimer = clearTimeout(pressTimer);
 
@@ -200,8 +200,12 @@ export default class Drag extends Component {
           const top = offsetTop;
           const bottom = offsetTop + offsetHeight;
 
-          // console.log(pageY, top, bottom, ID);
-          if (pageY > top && pageY < bottom) {
+          // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+          const cursorOffsetTop = this.childrenMap[originalPosOfLastPressed].ref.offsetTop
+            + this.childrenMap[originalPosOfLastPressed].style.y;
+
+          // console.log(cursorOffsetTop, top, bottom, ID);
+          if (cursorOffsetTop > top && cursorOffsetTop < bottom) {
             return index;
           }
           return row;
@@ -292,7 +296,7 @@ export default class Drag extends Component {
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(1.1, springConfig),
+              scale: spring(0.5, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }

@@ -7,10 +7,12 @@ body {
   /*width: 300px;*/
 }
 
-/*.dino-form-drag-container {*/
-  /*height: 500px;*/
-  /*overflow-y: auto;*/
-/*}*/
+.dino-form-drag-container {
+  height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /*footer {*/
   /*display: none;*/
 /*}*/
