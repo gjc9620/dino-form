@@ -268,7 +268,7 @@ export default class Drag extends Component {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
           if (index !== newIndex) {
-            y = (newIndex - index) * height;
+            y = (newIndex - index) * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
           }
 
           const style = originalPosOfLastPressed === ID && isPressed
