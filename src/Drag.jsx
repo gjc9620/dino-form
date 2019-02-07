@@ -4,7 +4,7 @@ import { prefix } from './util';
 
 
 // todo auto scroll
-// todo auto height last touch bug   /
+// todo auto height srcoll bug
 // todo ref bug movedown move up
 
 function findAllParentNode(node) {

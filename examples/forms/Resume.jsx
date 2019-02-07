@@ -42,8 +42,9 @@ const config = {
     workHistory: {
       Com: WorkHistoryForm,
       field: 'workHistory',
-      count: 2,
+      count: 10,
       formProps: { aa: 1 },
+      needDrag: true,
     },
   },
 };
