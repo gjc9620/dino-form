@@ -268,7 +268,6 @@ export const groupsAPI = ({
       formProps,
     })
   );
-  console.log(needDrag);
   
   const group = {
     IDList,

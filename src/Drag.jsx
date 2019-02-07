@@ -46,6 +46,7 @@ export default class Drag extends Component {
 
     this.Motions = {};
     this.nextRenderClearMotions = false;
+    this.lastPressedleftTop = 0;
 
     this.state = {
       topDeltaY: 0,
@@ -233,7 +234,7 @@ export default class Drag extends Component {
     const { isPressed } = this.state;
 
     pressTimer = window.clearTimeout(pressTimer);
-    this.setState({ isPressed: false, topDeltaY: 0 });
+    this.setState({ isPressed: false, topDeltaY: 0, mouseY: 0 });
     this.removeListener();
 
     if (isPressed) {
@@ -268,7 +269,19 @@ export default class Drag extends Component {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
           if (index !== newIndex) {
-            y = (newIndex - index) * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
+            // console.log(index, newIndex);
+            y = (newIndex - index > 0 ? 1 : -1) * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
+          }
+
+          if (originalPosOfLastPressed === ID) {
+            // y = 0;
+            [...new Array(index)].map((v, i) => i).forEach((i) => {
+              const ID = newOrder[i];
+              const { height } = this.childrenMap[ID].ref.getBoundingClientRect();
+              y += height;
+            });
+            
+            console.log(y);
           }
 
           const style = originalPosOfLastPressed === ID && isPressed
