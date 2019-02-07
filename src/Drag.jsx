@@ -214,9 +214,10 @@ export default class Drag extends Component {
         //   return topHeight + height;
         //   // const topHeight = height + this.childrenMap[IDList[i]].style.y;
         // }, 0);
-        const { height, top } = this.childrenMap[ID].ref.getBoundingClientRect();
+        const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+        // const y = this.childrenMap[ID].style.y;
 
-        const bottom = height + top;
+        // if (pageY > top + y && pageY < bottom + y) {
         if (pageY > top && pageY < bottom) {
           console.log(pageY, top, bottom, this.childrenMap[ID].ref);
           // console.log(pageY, top, bottom);
@@ -228,11 +229,13 @@ export default class Drag extends Component {
       // return
       // const currentRow = clamp(row, 0, itemsCount - 1);
       //
-      const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), realRow);
+      const originIndex = order.indexOf(originalPosOfLastPressed);
+      if (originIndex !== realRow) {
+        const newOrder = reinsert(order, originIndex, realRow);
+        console.log(newOrder);
+        this.setState({ newOrder: [...newOrder] });
+      }
 
-      console.log(newOrder);
-
-      this.setState({ newOrder: [...newOrder] });
       // console.log(pageY);
       this.setState({ mouseY });
     }
