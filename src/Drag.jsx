@@ -270,7 +270,8 @@ export default class Drag extends Component {
           const newIndex = newOrder.indexOf(ID);
           if (index !== newIndex) {
             // console.log(index, newIndex);
-            y = (newIndex - index > 0 ? 1 : -1) * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
+            y = (newIndex - index > 0 ? 1 : -1)
+              * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
           }
 
           if (originalPosOfLastPressed === ID && !isPressed) {
