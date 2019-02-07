@@ -4,7 +4,8 @@ import { prefix } from './util';
 
 
 // todo auto scroll
-// todo auto height
+// todo auto height last touch bug   /
+// todo ref bug movedown move up
 
 function findAllParentNode(node) {
   const els = [window];
@@ -195,8 +196,11 @@ export default class Drag extends Component {
           }
 
           const index = newOrder.indexOf(ID);
-          const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+          const { offsetHeight, offsetTop } = this.childrenMap[ID].ref;
+          const top = offsetTop;
+          const bottom = offsetTop + offsetHeight;
 
+          // console.log(pageY, top, bottom, ID);
           if (pageY > top && pageY < bottom) {
             return index;
           }
