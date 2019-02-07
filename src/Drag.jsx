@@ -192,6 +192,9 @@ export default class Drag extends Component {
 
     console.log(isPressed, this.moveing);
     if (isPressed && !this.moveing) {
+      if (+new Date() - this.preTime < animDuration) {
+        return;
+      }
       const currIndex = newOrder.indexOf(originalPosOfLastPressed);
       const realRow = newOrder.reduce((row, ID) => {
         if (originalPosOfLastPressed === ID) {
@@ -220,10 +223,7 @@ export default class Drag extends Component {
         const nextNewOrder = reinsert(newOrder, originIndex, realRow);
         this.setState({ newOrder: [...nextNewOrder] });
 
-        this.moveing = true;
-        setTimeout(() => {
-          this.moveing = false;
-        }, animDuration);
+        this.preTime = +new Date();
       }
     }
     // });
