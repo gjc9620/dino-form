@@ -87,8 +87,8 @@ export default class Drag extends Component {
     this.setState({ isPressed: false });
   }
 
-  addListener = ({ move = true } = {}) => {
-    move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+  addListener = () => {
+    window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
