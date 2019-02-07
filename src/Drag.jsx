@@ -29,7 +29,7 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const height = 400;
+const height = 76;
 const animDuration = 500;
 
 const springConfig = { stiffness: 200, damping: 20 };
@@ -176,69 +176,78 @@ export default class Drag extends Component {
 
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
-    const { pageY } = event;
-    // pressTimer = clearTimeout(pressTimer);
+    requestAnimationFrame(() => {
+      const { pageY } = event;
+      // pressTimer = clearTimeout(pressTimer);
 
-    const {
-      isPressed, topDeltaY, originalPosOfLastPressed,
-    } = this.state;
+      const {
+        isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
+      } = this.state;
 
-    const { order = [], children } = this.props;
+      console.log(newOrder);
 
-    if (isPressed) {
-      const mouseY = pageY - topDeltaY;
+      if (isPressed) {
+        const mouseY = pageY - topDeltaY;
 
-      // let row = Math.round(mouseY / height);
-      // if (mouseY < 0) {
-      //   row = (itemsCount - 2) * height + mouseY;
-      //   row = Math.round(row / height);
-      //   // console.log('row', row);
-      // }
-      // console.log('returnRow', row);
+        // let row = Math.round(mouseY / height);
+        // if (mouseY < 0) {
+        //   row = (itemsCount - 2) * height + mouseY;
+        //   row = Math.round(row / height);
+        //   // console.log('row', row);
+        // }
+        // console.log('returnRow', row);
 
-      // console.table(this.childrenMap);
-      // console.log(0, this.childrenMap[0].style.y);
-      // console.log(1, this.childrenMap[1].style.y);
+        // console.table(this.childrenMap);
+        // console.log(0, this.childrenMap[0].style.y);
+        // console.log(1, this.childrenMap[1].style.y);
 
-      // const { top } = this.container.getBoundingClientRect();
+        // const { top } = this.container.getBoundingClientRect();
 
-      const currIndex = order.indexOf(originalPosOfLastPressed);
-      const realRow = order.reduce((row, ID) => {
-        if (originalPosOfLastPressed === ID) {
+        const currIndex = newOrder.indexOf(originalPosOfLastPressed);
+        const realRow = newOrder.reduce((row, ID) => {
+          if (originalPosOfLastPressed === ID) {
+            return row;
+          }
+
+          const index = newOrder.indexOf(ID);
+          // const top = [...new Array(index)].map((v, i) => i).reduce((topHeight, i) => {
+          //   const { height, top } = this.childrenMap[order[i]].ref.getBoundingClientRect();
+          //   return topHeight + height;
+          //   // const topHeight = height + this.childrenMap[IDList[i]].style.y;
+          // }, 0);
+          const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+          // const y = this.childrenMap[ID].style.y;
+
+          // if (pageY > top + y && pageY < bottom + y) {
+          // console.log(pageY, top, bottom, ID, index);
+          if (pageY > top && pageY < bottom) {
+            // console.log(pageY, top, bottom);
+            return index;
+          }
           return row;
+        }, currIndex);
+
+        // return
+        // const currentRow = clamp(row, 0, itemsCount - 1);
+        // console.log(realRow);
+
+        if (!this.moveing) {
+          const originIndex = newOrder.indexOf(originalPosOfLastPressed);
+          if (originIndex !== realRow) {
+            const nextNewOrder = reinsert(newOrder, originIndex, realRow);
+            console.log('nextNewOrder', nextNewOrder);
+            this.setState({ newOrder: [...nextNewOrder] });
+            this.moveing = true;
+            setTimeout(() => {
+              this.moveing = false;
+            }, 700);
+          }
         }
 
-        const index = order.indexOf(ID);
-        // const top = [...new Array(index)].map((v, i) => i).reduce((topHeight, i) => {
-        //   const { height, top } = this.childrenMap[order[i]].ref.getBoundingClientRect();
-        //   return topHeight + height;
-        //   // const topHeight = height + this.childrenMap[IDList[i]].style.y;
-        // }, 0);
-        const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
-        // const y = this.childrenMap[ID].style.y;
-
-        // if (pageY > top + y && pageY < bottom + y) {
-        if (pageY > top && pageY < bottom) {
-          console.log(pageY, top, bottom, this.childrenMap[ID].ref);
-          // console.log(pageY, top, bottom);
-          return index;
-        }
-        return row;
-      }, currIndex);
-
-      // return
-      // const currentRow = clamp(row, 0, itemsCount - 1);
-      //
-      // if (originIndex !== realRow) {
-      //   console.log(newOrder);
-      // }
-      const originIndex = order.indexOf(originalPosOfLastPressed);
-      const newOrder = reinsert(order, originIndex, realRow);
-      this.setState({ order: [...newOrder] });
-
-      // console.log(pageY);
-      this.setState({ mouseY });
-    }
+        // console.log(pageY);
+        this.setState({ mouseY });
+      }
+    });
   };
 
   changeDone = () => {
@@ -288,12 +297,11 @@ export default class Drag extends Component {
     return (
       <div className={ `${prefix('drag-container')} ${prefix('map-container')}` } ref={ this.getContainer }>
         {order.map((ID, index) => {
-          // let y = 0;
-          // const newIndex = newOrder.indexOf(ID);
-          //
-          // if (index !== newIndex) {
-          //   y = (newIndex - index) * height;
-          // }
+          let y = 0;
+          const newIndex = newOrder.indexOf(ID);
+          if (index !== newIndex) {
+            y = (newIndex - index) * height;
+          }
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
@@ -309,7 +317,7 @@ export default class Drag extends Component {
               } : {
                 scale: spring(1, springConfig),
                 shadow: spring(0, springConfig),
-                y: spring(0, springConfig),
+                y: spring(y, springConfig),
               };
           return (
             <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>
