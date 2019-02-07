@@ -271,7 +271,7 @@ export default class Drag extends Component {
           if (index !== newIndex) {
             // console.log(index, newIndex);
             y = (newIndex - index > 0 ? 1 : -1)
-              * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
+              * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
           if (originalPosOfLastPressed === ID && !isPressed) {
@@ -279,7 +279,7 @@ export default class Drag extends Component {
             let nowY = 0;
             [...new Array(Math.abs(newIndex - index))].map((v, i) => i).forEach((i) => {
               const newOrderID = newOrder[i];
-              const { height } = this.childrenMap[newOrderID].ref.getBoundingClientRect();
+              const height = this.childrenMap[newOrderID].ref.offsetHeight;
               nowY += height;
             });
 
@@ -288,7 +288,7 @@ export default class Drag extends Component {
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(1, springConfig),
+              scale: spring(1.1, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
