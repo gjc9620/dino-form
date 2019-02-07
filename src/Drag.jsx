@@ -55,6 +55,8 @@ export default class Drag extends Component {
       order: [...order],
       newOrder: [...order],
     };
+
+    this.childrenMap = {};
   }
 
   componentDidMount() {
@@ -118,7 +120,7 @@ export default class Drag extends Component {
     this.removeListener();
     this.addListener();
 
-    const a = +new Date();
+    // const a = +new Date();
     if (!pressTimer) {
       pressTimer = window.setTimeout(() => {
         pressTimer = window.clearTimeout(pressTimer);
@@ -128,7 +130,7 @@ export default class Drag extends Component {
     }
   }
 
-  handleTouchStart = (e, key, pressY) => {
+  handleTouchStart = (e, ID, pressY) => {
     // console.log('handleTouchStart');
     e.persist();
     this.handleStart(e, () => {
@@ -140,12 +142,12 @@ export default class Drag extends Component {
         topDeltaY: pageY - pressY,
         mouseY: pressY,
         isPressed: true,
-        originalPosOfLastPressed: key,
+        originalPosOfLastPressed: ID,
       });
     });
   };
 
-  handleMouseDown = (e, pos, pressY) => {
+  handleMouseDown = (e, ID, pressY) => {
     // console.log('handleMouseDown');
     const { pageY } = e;
 
@@ -155,7 +157,7 @@ export default class Drag extends Component {
         topDeltaY: pageY - pressY,
         mouseY: pressY,
         isPressed: true,
-        originalPosOfLastPressed: pos,
+        originalPosOfLastPressed: ID,
       });
     });
   };
@@ -175,7 +177,6 @@ export default class Drag extends Component {
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
     const { pageY } = event;
-
     // pressTimer = clearTimeout(pressTimer);
 
     const {
@@ -187,18 +188,52 @@ export default class Drag extends Component {
     if (isPressed) {
       const mouseY = pageY - topDeltaY;
 
-      let row = Math.round(mouseY / height);
-      if (mouseY < 0) {
-        row = (itemsCount - 1) * height + mouseY;
-        row = Math.round(row / height);
-      }
-      // console.log('row', row);
+      // let row = Math.round(mouseY / height);
+      // if (mouseY < 0) {
+      //   row = (itemsCount - 2) * height + mouseY;
+      //   row = Math.round(row / height);
+      //   // console.log('row', row);
+      // }
+      // console.log('returnRow', row);
 
-      const currentRow = clamp(row, 0, itemsCount - 1);
+      // console.table(this.childrenMap);
+      // console.log(0, this.childrenMap[0].style.y);
+      // console.log(1, this.childrenMap[1].style.y);
 
-      const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), currentRow);
+      // const { top } = this.container.getBoundingClientRect();
+
+      const currIndex = order.indexOf(originalPosOfLastPressed);
+      const realRow = order.reduce((row, ID) => {
+        if (originalPosOfLastPressed === ID) {
+          return row;
+        }
+
+        const index = order.indexOf(ID);
+        // const top = [...new Array(index)].map((v, i) => i).reduce((topHeight, i) => {
+        //   const { height, top } = this.childrenMap[order[i]].ref.getBoundingClientRect();
+        //   return topHeight + height;
+        //   // const topHeight = height + this.childrenMap[IDList[i]].style.y;
+        // }, 0);
+        const { height, top } = this.childrenMap[ID].ref.getBoundingClientRect();
+
+        const bottom = height + top;
+        if (pageY > top && pageY < bottom) {
+          console.log(pageY, top, bottom, this.childrenMap[ID].ref);
+          // console.log(pageY, top, bottom);
+          return index;
+        }
+        return row;
+      }, currIndex);
+
+      // return
+      // const currentRow = clamp(row, 0, itemsCount - 1);
+      //
+      const newOrder = reinsert(order, order.indexOf(originalPosOfLastPressed), realRow);
+
+      console.log(newOrder);
 
       this.setState({ newOrder: [...newOrder] });
+      // console.log(pageY);
       this.setState({ mouseY });
     }
   };
@@ -259,7 +294,7 @@ export default class Drag extends Component {
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(1.1, springConfig),
+              scale: spring(1, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
@@ -283,10 +318,16 @@ export default class Drag extends Component {
                ({ scale, shadow, y }) => {
                  1111;
 
+                 if (!this.childrenMap[ID]) this.childrenMap[ID] = {};
+
+                 this.childrenMap[ID].style = { scale, shadow, y };
                  return (
                    <div
                      onMouseDown={ (event) => {
                        this.handleMouseDown(event, ID, y);
+                     } }
+                     ref={ (ref) => {
+                       this.childrenMap[ID].ref = ref;
                      } }
                      onTouchStart={ event => this.handleTouchStart(event, ID, y) }
                      className={ `${prefix('group-item-wrap')} ${originalPosOfLastPressed === ID && isPressed ? prefix('group-item-wrap-pressed') : ''}` }
