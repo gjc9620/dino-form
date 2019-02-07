@@ -184,26 +184,10 @@ export default class Drag extends Component {
         isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
       } = this.state;
 
-      console.log(newOrder);
-
       const mouseY = pageY - topDeltaY;
       this.setState({ mouseY });
 
       if (isPressed && !this.moveing) {
-        // let row = Math.round(mouseY / height);
-        // if (mouseY < 0) {
-        //   row = (itemsCount - 2) * height + mouseY;
-        //   row = Math.round(row / height);
-        //   // console.log('row', row);
-        // }
-        // console.log('returnRow', row);
-
-        // console.table(this.childrenMap);
-        // console.log(0, this.childrenMap[0].style.y);
-        // console.log(1, this.childrenMap[1].style.y);
-
-        // const { top } = this.container.getBoundingClientRect();
-
         const currIndex = newOrder.indexOf(originalPosOfLastPressed);
         const realRow = newOrder.reduce((row, ID) => {
           if (originalPosOfLastPressed === ID) {
@@ -211,31 +195,20 @@ export default class Drag extends Component {
           }
 
           const index = newOrder.indexOf(ID);
-          // const top = [...new Array(index)].map((v, i) => i).reduce((topHeight, i) => {
-          //   const { height, top } = this.childrenMap[order[i]].ref.getBoundingClientRect();
-          //   return topHeight + height;
-          //   // const topHeight = height + this.childrenMap[IDList[i]].style.y;
-          // }, 0);
           const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
-          // const y = this.childrenMap[ID].style.y;
 
-          // if (pageY > top + y && pageY < bottom + y) {
-          // console.log(pageY, top, bottom, ID, index);
           if (pageY > top && pageY < bottom) {
-            // console.log(pageY, top, bottom);
             return index;
           }
           return row;
         }, currIndex);
 
-        // return
-        // const currentRow = clamp(row, 0, itemsCount - 1);
-        // console.log(realRow);
         const originIndex = newOrder.indexOf(originalPosOfLastPressed);
+
         if (originIndex !== realRow) {
           const nextNewOrder = reinsert(newOrder, originIndex, realRow);
-          console.log('nextNewOrder', nextNewOrder);
           this.setState({ newOrder: [...nextNewOrder] });
+
           this.moveing = true;
           setTimeout(() => {
             this.moveing = false;
