@@ -26,7 +26,7 @@ const workHistoryForm = createForm({
     projects: {
       Com: ProjectsForm,
       field: 'projects',
-      count: 1,
+      count: 3,
       formProps: { aa: 1 },
       needDrag: true,
     },

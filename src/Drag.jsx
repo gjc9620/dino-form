@@ -6,6 +6,17 @@ import { prefix } from './util';
 // todo auto scroll
 // todo auto height
 
+function findAllParentNode(node) {
+  const els = [window];
+  let currNode = node;
+  while (currNode) {
+    els.unshift(currNode);
+    currNode = currNode.parentNode;
+  }
+  return els;
+}
+
+
 function reinsert(arr, from, to) {
   const _arr = arr.slice(0);
   const val = _arr[from];
@@ -22,7 +33,7 @@ const height = 400;
 const animDuration = 500;
 
 const springConfig = { stiffness: 200, damping: 20 };
-const itemsCount = 4;
+const itemsCount = 3;
 
 let pressTimer;
 
@@ -47,7 +58,7 @@ export default class Drag extends Component {
   }
 
   componentDidMount() {
-    [this.container, window].forEach((dom) => {
+    [this.container, ...findAllParentNode(this.container)].forEach((dom) => {
       dom.addEventListener('scroll', this.onScroll);
     });
   }
@@ -79,7 +90,9 @@ export default class Drag extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.onScroll);
+    [this.container, ...findAllParentNode(this.container)].forEach((dom) => {
+      dom.removeEventListener('scroll', this.onScroll);
+    });
   }
 
   onScroll = () => {
