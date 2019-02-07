@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
+import rafSchd from 'raf-schd';
 import { prefix } from './util';
 
 
@@ -30,7 +31,7 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const animDuration = 500;
+const animDuration = 700;
 
 const springConfig = { stiffness: 200, damping: 20 };
 
@@ -55,6 +56,7 @@ export default class Drag extends Component {
       newOrder: [...order],
     };
 
+    this.handleMouseMove = rafSchd(this.handleMouseMove);
     this.childrenMap = {};
   }
 
@@ -177,53 +179,54 @@ export default class Drag extends Component {
 
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
-    setTimeout(() => {
-      const { pageY } = event;
-      // pressTimer = clearTimeout(pressTimer);
+    // setTimeout(() => {
+    const { pageY } = event;
+    // pressTimer = clearTimeout(pressTimer);
 
-      const {
-        isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
-      } = this.state;
+    const {
+      isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
+    } = this.state;
 
-      const mouseY = pageY - topDeltaY;
-      this.setState({ mouseY });
+    const mouseY = pageY - topDeltaY;
+    this.setState({ mouseY });
 
-      if (isPressed && !this.moveing) {
-        const currIndex = newOrder.indexOf(originalPosOfLastPressed);
-        const realRow = newOrder.reduce((row, ID) => {
-          if (originalPosOfLastPressed === ID) {
-            return row;
-          }
+    console.log(isPressed, this.moveing);
+    if (isPressed && !this.moveing) {
+      const currIndex = newOrder.indexOf(originalPosOfLastPressed);
+      const realRow = newOrder.reduce((row, ID) => {
+        if (originalPosOfLastPressed === ID) {
+          return row;
+        }
 
-          const index = newOrder.indexOf(ID);
-          const { offsetHeight, offsetTop } = this.childrenMap[ID].ref;
-          const top = offsetTop;
-          const bottom = offsetTop + offsetHeight;
+        const index = newOrder.indexOf(ID);
+        const { offsetHeight, offsetTop } = this.childrenMap[ID].ref;
+        const top = offsetTop;
+        const bottom = offsetTop + offsetHeight;
 
-          // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
-          const cursorOffsetTop = this.childrenMap[originalPosOfLastPressed].ref.offsetTop
+        // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+        const cursorOffsetTop = this.childrenMap[originalPosOfLastPressed].ref.offsetTop
             + this.childrenMap[originalPosOfLastPressed].style.y;
 
-          // console.log(cursorOffsetTop, top, bottom, ID);
-          if (cursorOffsetTop > top && cursorOffsetTop < bottom) {
-            return index;
-          }
-          return row;
-        }, currIndex);
-
-        const originIndex = newOrder.indexOf(originalPosOfLastPressed);
-
-        if (originIndex !== realRow) {
-          const nextNewOrder = reinsert(newOrder, originIndex, realRow);
-          this.setState({ newOrder: [...nextNewOrder] });
-
-          this.moveing = true;
-          setTimeout(() => {
-            this.moveing = false;
-          }, animDuration);
+        console.log(cursorOffsetTop, top, bottom, ID);
+        if (cursorOffsetTop > top && cursorOffsetTop < bottom) {
+          return index;
         }
+        return row;
+      }, currIndex);
+
+      const originIndex = newOrder.indexOf(originalPosOfLastPressed);
+
+      if (originIndex !== realRow) {
+        const nextNewOrder = reinsert(newOrder, originIndex, realRow);
+        this.setState({ newOrder: [...nextNewOrder] });
+
+        this.moveing = true;
+        setTimeout(() => {
+          this.moveing = false;
+        }, animDuration);
       }
-    });
+    }
+    // });
   };
 
   changeDone = () => {
