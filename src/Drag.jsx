@@ -29,11 +29,9 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const height = 76;
 const animDuration = 500;
 
 const springConfig = { stiffness: 200, damping: 20 };
-const itemsCount = 3;
 
 let pressTimer;
 
@@ -279,8 +277,8 @@ export default class Drag extends Component {
           // if (originalPosOfLastPressed === ID ) {
             let nowY = 0;
             [...new Array(Math.abs(newIndex - index))].map((v, i) => i).forEach((i) => {
-              const ID = newOrder[i];
-              const { height } = this.childrenMap[ID].ref.getBoundingClientRect();
+              const newOrderID = newOrder[i];
+              const { height } = this.childrenMap[newOrderID].ref.getBoundingClientRect();
               nowY += height;
             });
 
