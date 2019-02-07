@@ -229,12 +229,12 @@ export default class Drag extends Component {
       // return
       // const currentRow = clamp(row, 0, itemsCount - 1);
       //
+      // if (originIndex !== realRow) {
+      //   console.log(newOrder);
+      // }
       const originIndex = order.indexOf(originalPosOfLastPressed);
-      if (originIndex !== realRow) {
-        const newOrder = reinsert(order, originIndex, realRow);
-        console.log(newOrder);
-        this.setState({ newOrder: [...newOrder] });
-      }
+      const newOrder = reinsert(order, originIndex, realRow);
+      this.setState({ order: [...newOrder] });
 
       // console.log(pageY);
       this.setState({ mouseY });
@@ -288,12 +288,12 @@ export default class Drag extends Component {
     return (
       <div className={ `${prefix('drag-container')} ${prefix('map-container')}` } ref={ this.getContainer }>
         {order.map((ID, index) => {
-          let y = 0;
-          const newIndex = newOrder.indexOf(ID);
-
-          if (index !== newIndex) {
-            y = (newIndex - index) * height;
-          }
+          // let y = 0;
+          // const newIndex = newOrder.indexOf(ID);
+          //
+          // if (index !== newIndex) {
+          //   y = (newIndex - index) * height;
+          // }
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
@@ -309,7 +309,7 @@ export default class Drag extends Component {
               } : {
                 scale: spring(1, springConfig),
                 shadow: spring(0, springConfig),
-                y: spring(y, springConfig),
+                y: spring(0, springConfig),
               };
           return (
             <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>

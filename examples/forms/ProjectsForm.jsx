@@ -76,15 +76,15 @@ const ProjectsForm = createForm({
 
       return (
         <div className="project">
-          <div>
-            <ProjectsName />
+          <ProjectsName />
+          {/* <div>
           </div>
           <div>
             <Time />
             <Time1 />
             <Time2 />
             <Time3 />
-          </div>
+          </div> */}
         </div>
       );
     }
