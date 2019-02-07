@@ -46,13 +46,12 @@ export default class Drag extends Component {
 
     this.Motions = {};
     this.nextRenderClearMotions = false;
-    this.lastPressedleftTop = 0;
 
     this.state = {
       topDeltaY: 0,
       mouseY: 0,
       isPressed: false,
-      originalPosOfLastPressed: 0,
+      originalPosOfLastPressed: undefined,
       order: [...order],
       newOrder: [...order],
     };
@@ -134,6 +133,8 @@ export default class Drag extends Component {
   handleTouchStart = (e, ID, pressY) => {
     // console.log('handleTouchStart');
     e.persist();
+    const { top } = e.currentTarget.getBoundingClientRect();
+
     this.handleStart(e, () => {
       const event = e.touches[0];
       const { pageY } = event;
@@ -225,6 +226,7 @@ export default class Drag extends Component {
     this.clearMotions(animDuration).then(() => {
       const { newOrder } = this.state;
       this.setState({ newOrder: [...newOrder], order: [...newOrder] });
+      this.setState({ topDeltaY: 0, mouseY: 0, originalPosOfLastPressed: undefined });
       onDrop(newOrder);
     });
   }
@@ -234,7 +236,7 @@ export default class Drag extends Component {
     const { isPressed } = this.state;
 
     pressTimer = window.clearTimeout(pressTimer);
-    this.setState({ isPressed: false, topDeltaY: 0, mouseY: 0 });
+    this.setState({ isPressed: false });
     this.removeListener();
 
     if (isPressed) {
@@ -273,15 +275,16 @@ export default class Drag extends Component {
             y = (newIndex - index > 0 ? 1 : -1) * this.childrenMap[originalPosOfLastPressed].ref.getBoundingClientRect().height;
           }
 
-          if (originalPosOfLastPressed === ID) {
-            // y = 0;
-            [...new Array(index)].map((v, i) => i).forEach((i) => {
+          if (originalPosOfLastPressed === ID && !isPressed) {
+          // if (originalPosOfLastPressed === ID ) {
+            let nowY = 0;
+            [...new Array(Math.abs(newIndex - index))].map((v, i) => i).forEach((i) => {
               const ID = newOrder[i];
               const { height } = this.childrenMap[ID].ref.getBoundingClientRect();
-              y += height;
+              nowY += height;
             });
-            
-            console.log(y);
+
+            y = (newIndex - index > 0 ? 1 : -1) * nowY;
           }
 
           const style = originalPosOfLastPressed === ID && isPressed
