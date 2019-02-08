@@ -199,7 +199,7 @@ function createForm({
               const { ref } = subForm;
 
               if (!ref) {
-                console.warn(`[dino-form] subForm field is '${field}' should be mounted but the Ref is not registered, maybe you not render this subForm.`);
+                console.warn(`[dino-form] field is '${field}' subForm should be mounted but the Ref is not registered, maybe you not render this subForm.`);
                 return;
               }
 
@@ -219,7 +219,8 @@ function createForm({
             group.IDList = [...new Array(value.length)].map(() => this.ID++);
 
             // render
-            await this.topFormRender();
+            // await render();
+            await render();
             // await this.topFormRender();
 
             // group should mounted
@@ -227,7 +228,7 @@ function createForm({
 
             await mapObjectAsync(IDList, async (index, ID) => {
               const ref = await getGroupRef({
-                group, index, ID, render: this.topFormRender,
+                group, index, ID, render: this.render(),
               });
 
               if (!ref) {
