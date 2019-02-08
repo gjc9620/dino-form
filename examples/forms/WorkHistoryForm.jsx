@@ -28,7 +28,7 @@ const workHistoryForm = createForm({
       field: 'projects',
       count: 0,
       formProps: { aa: 1 },
-      // needDrag: true,
+      needDrag: true,
     },
   },
 })(class WorkHistory extends React.Component {
