@@ -110,7 +110,7 @@ export default class Drag extends Component {
     }
 
     this.clearMotions().then(() => {
-      this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+      this.setState({ children, newOrder: [...nextProps.order], order: [...nextProps.order] });
     });
   }
 
