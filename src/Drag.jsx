@@ -202,16 +202,21 @@ export default class Drag extends Component {
         }
 
         const index = newOrder.indexOf(ID);
-        const { offsetHeight, offsetTop } = this.childrenMap[ID].ref;
-        const top = offsetTop;
-        const bottom = offsetTop + offsetHeight;
+        const { ref: { offsetHeight, offsetTop }, style: currStyle } = this.childrenMap[ID];
+        const top = offsetTop + currStyle.y;
+        const bottom = top + offsetHeight;
 
         // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
-        const cursorOffsetTop = this.childrenMap[originalPosOfLastPressed].ref.offsetTop
-            + this.childrenMap[originalPosOfLastPressed].style.y;
+        const { ref: cursor, style } = this.childrenMap[originalPosOfLastPressed];
+        const { offsetTop: cursorOffsetTop, offsetHeight: cursorOffsetHeight } = cursor;
 
-        console.log(cursorOffsetTop, top, bottom, ID);
-        if (cursorOffsetTop > top && cursorOffsetTop < bottom) {
+        const cursorMiddleLine = cursorOffsetTop + style.y + (cursorOffsetHeight / 2);
+
+        console.log(cursorMiddleLine, top + (offsetHeight / 4), bottom - (offsetHeight / 4), ID);
+        if (
+          cursorMiddleLine > top + (offsetHeight / 4)
+          && cursorMiddleLine < bottom - (offsetHeight / 4)
+        ) {
           return index;
         }
         return row;
@@ -299,7 +304,7 @@ export default class Drag extends Component {
 
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(0.5, springConfig),
+              scale: spring(0.7, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
