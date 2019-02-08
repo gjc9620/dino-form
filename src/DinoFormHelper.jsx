@@ -126,14 +126,23 @@ export const dinoFormMoveItem = ({
 }) => {
   const group = getGroup();
   const index = group.IDList.indexOf(ID);
-  group.IDList.splice(index, 1);
+  group.lastActionMoveID = ID;
+
   if (offset === -Infinity) {
+    group.lastMoveID = group.IDList[0];
+    group.IDList.splice(index, 1);
     group.IDList.splice(0, 0, ID);
   } else if (offset === Infinity) {
+    group.lastMoveID = group.IDList[group.IDList.length - 1];
+    group.IDList.splice(index, 1);
     group.IDList.splice(group.IDList.length, 0, ID);
   } else {
+    group.lastMoveID = group.IDList[index + offset];
+    group.IDList.splice(index, 1);
     group.IDList.splice(index + offset, 0, ID);
   }
+  console.log(group.lastMoveID);
+  
   render();
 };
 
@@ -268,13 +277,17 @@ export const groupsAPI = ({
       formProps,
     })
   );
-  
+
   const group = {
     IDList,
     dragMap: (mapGroup = dinoFormMapGroup) => (
       <Drag
-        order={ IDList }
-        onDrop={ (newIDList) => { groupValue.IDList = [...newIDList]; render(); } }>
+        order={ [...IDList] }
+        lastActionMoveID={ groupValue.lastActionMoveID }
+        lastMoveID={ groupValue.lastMoveID }
+        changeDone={ (newIDList) => {
+          groupValue.IDList = [...newIDList]; render();
+        } }>
         {
           mapObject(IDList, (index, ID) => ({ [ID]: mapFun(mapGroup, ID, index) }))
         }

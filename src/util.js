@@ -1,4 +1,10 @@
 
+export function sleep(time) {
+  return new Promise((r) => {
+    setTimeout(r, time);
+  });
+}
+
 export function mapObject(obj, callback) {
   const mapedObj = {};
   for (const [key, value] of Object.entries(obj)) {

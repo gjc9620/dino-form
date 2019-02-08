@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
 import rafSchd from 'raf-schd';
-import { prefix } from './util';
+import { prefix, sleep } from './util';
 
 
 // todo auto scroll
@@ -30,16 +30,17 @@ function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-const animDuration = 700;
+const animDuration = 300;
 
 const springConfig = { stiffness: 200, damping: 20 };
 
 let pressTimer;
 
+
 export default class Drag extends Component {
   constructor(props) {
     super(props);
-    const { order } = props;
+    const { order, children } = props;
 
     console.log('Drag constructor');
 
@@ -53,6 +54,8 @@ export default class Drag extends Component {
       originalPosOfLastPressed: undefined,
       order: [...order],
       newOrder: [...order],
+      children,
+      newChildren: children,
     };
 
     this.handleMouseMove = rafSchd(this.handleMouseMove);
@@ -65,29 +68,41 @@ export default class Drag extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const { order } = this.state;
+  async componentWillReceiveProps(nextProps, nextContext) {
+    const { order, newOrder } = this.state;
+    const { lastActionMoveID, lastMoveID, children } = nextProps;
 
     if (
       order.length === nextProps.order.length
       && JSON.stringify(order) !== JSON.stringify(nextProps.order)
     ) {
-      this.clearMotions().then(() => {
-        this.setState({
-          newOrder: [...nextProps.order],
-          // originalPosOfLastPressed: order.find((ID, index) => nextProps.order.indexOf(ID) !== index),
-          originalPosOfLastPressed: 0,
-          isPressed: true,
-        });
-        return;
-        this.clearMotions(animDuration).then(() => {
-          this.setState({
-            newOrder: [...nextProps.order],
-            order: [...nextProps.order],
-            originalPosOfLastPressed: undefined,
-            isPressed: false,
-          });
-        });
+      await this.clearMotions();
+      this.setState({
+        // newOrder: [...nextProps.order],
+        originalPosOfLastPressed: lastActionMoveID,
+        isPressed: true,
+      });
+
+      await this.setMouseY(
+        this.childrenMap[lastMoveID].ref.offsetTop
+        - this.childrenMap[lastActionMoveID].ref.offsetTop,
+      );
+
+      this.setState({ newOrder: [...nextProps.order] });
+
+      await sleep(animDuration);
+
+      this.setState({ isPressed: false });
+
+      await sleep(200);
+
+      await this.clearMotions();
+
+      this.setState({
+        newOrder: [...nextProps.order],
+        order: [...nextProps.order],
+        originalPosOfLastPressed: undefined,
+        children,
       });
     }
 
@@ -152,8 +167,6 @@ export default class Drag extends Component {
       const event = e.touches[0];
       const { pageY } = event;
 
-      debugger;
-      // console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
         mouseY: pressY,
@@ -231,13 +244,11 @@ export default class Drag extends Component {
     return newOrder;
   }
 
-  setMouseY = (pageY) => {
-    const {
-      isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
-    } = this.state;
-    const mouseY = pageY - topDeltaY;
-    this.setState({ mouseY });
-  }
+  setMouseY = mouseY => new Promise((r) => {
+    this.setState({ mouseY }, () => {
+      sleep(300).then(r);
+    });
+  })
 
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
@@ -247,7 +258,9 @@ export default class Drag extends Component {
       isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
     } = this.state;
 
-    this.setMouseY(pageY);
+    const mouseY = pageY - topDeltaY;
+
+    this.setMouseY(mouseY);
 
     if (isPressed && !this.moveing) {
       if (+new Date() - this.preTime < animDuration) {
@@ -265,13 +278,13 @@ export default class Drag extends Component {
   };
 
   changeDone = () => {
-    const { onDrop = () => {} } = this.props;
+    const { changeDone } = this.props;
 
     this.clearMotions(animDuration).then(() => {
       const { newOrder } = this.state;
       this.setState({ newOrder: [...newOrder], order: [...newOrder] });
       this.setState({ topDeltaY: 0, mouseY: 0, originalPosOfLastPressed: undefined });
-      onDrop(newOrder);
+      changeDone(newOrder);
     });
   }
 
@@ -302,12 +315,10 @@ export default class Drag extends Component {
 
   render() {
     const {
-      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [],
+      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [], children, newChildren,
     } = this.state;
 
     const { nextRenderClearMotions } = this;
-
-    const { children } = this.props;
 
     return (
       <div className={ `${prefix('drag-container')} ${prefix('map-container')}` } ref={ this.getContainer }>
@@ -329,7 +340,6 @@ export default class Drag extends Component {
             }
             // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
-            debugger;
           } else if (index !== newIndex) {
             // console.log(index, newIndex);
             y = (newIndex - index > 0 ? 1 : -1)
@@ -399,5 +409,5 @@ export default class Drag extends Component {
 }
 
 Drag.defaultProps = {
-  onDrop: () => {},
+  changeDone: () => {},
 };
