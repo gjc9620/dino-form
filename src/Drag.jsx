@@ -74,9 +74,19 @@ export default class Drag extends Component {
       && JSON.stringify(order) !== JSON.stringify(nextProps.order)
     ) {
       this.clearMotions().then(() => {
-        this.setState({ newOrder: [...nextProps.order] });
+        this.setState({
+          newOrder: [...nextProps.order],
+          // originalPosOfLastPressed: order.find((ID, index) => nextProps.order.indexOf(ID) !== index),
+          originalPosOfLastPressed: 0,
+          isPressed: true,
+        });
+        return
         this.clearMotions(animDuration).then(() => {
-          this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+          this.setState({
+            newOrder: [...nextProps.order], order: [...nextProps.order],
+            originalPosOfLastPressed: undefined,
+            isPressed: false,
+          });
         });
       });
     }
@@ -103,10 +113,10 @@ export default class Drag extends Component {
     this.setState({ isPressed: false });
   }
 
-  addListener = () => {
-    window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+  addListener = ({ move = true } = {}) => {
+    move && window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    move && window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
   }
 
@@ -119,13 +129,15 @@ export default class Drag extends Component {
 
   handleStart = (e, func = () => {}) => {
     this.removeListener();
-    this.addListener();
+    this.addListener({ move: false });
 
     // const a = +new Date();
     if (!pressTimer) {
       pressTimer = window.setTimeout(() => {
         pressTimer = window.clearTimeout(pressTimer);
         // console.log(+new Date() - a);
+        this.removeListener();
+        this.addListener();
         func();
       }, 700);
     }
@@ -140,6 +152,7 @@ export default class Drag extends Component {
       const event = e.touches[0];
       const { pageY } = event;
 
+      debugger
       // console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
@@ -176,7 +189,9 @@ export default class Drag extends Component {
       this.handleMouseMove(e.touches[0]);
     }
   };
-
+  reOrder = ()=>{
+  
+  }
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
     // setTimeout(() => {
@@ -187,6 +202,7 @@ export default class Drag extends Component {
       isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
     } = this.state;
 
+    debugger
     const mouseY = pageY - topDeltaY;
     this.setState({ mouseY });
 
@@ -299,15 +315,17 @@ export default class Drag extends Component {
             }
             // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
+            debugger
           } else if (index !== newIndex) {
             // console.log(index, newIndex);
             y = (newIndex - index > 0 ? 1 : -1)
                 * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
+          console.log(mouseY)
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(0.7, springConfig),
+              scale: spring(1, springConfig),
               shadow: spring(16, springConfig),
               y: mouseY,
             }
