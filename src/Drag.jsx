@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
 import rafSchd from 'raf-schd';
-import { prefix, sleep } from './util';
+import { prefix, sleep, isExist } from './util';
 
 
 // todo auto scroll
@@ -75,6 +75,8 @@ export default class Drag extends Component {
     if (
       order.length === nextProps.order.length
       && JSON.stringify(order) !== JSON.stringify(nextProps.order)
+      && isExist(lastActionMoveID)
+      && isExist(lastMoveID)
     ) {
       await this.clearMotions();
       this.setState({
@@ -104,6 +106,8 @@ export default class Drag extends Component {
         originalPosOfLastPressed: undefined,
         children,
       });
+
+      return;
     }
 
     if (order.length !== nextProps.order.length) {
@@ -111,6 +115,8 @@ export default class Drag extends Component {
         this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
       });
     }
+
+    this.setState({ children });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -334,10 +340,21 @@ export default class Drag extends Component {
               : ({ startIndex: newIndex, endIndex: index });
 
             for (let i = startIndex; i < endIndex; i++) {
-              const { ref: { offsetHeight } } = this.childrenMap[order[i]];
+              const {
+                ref: { offsetHeight },
+              } = this.childrenMap[(newIndex - index > 0 ? newOrder : order)[i]];
               nowY += offsetHeight;
               // debugger;
             }
+
+            // for (let i = index; i <= newIndex; newIndex > index ? i++ : i--) {
+            //   if (order[i] === originalPosOfLastPressed) {
+            //     continue;
+            //   }
+            //   const { ref: { offsetHeight } } = this.childrenMap[order[i]];
+            //   nowY += offsetHeight;
+            //   // debugger;
+            // }
             // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
           } else if (index !== newIndex) {
@@ -349,7 +366,7 @@ export default class Drag extends Component {
           // console.log(mouseY);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(0.7, springConfig),
+              scale: spring(1.1, springConfig),
               shadow: spring(16, springConfig),
               y: spring(mouseY, { stiffness: 500, damping: 50 }),
               // y: mouseY,

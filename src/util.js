@@ -5,6 +5,14 @@ export function sleep(time) {
   });
 }
 
+export function isExist(value) {
+  return (
+    value !== undefined
+    && value !== null
+    && !Number.isNaN(value)
+  );
+}
+
 export function mapObject(obj, callback) {
   const mapedObj = {};
   for (const [key, value] of Object.entries(obj)) {
