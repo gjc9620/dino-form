@@ -293,13 +293,17 @@ export default class Drag extends Component {
           if (originalPosOfLastPressed === ID && !isPressed) {
           // if (originalPosOfLastPressed === ID ) {
             let nowY = 0;
-            [...new Array(Math.abs(newIndex - index))].map((v, i) => i).forEach((i) => {
-              const newOrderID = newOrder[i];
-              const height = this.childrenMap[newOrderID].ref.offsetHeight;
-              nowY += height;
-            });
+            const { startIndex, endIndex } = newIndex - index > 0
+              ? ({ startIndex: index, endIndex: newIndex })
+              : ({ startIndex: newIndex, endIndex: index });
 
-            y = (newIndex - index > 0 ? 1 : -1) * nowY;
+            for (let i = startIndex; i < endIndex; i++) {
+              const { ref: { offsetHeight } } = this.childrenMap[order[i]];
+              nowY += offsetHeight;
+              // debugger;
+            }
+            // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
+            y = newIndex - index > 0 ? nowY : -nowY;
           }
 
           const style = originalPosOfLastPressed === ID && isPressed
