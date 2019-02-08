@@ -5,7 +5,6 @@ import { prefix, sleep, isExist } from './util';
 
 
 // todo auto scroll
-// todo ref bug movedown move up
 
 function findAllParentNode(node) {
   const els = [window];
@@ -366,7 +365,7 @@ export default class Drag extends Component {
           // console.log(mouseY);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(1.1, springConfig),
+              scale: spring(0.6, springConfig),
               shadow: spring(16, springConfig),
               y: spring(mouseY, { stiffness: 500, damping: 50 }),
               // y: mouseY,
