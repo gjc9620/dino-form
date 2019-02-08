@@ -3,6 +3,29 @@ import { prefix, mapObject } from './util';
 import DinoFormItem from './DinoFormItem';
 import Drag from './Drag';
 
+export const dinoFormGetGroupRef = async ({ group, index, ID, render } = {}) => {
+  const { IDRefMap, IDList, formName } = group;
+
+  let {
+    [ID]: {
+      ref,
+    } = {},
+  } = IDRefMap;
+  // const
+  let { reTryRefCount } = 3;
+
+  while (!ref && reTryRefCount-- > 0) {
+    await render();
+    ({
+      [ID]: {
+        ref,
+      } = {},
+    } = IDRefMap);
+  }
+
+  return ref;
+};
+
 export const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({
     [comName]: Object.assign(
@@ -141,8 +164,7 @@ export const dinoFormMoveItem = ({
     group.IDList.splice(index, 1);
     group.IDList.splice(index + offset, 0, ID);
   }
-  console.log(group.lastMoveID);
-  
+
   render();
 };
 
@@ -281,28 +303,34 @@ export const groupsAPI = ({
   const group = {
     IDList,
     dragMap: (mapGroup = dinoFormMapGroup) => (
-      <Drag
-        order={ [...IDList] }
-        lastActionMoveID={ groupValue.lastActionMoveID }
-        lastMoveID={ groupValue.lastMoveID }
-        changeDone={ (newIDList) => {
-          groupValue.IDList = [...newIDList]; render();
-        } }>
-        {
+      IDList.length > 0
+        ? (
+          <Drag
+            order={ [...IDList] }
+            lastActionMoveID={ groupValue.lastActionMoveID }
+            lastMoveID={ groupValue.lastMoveID }
+            changeDone={ (newIDList) => {
+              groupValue.IDList = [...newIDList]; render();
+            } }>
+            {
           mapObject(IDList, (index, ID) => ({ [ID]: mapFun(mapGroup, ID, index) }))
         }
-      </Drag>
+          </Drag>
+        ) : null
     ),
     map: (mapGroup = dinoFormMapGroup) => (
-      <div className={ `${prefix('map-container')}` }>
-        {
+      IDList.length > 0
+        ? (
+          <div className={ `${prefix('map-container')}` }>
+            {
           IDList.map((ID, index) => (
             <div className={ `${prefix('group-item-wrap')}` } key={ ID }>
               { mapFun(mapGroup, ID, index)}
             </div>
           ))
         }
-      </div>
+          </div>
+        ) : null
     ),
     render: (
       renderGroup = ele => (

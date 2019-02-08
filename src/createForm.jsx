@@ -7,9 +7,11 @@ import {
   createFragments,
   groupsAPI,
   subFormsAPI,
+  dinoFormGetGroupRef,
 } from './DinoFormHelper';
 
 import { mapObject, mapObjectAsync } from './util';
+import { sleep } from './util';
 
 class WrapCom extends Component {
   render() {
@@ -22,6 +24,7 @@ function createForm({
   fragments = {},
   groups = {},
   subForms = {},
+  getGroupRef = dinoFormGetGroupRef,
 } = {}) {
   return function create(View) {
     return function bindWrap(Wrap = WrapCom) {
@@ -81,12 +84,12 @@ function createForm({
           });
         })
 
-        topFormRender = () => {
+        topFormRender = () => new Promise((r) => {
           if (this.props.topFormRender) {
-            return this.props.topFormRender();
+            return this.props.topFormRender().then(r);
           }
-          return this.setState({});
-        }
+          return this.setState({}, r);
+        })
 
         createDinoFormApi = () => ({
           FromItem: this.FromItem,
@@ -185,7 +188,7 @@ function createForm({
             this.subForms,
           ).find(subForm => subForm.field === field);
 
-          const render = () => new Promise(r => this.setState({}, () => r()));
+          const render = () => new Promise(r => this.setState({}, r));
 
           await mapObjectAsync(values, async (field, value) => {
             const group = findGroups(field);
@@ -194,6 +197,12 @@ function createForm({
             if (subForm) {
               const { [field]: subFormMapObj } = maps;
               const { ref } = subForm;
+
+              if (!ref) {
+                console.warn(`[dino-form] subForm field is '${field}' should be mounted but the Ref is not registered, maybe you not render this subForm.`);
+                return;
+              }
+
               ref.setFullValues(value, subFormMapObj);
               return;
             }
@@ -210,20 +219,19 @@ function createForm({
             group.IDList = [...new Array(value.length)].map(() => this.ID++);
 
             // render
-            await render();
+            await this.topFormRender();
+            // await this.topFormRender();
 
             // group should mounted
             const { IDRefMap, IDList, formName } = group;
 
-            IDList.forEach((ID, index) => {
-              const {
-                [ID]: {
-                  ref,
-                } = {},
-              } = IDRefMap;
+            await mapObjectAsync(IDList, async (index, ID) => {
+              const ref = await getGroupRef({
+                group, index, ID, render: this.topFormRender,
+              });
 
               if (!ref) {
-                console.warn(`[dino-form] ${formName} should be mounted but the Ref is not registered, maybe you not render this group.`);
+                console.warn(`[dino-form] form '${formName}' should be mounted but the Ref is not registered, maybe you not render this group.`);
                 return;
               }
 
@@ -240,7 +248,7 @@ function createForm({
               IDRefMap[ID].props = props;
 
               ref.setFullValues(groupItemValue, mapObj);
-            });
+            }, IDList);
           });
 
           this.setState({});

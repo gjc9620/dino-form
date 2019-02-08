@@ -41,8 +41,6 @@ export default class Drag extends Component {
     super(props);
     const { order, children } = props;
 
-    console.log('Drag constructor');
-
     this.Motions = {};
     this.nextRenderClearMotions = false;
 
@@ -108,7 +106,6 @@ export default class Drag extends Component {
 
       return;
     }
-
     this.clearMotions().then(() => {
       this.setState({ children, newOrder: [...nextProps.order], order: [...nextProps.order] });
     });
@@ -126,7 +123,9 @@ export default class Drag extends Component {
 
   onScroll = () => {
     clearTimeout(pressTimer);
-    this.setState({ isPressed: false });
+    if (this.state.isPressed) {
+      this.setState({ isPressed: false });
+    }
   }
 
   addListener = ({ move = true } = {}) => {

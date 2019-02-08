@@ -16,6 +16,8 @@ module.exports = {
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
     'no-unused-expressions': ["error", { "allowShortCircuit": true }],
+    "no-plusplus": 'off',
+    "no-await-in-loop": 'off',
     
     //react
     "react/no-multi-comp": "off",
