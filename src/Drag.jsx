@@ -5,7 +5,6 @@ import { prefix } from './util';
 
 
 // todo auto scroll
-// todo auto height srcoll bug
 // todo ref bug movedown move up
 
 function findAllParentNode(node) {
@@ -213,7 +212,7 @@ export default class Drag extends Component {
 
       const cursorMiddleLine = cursorOffsetTop + style.y + (cursorOffsetHeight / 2);
 
-      console.log(cursorMiddleLine, top + (offsetHeight / 4), bottom - (offsetHeight / 4), ID);
+      // console.log(cursorMiddleLine, top + (offsetHeight / 4), bottom - (offsetHeight / 4), ID);
       if (
         cursorMiddleLine > top + (offsetHeight / 4)
         && cursorMiddleLine < bottom - (offsetHeight / 4)
@@ -337,12 +336,13 @@ export default class Drag extends Component {
                 * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
-          console.log(mouseY);
+          // console.log(mouseY);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
-              scale: spring(1, springConfig),
+              scale: spring(0.7, springConfig),
               shadow: spring(16, springConfig),
-              y: mouseY,
+              y: spring(mouseY, { stiffness: 500, damping: 50 }),
+              // y: mouseY,
             }
             : nextRenderClearMotions
               ? {
