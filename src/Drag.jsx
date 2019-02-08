@@ -284,11 +284,6 @@ export default class Drag extends Component {
         {order.map((ID, index) => {
           let y = 0;
           const newIndex = newOrder.indexOf(ID);
-          if (index !== newIndex) {
-            // console.log(index, newIndex);
-            y = (newIndex - index > 0 ? 1 : -1)
-              * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
-          }
 
           if (originalPosOfLastPressed === ID && !isPressed) {
           // if (originalPosOfLastPressed === ID ) {
@@ -304,6 +299,10 @@ export default class Drag extends Component {
             }
             // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
+          } else if (index !== newIndex) {
+            // console.log(index, newIndex);
+            y = (newIndex - index > 0 ? 1 : -1)
+                * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
           const style = originalPosOfLastPressed === ID && isPressed
