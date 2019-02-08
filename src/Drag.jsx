@@ -388,11 +388,10 @@ export default class Drag extends Component {
                // console.log('scale', ' ', scale);
                // console.log('shadow', ' ', shadow);
                ({ scale, shadow, y }) => {
-                 1111;
-
+                 
                  if (!this.childrenMap[ID]) this.childrenMap[ID] = {};
-
                  this.childrenMap[ID].style = { scale, shadow, y };
+                 
                  return (
                    <div
                      onMouseDown={ (event) => {
