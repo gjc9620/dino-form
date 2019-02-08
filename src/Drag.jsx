@@ -109,13 +109,9 @@ export default class Drag extends Component {
       return;
     }
 
-    if (order.length !== nextProps.order.length) {
-      this.clearMotions().then(() => {
-        this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
-      });
-    }
-
-    this.setState({ children });
+    this.clearMotions().then(() => {
+      this.setState({ newOrder: [...nextProps.order], order: [...nextProps.order] });
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
