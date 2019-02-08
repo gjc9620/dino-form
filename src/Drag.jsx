@@ -80,10 +80,11 @@ export default class Drag extends Component {
           originalPosOfLastPressed: 0,
           isPressed: true,
         });
-        return
+        return;
         this.clearMotions(animDuration).then(() => {
           this.setState({
-            newOrder: [...nextProps.order], order: [...nextProps.order],
+            newOrder: [...nextProps.order],
+            order: [...nextProps.order],
             originalPosOfLastPressed: undefined,
             isPressed: false,
           });
@@ -152,7 +153,7 @@ export default class Drag extends Component {
       const event = e.touches[0];
       const { pageY } = event;
 
-      debugger
+      debugger;
       // console.log(pageY, pressY);
       this.setState({
         topDeltaY: pageY - pressY,
@@ -189,59 +190,73 @@ export default class Drag extends Component {
       this.handleMouseMove(e.touches[0]);
     }
   };
-  reOrder = ()=>{
-  
+
+  reOrder = () => {
+    const {
+      originalPosOfLastPressed, newOrder,
+    } = this.state;
+
+    const currIndex = newOrder.indexOf(originalPosOfLastPressed);
+    const realRow = newOrder.reduce((row, ID) => {
+      if (originalPosOfLastPressed === ID) {
+        return row;
+      }
+
+      const index = newOrder.indexOf(ID);
+      const { ref: { offsetHeight, offsetTop }, style: currStyle } = this.childrenMap[ID];
+      const top = offsetTop + currStyle.y;
+      const bottom = top + offsetHeight;
+
+      // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
+      const { ref: cursor, style } = this.childrenMap[originalPosOfLastPressed];
+      const { offsetTop: cursorOffsetTop, offsetHeight: cursorOffsetHeight } = cursor;
+
+      const cursorMiddleLine = cursorOffsetTop + style.y + (cursorOffsetHeight / 2);
+
+      console.log(cursorMiddleLine, top + (offsetHeight / 4), bottom - (offsetHeight / 4), ID);
+      if (
+        cursorMiddleLine > top + (offsetHeight / 4)
+        && cursorMiddleLine < bottom - (offsetHeight / 4)
+      ) {
+        return index;
+      }
+      return row;
+    }, currIndex);
+
+    const originIndex = newOrder.indexOf(originalPosOfLastPressed);
+
+    if (originIndex !== realRow) {
+      const nextNewOrder = reinsert(newOrder, originIndex, realRow);
+      return nextNewOrder;
+    }
+    return newOrder;
   }
+
+  setMouseY = (pageY) => {
+    const {
+      isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
+    } = this.state;
+    const mouseY = pageY - topDeltaY;
+    this.setState({ mouseY });
+  }
+
   handleMouseMove = (event) => {
     // console.log('handleMouseMove');
-    // setTimeout(() => {
     const { pageY } = event;
-    // pressTimer = clearTimeout(pressTimer);
 
     const {
       isPressed, topDeltaY, originalPosOfLastPressed, newOrder,
     } = this.state;
 
-    debugger
-    const mouseY = pageY - topDeltaY;
-    this.setState({ mouseY });
+    this.setMouseY(pageY);
 
-    console.log(isPressed, this.moveing);
     if (isPressed && !this.moveing) {
       if (+new Date() - this.preTime < animDuration) {
         return;
       }
-      const currIndex = newOrder.indexOf(originalPosOfLastPressed);
-      const realRow = newOrder.reduce((row, ID) => {
-        if (originalPosOfLastPressed === ID) {
-          return row;
-        }
+      const nextNewOrder = this.reOrder();
 
-        const index = newOrder.indexOf(ID);
-        const { ref: { offsetHeight, offsetTop }, style: currStyle } = this.childrenMap[ID];
-        const top = offsetTop + currStyle.y;
-        const bottom = top + offsetHeight;
-
-        // const { top, bottom } = this.childrenMap[ID].ref.getBoundingClientRect();
-        const { ref: cursor, style } = this.childrenMap[originalPosOfLastPressed];
-        const { offsetTop: cursorOffsetTop, offsetHeight: cursorOffsetHeight } = cursor;
-
-        const cursorMiddleLine = cursorOffsetTop + style.y + (cursorOffsetHeight / 2);
-
-        console.log(cursorMiddleLine, top + (offsetHeight / 4), bottom - (offsetHeight / 4), ID);
-        if (
-          cursorMiddleLine > top + (offsetHeight / 4)
-          && cursorMiddleLine < bottom - (offsetHeight / 4)
-        ) {
-          return index;
-        }
-        return row;
-      }, currIndex);
-
-      const originIndex = newOrder.indexOf(originalPosOfLastPressed);
-
-      if (originIndex !== realRow) {
-        const nextNewOrder = reinsert(newOrder, originIndex, realRow);
+      if (newOrder !== nextNewOrder) {
         this.setState({ newOrder: [...nextNewOrder] });
 
         this.preTime = +new Date();
@@ -315,14 +330,14 @@ export default class Drag extends Component {
             }
             // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
-            debugger
+            debugger;
           } else if (index !== newIndex) {
             // console.log(index, newIndex);
             y = (newIndex - index > 0 ? 1 : -1)
                 * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
-          console.log(mouseY)
+          console.log(mouseY);
           const style = originalPosOfLastPressed === ID && isPressed
             ? {
               scale: spring(1, springConfig),
