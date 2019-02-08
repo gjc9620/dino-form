@@ -409,8 +409,6 @@ export default class Drag extends Component {
                        WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
                        zIndex: ID === originalPosOfLastPressed ? 99 : ID,
                      } }>
-                     {/* { children[index] } */}
-                     {/* <div>{ID}</div> */}
                      { children[ID] }
                    </div>
                  );
