@@ -233,6 +233,10 @@ export const groupsAPI = ({
     Com,
     field,
     needDrag,
+    clearMotions,
+    pressedMotions,
+    notPressedMotions,
+    createStyle,
     IDRefMap,
     IDList,
     Form,
@@ -304,12 +308,16 @@ export const groupsAPI = ({
   const group = {
     IDList,
     dragMap: (mapGroup = dinoFormMapGroup) => (
-      IDList.length > 0
+      IDList.length > 0 // todo style config
         ? (
           <Drag
             order={ [...IDList] }
             lastActionMoveID={ groupValue.lastActionMoveID }
             lastMoveID={ groupValue.lastMoveID }
+            clearMotions={ clearMotions }
+            pressedMotions={ pressedMotions }
+            notPressedMotions={ notPressedMotions }
+            createStyle={ createStyle }
             changeDone={ (newIDList) => {
               groupValue.IDList = [...newIDList]; render();
             } }>

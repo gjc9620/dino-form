@@ -58,7 +58,7 @@ function createForm({
         }
 
         createGroups = groupsObj => mapObject(groupsObj, (formName, {
-          Com, field, count, formProps = {}, needDrag = false,
+          Com, field, count, formProps = {}, needDrag = false, //todo
         } = {}) => {
           const IDRefMap = {};
           const IDList = [...new Array(count)].map(() => this.ID++);
