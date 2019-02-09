@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion';
+import { Motion } from 'react-motion';
 import rafSchd from 'raf-schd';
 import { prefix, sleep, isExist } from './util';
+
+export { spring } from 'react-motion';
 
 
 // todo auto scroll
