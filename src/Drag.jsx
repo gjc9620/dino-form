@@ -384,6 +384,7 @@ export default class Drag extends Component {
                      style={ {
                        ...createStyle({ styles, ID, originalPosOfLastPressed }),
                        zIndex: ID === originalPosOfLastPressed ? 99 : ID,
+                       position: ID === originalPosOfLastPressed ? 'relative' : 'unset',
                      } }>
                      { children[ID] }
                    </div>
