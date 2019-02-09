@@ -2,31 +2,30 @@ import React, { Component } from 'react';
 import { prefix, mapObject, sleep } from './util';
 import DinoFormItem from './DinoFormItem';
 import Drag from './Drag';
-import { } from './util';
 
-export const dinoFormGetGroupRef = async ({
-  group, index, ID, render,
-} = {}) => {
-  const { IDRefMap, IDList, formName } = group;
+export async function getRef(
+  getFun = () => {},
+  timeout = 500,
+) {
+  let ref = getFun();
 
-  let {
-    [ID]: {
-      ref,
-    } = {},
-  } = IDRefMap;
+  const startTime = +new Date();
 
-  if (!ref) {
+  while (1) {
+    const now = +new Date();
+    if (now - startTime > timeout) {
+      console.warn('[dino-form] get ref timeout, maybe you not render it.');
+      return undefined;
+    }
     await sleep();
 
-    ({
-      [ID]: {
-        ref,
-      } = {},
-    } = IDRefMap);
+    ref = getFun();
+
+    if (ref) break;
   }
 
   return ref;
-};
+}
 
 export const createFragments = ({ fragments, createDinoFormApi }) => (
   mapObject(fragments, (comName, { Com, ...props } = {}) => ({

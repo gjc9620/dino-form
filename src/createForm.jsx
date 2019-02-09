@@ -7,7 +7,7 @@ import {
   createFragments,
   groupsAPI,
   subFormsAPI,
-  dinoFormGetGroupRef,
+  getRef,
 } from './DinoFormHelper';
 
 import { mapObject, mapObjectAsync } from './util';
@@ -24,7 +24,7 @@ function createForm({
   fragments = {},
   groups = {},
   subForms = {},
-  getGroupRef = dinoFormGetGroupRef,
+  getGroupRef = getRef,
 } = {}) {
   return function create(View) {
     return function bindWrap(Wrap = WrapCom) {
@@ -190,7 +190,7 @@ function createForm({
 
           const render = () => new Promise(r => this.setState({}, r));
 
-          await mapObjectAsync(values, async (field, value) => {
+          await mapObject(values, async (field, value) => {
             const group = findGroups(field);
             const subForm = findSubForms(field);
 
@@ -227,8 +227,13 @@ function createForm({
             const { IDRefMap, IDList, formName } = group;
 
             await mapObjectAsync(IDList, async (index, ID) => {
-              const ref = await getGroupRef({
-                group, index, ID, render: this.render(),
+              const ref = await getGroupRef(() => {
+                const {
+                  [ID]: {
+                    ref: groupFormRef,
+                  } = {},
+                } = IDRefMap;
+                return groupFormRef;
               });
 
               if (!ref) {
