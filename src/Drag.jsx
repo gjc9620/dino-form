@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Motion } from 'react-motion';
+import { Motion, spring } from 'react-motion';
 import rafSchd from 'raf-schd';
 import { prefix, sleep, isExist } from './util';
 
