@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { prefix, mapObject } from './util';
+import { prefix, mapObject, sleep } from './util';
 import DinoFormItem from './DinoFormItem';
 import Drag from './Drag';
+import { } from './util';
 
-export const dinoFormGetGroupRef = async ({ group, index, ID, render } = {}) => {
+export const dinoFormGetGroupRef = async ({
+  group, index, ID, render,
+} = {}) => {
   const { IDRefMap, IDList, formName } = group;
 
   let {
@@ -11,11 +14,10 @@ export const dinoFormGetGroupRef = async ({ group, index, ID, render } = {}) => 
       ref,
     } = {},
   } = IDRefMap;
-  // const
-  let { reTryRefCount } = 3;
 
-  while (!ref && reTryRefCount-- > 0) {
-    await render();
+  if (!ref) {
+    await sleep();
+
     ({
       [ID]: {
         ref,
