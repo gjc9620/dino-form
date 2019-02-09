@@ -314,6 +314,9 @@ export default class Drag extends Component {
       mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [], children, newChildren,
     } = this.state;
 
+    const {
+      clearMotions, pressedMotions, notPressedMotions, createStyle,
+    } = this.props;
     const { nextRenderClearMotions } = this;
 
     return (
@@ -334,41 +337,25 @@ export default class Drag extends Component {
                 ref: { offsetHeight },
               } = this.childrenMap[(newIndex - index > 0 ? newOrder : order)[i]];
               nowY += offsetHeight;
-              // debugger;
             }
-
-            // for (let i = index; i <= newIndex; newIndex > index ? i++ : i--) {
-            //   if (order[i] === originalPosOfLastPressed) {
-            //     continue;
-            //   }
-            //   const { ref: { offsetHeight } } = this.childrenMap[order[i]];
-            //   nowY += offsetHeight;
-            //   // debugger;
-            // }
-            // const { ref: { offsetHeight } } = this.childrenMap[originalPosOfLastPressed];
             y = newIndex - index > 0 ? nowY : -nowY;
           } else if (index !== newIndex) {
-            // console.log(index, newIndex);
             y = (newIndex - index > 0 ? 1 : -1)
                 * this.childrenMap[originalPosOfLastPressed].ref.offsetHeight;
           }
 
-          // console.log(mouseY);
           const style = nextRenderClearMotions
             ? {
-              scale: 1,
-              shadow: 0,
+              ...clearMotions(),
               y: 0,
             }
             : originalPosOfLastPressed === ID && isPressed
               ? {
-                scale: spring(0.6, springConfig),
-                shadow: spring(16, springConfig),
+                ...pressedMotions(),
                 y: spring(mouseY, { stiffness: 500, damping: 50 }),
               // y: mouseY,
               } : {
-                scale: spring(1, springConfig),
-                shadow: spring(0, springConfig),
+                ...notPressedMotions(),
                 y: spring(y, springConfig),
               };
           return (
@@ -378,9 +365,9 @@ export default class Drag extends Component {
                // console.trace(ID, ' ', y);
                // console.log('scale', ' ', scale);
                // console.log('shadow', ' ', shadow);
-               ({ scale, shadow, y }) => {
+               (styles) => {
                  if (!this.childrenMap[ID]) this.childrenMap[ID] = {};
-                 this.childrenMap[ID].style = { scale, shadow, y };
+                 this.childrenMap[ID].style = { y: styles.y };
 
                  return (
                    <div
@@ -393,9 +380,7 @@ export default class Drag extends Component {
                      onTouchStart={ event => this.handleTouchStart(event, ID, y) }
                      className={ `${prefix('group-item-wrap')} ${originalPosOfLastPressed === ID && isPressed ? prefix('group-item-wrap-pressed') : ''}` }
                      style={ {
-                       boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
-                       transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
-                       WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+                       ...createStyle({ styles, ID, originalPosOfLastPressed }),
                        zIndex: ID === originalPosOfLastPressed ? 99 : ID,
                      } }>
                      { children[ID] }
@@ -413,8 +398,30 @@ export default class Drag extends Component {
 
 Drag.defaultProps = {
   changeDone: () => {},
-  clearMotions: {},
-  pressedMotions: {},
-  notPressedMotions: {},
-  createStyle: ()=>{},
+  clearMotions: () => ({
+    scale: 1,
+    shadow: 0,
+  }),
+  pressedMotions: () => ({
+    scale: spring(0.6, springConfig),
+    shadow: spring(16, springConfig),
+    // y: mouseY,
+  }),
+  notPressedMotions: () => ({
+    scale: spring(1, springConfig),
+    shadow: spring(0, springConfig),
+  }),
+  createStyle: ({
+    styles: {
+      scale,
+      shadow,
+      y,
+    },
+    // ID,
+    // originalPosOfLastPressed,
+  } = {}) => ({
+    boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
+    transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+    WebkitTransform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+  }),
 };

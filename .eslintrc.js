@@ -18,6 +18,7 @@ module.exports = {
     'no-unused-expressions': ["error", { "allowShortCircuit": true }],
     "no-plusplus": 'off',
     "no-await-in-loop": 'off',
+    "no-nested-ternary": 'off',
     
     //react
     "react/no-multi-comp": "off",
