@@ -25,10 +25,6 @@ function reinsert(arr, from, to) {
   return _arr;
 }
 
-function clamp(n, min, max) {
-  return Math.max(Math.min(n, max), min);
-}
-
 const animDuration = 300;
 
 const springConfig = { stiffness: 200, damping: 20 };
@@ -358,18 +354,18 @@ export default class Drag extends Component {
           }
 
           // console.log(mouseY);
-          const style = originalPosOfLastPressed === ID && isPressed
+          const style = nextRenderClearMotions
             ? {
-              scale: spring(0.6, springConfig),
-              shadow: spring(16, springConfig),
-              y: spring(mouseY, { stiffness: 500, damping: 50 }),
-              // y: mouseY,
+              scale: 1,
+              shadow: 0,
+              y: 0,
             }
-            : nextRenderClearMotions
+            : originalPosOfLastPressed === ID && isPressed
               ? {
-                scale: 1,
-                shadow: 0,
-                y: 0,
+                scale: spring(0.6, springConfig),
+                shadow: spring(16, springConfig),
+                y: spring(mouseY, { stiffness: 500, damping: 50 }),
+              // y: mouseY,
               } : {
                 scale: spring(1, springConfig),
                 shadow: spring(0, springConfig),
@@ -417,4 +413,8 @@ export default class Drag extends Component {
 
 Drag.defaultProps = {
   changeDone: () => {},
+  clearMotions: {},
+  pressedMotions: {},
+  notPressedMotions: {},
+  createStyle: ()=>{},
 };
