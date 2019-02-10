@@ -58,7 +58,15 @@ function createForm({
         }
 
         createGroups = groupsObj => mapObject(groupsObj, (formName, {
-          Com, field, count, formProps = {}, needDrag = false, //todo
+          Com,
+          field,
+          count,
+          formProps = {},
+          needDrag = false,
+          clearMotions,
+          pressedMotions,
+          notPressedMotions,
+          createStyle,
         } = {}) => {
           const IDRefMap = {};
           const IDList = [...new Array(count)].map(() => this.ID++);
@@ -77,6 +85,10 @@ function createForm({
             IDRefMap,
             IDList,
             Form,
+            clearMotions,
+            pressedMotions,
+            notPressedMotions,
+            createStyle,
           };
 
           return ({

@@ -319,9 +319,7 @@ export default class Drag extends Component {
     const {
       clearMotions, pressedMotions, notPressedMotions, createStyle,
     } = this.props;
-    
-    debugger
-    
+
     const { nextRenderClearMotions } = this;
 
     return (
