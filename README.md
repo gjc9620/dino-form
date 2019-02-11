@@ -20,8 +20,8 @@
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-fragments   | #       |    #         | # 
-groups       | ---     |    ---       | --- 
+fragments   | #       |    #         |  [example](wwww)
+groups       | ---     |    ---       | ` aaa `
 subform       | ---     |    ---       | --- 
 
 
