@@ -20,8 +20,9 @@
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-FromItem   | #       |    #         | # 
----        | ---     |    ---       | --- 
+fragments   | #       |    #         | # 
+groups       | ---     |    ---       | --- 
+subform       | ---     |    ---       | --- 
 
 
 #### CreateForm
