@@ -17,7 +17,7 @@
 * dinoFormRef
 
 
-//todo edting...
+//todo editing...
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
