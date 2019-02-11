@@ -20,9 +20,9 @@
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-fragments   | #       |    #         |  [example](wwww)
-groups       | ---     |    ---       | ` aaa `
-subform       | ---     |    ---       | --- 
+fragments   | `Object`       |    fragments       |  [example](wwww)
+groups       | `Object`     |    Can be delete or add item(s)| [example](wwww)
+subform       | `Object`     |    ---       | --- 
 
 
 #### CreateForm
