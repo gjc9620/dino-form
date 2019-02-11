@@ -16,6 +16,14 @@
 * store
 * dinoFormRef
 
+
+### DinoForm
+parts      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+FromItem   | #       |    #         | # 
+---        | ---     |    ---       | --- 
+
+
 #### CreateForm
 ```
   import createForm from 'dino-form';
