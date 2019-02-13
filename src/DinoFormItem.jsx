@@ -123,7 +123,7 @@ class DinoFormItem extends React.Component {
             },
           };
         }
-        return { [propsKey]: event };
+        return { [propsKey]: propsValue };
       }),
     };
 
