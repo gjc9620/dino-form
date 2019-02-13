@@ -16,6 +16,16 @@
 * store
 * dinoFormRef
 
+
+//todo editing...
+### DinoForm
+parts      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+fragments   | `Object`       |    fragments       |  [example](wwww)
+groups       | `Object`     |    Can be delete or add item(s)| [example](wwww)
+subform       | `Object`     |    Nesting other dino-form       | [example](wwww)
+
+
 #### CreateForm
 ```
   import createForm from 'dino-form';
@@ -25,5 +35,7 @@
 #### Why?
 
 #### What is Parts & View & Wrap?
+
+### Drag && Drop
 
 
