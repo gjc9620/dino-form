@@ -15,6 +15,10 @@ class DinoFormItem extends React.Component {
       initValue,
     } = props;
 
+    if (!field) {
+      console.warn('This FormItem has no field');
+    }
+
     const [storeValue] = getFieldsValue(field);
 
     const value = isExist(storeValue)
