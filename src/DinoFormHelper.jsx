@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  prefix, mapObject, sleep, isExist,
+  prefix, mapObject, sleep, isExist, isNotExist,
 } from './util';
 import DinoFormItem from './DinoFormItem';
 import Drag from './Drag';
@@ -73,8 +73,8 @@ export const createDinoFormGroupWrap = ({
 
     checkID = () => {
       const { ID, index } = this.props;
-      if (isExist(ID)) {
-        console.error('[dino-form] props ID not found, look like you forget give a ID in map function');
+      if (!isNotExist(ID)) {
+        console.error('[dino-form] props ID not found, look like you forget give a ID in map function.');
       }
     }
 

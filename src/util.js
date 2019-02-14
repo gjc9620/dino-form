@@ -13,6 +13,10 @@ export function isExist(value) {
   );
 }
 
+export function isNotExist(value) {
+  return !isExist(value);
+}
+
 export function mapObject(obj, callback) {
   const mapedObj = {};
   for (const [key, value] of Object.entries(obj)) {
