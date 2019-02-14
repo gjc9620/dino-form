@@ -16,7 +16,7 @@ class DinoFormItem extends React.Component {
     } = props;
 
     if (!field) {
-      console.warn('This FormItem has no field');
+      console.warn('[dino-form] This FormItem has no field');
     }
 
     const [storeValue] = getFieldsValue(field);
