@@ -73,7 +73,7 @@ export const createDinoFormGroupWrap = ({
 
     checkID = () => {
       const { ID, index } = this.props;
-      if (!isNotExist(ID)) {
+      if (isNotExist(ID)) {
         console.error('[dino-form] props ID not found, look like you forget give a ID in map function.');
       }
     }
