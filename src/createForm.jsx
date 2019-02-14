@@ -164,6 +164,10 @@ function createForm({
               const values = [];
 
               for (const ID of IDList) {
+                if (!IDRefMap[ID].ref) {
+                  console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
+                  continue;
+                }
                 const result = IDRefMap[ID].ref.getFullValues();
                 values.push(result);
               }
@@ -178,6 +182,14 @@ function createForm({
             this.subForms,
             (formName, subForm) => {
               const { ref, field } = subForm;
+
+              if (!ref) {
+                console.warn(`[dino-form] subForm ref not registered, field = ${field}`);
+                return {
+                  [field]: {},
+                };
+              }
+
               return {
                 [field]: ref.getFullValues(),
               };
@@ -313,6 +325,10 @@ function createForm({
                 const values = [];
 
                 for (const ID of IDList) {
+                  if (!IDRefMap[ID].ref) {
+                    console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
+                    continue;
+                  }
                   const result = await IDRefMap[ID].ref.verify();
                   if (result.hasError) hasError = true;
                   values.push(result.data);
@@ -328,6 +344,12 @@ function createForm({
               this.subForms,
               async (formName, subForm) => {
                 const { ref, field } = subForm;
+
+                if (!ref) {
+                  console.warn(`[dino-form] subFrom ref not registered, field = ${field}.`);
+                  return { [field]: {} };
+                }
+
                 const { data, hasError: subFormHasError } = await ref.verify();
                 hasError = subFormHasError;
                 return {

@@ -37,6 +37,11 @@ const config = {
       field: 'workHistorySubForm',
       formProps: { withPig: true },
     },
+    JustForm2: {
+      Form: WorkHistoryForm,
+      field: 'workHistorySubForm1231',
+      formProps: { withPig: true },
+    },
   },
   groups: {
     workHistory: {
