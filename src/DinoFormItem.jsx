@@ -1,13 +1,30 @@
 import React, { Component, PropTypes } from 'react';
-import { mapObject, getValueFromEvent, isEventObj, prefix } from './util';
+import {
+  mapObject, getValueFromEvent, isEventObj, prefix, isExist,
+} from './util';
 
 class DinoFormItem extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     // message: undefined,
-  //   };
-  // }
+  constructor(props) {
+    super(props);
+    const {
+      dinoForm: {
+        store,
+        getFieldsValue,
+      },
+      field,
+      initValue,
+    } = props;
+
+    const [storeValue] = getFieldsValue(field);
+
+    const value = isExist(storeValue)
+      ? storeValue
+      : isExist(initValue)
+        ? initValue
+        : undefined;
+
+    store.update(field, { value });
+  }
 
   componentDidMount() {
     this.syncToStore({ isMount: true });
