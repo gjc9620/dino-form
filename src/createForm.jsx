@@ -168,7 +168,7 @@ function createForm({
                   console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
                   continue;
                 }
-                const result = IDRefMap[ID].ref.getFullValues();
+                const result = IDRefMap[ID].ref.getFullValues({ onlyGetMount });
                 values.push(result);
               }
 
@@ -191,7 +191,7 @@ function createForm({
               }
 
               return {
-                [field]: ref.getFullValues(),
+                [field]: ref.getFullValues({ onlyGetMount }),
               };
             },
           );
