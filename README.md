@@ -28,8 +28,15 @@ subform       | `Object`     |    Nesting other dino-form       | [example](wwww
 ### group
 group      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-needDrag   | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
-
+Com | `dino-form`       |   Will transform become group |  [example](wwww)
+field | `String`       |    Fields will become object key when collect form    |  [example](wwww)
+count | `Number`       |    init count       |  [example](wwww)
+formProps | `Boolean`       |    Com's props |  [example](wwww)
+needDrag | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
+clearMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
+pressedMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
+notPressedMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
+createStyle | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
 #### CreateForm
 ```
   import createForm from 'dino-form';
