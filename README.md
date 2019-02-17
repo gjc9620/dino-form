@@ -25,6 +25,10 @@ fragments   | `Object`       |    fragments       |  [example](wwww)
 groups       | `Object`     |    Can be delete or add item(s)| [example](wwww)
 subform       | `Object`     |    Nesting other dino-form       | [example](wwww)
 
+### group
+group      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+needDrag   | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
 
 #### CreateForm
 ```
@@ -37,5 +41,6 @@ subform       | `Object`     |    Nesting other dino-form       | [example](wwww
 #### What is Parts & View & Wrap?
 
 ### Drag && Drop
+needDrag
 
 
