@@ -30,13 +30,13 @@ group      | Type    |     Describe | Example
 ---        | ---     |    ---       | --- 
 Com | `dino-form`       |   Will transform become group |  [example](https://codesandbox.io/s/23rl65mnzr)
 field | `String`       |    Fields will become object key when collect form    |  [example](https://codesandbox.io/s/23rl65mnzr)
-count | `Number`       |    init count       |  [example](https://codesandbox.io/s/23rl65mnzr)
+count | `Number`       |    Number of initializations       |  [example](https://codesandbox.io/s/23rl65mnzr)
 formProps | `Boolean`       |    Com's props |  [example](https://codesandbox.io/s/23rl65mnzr)
-needDrag | `Boolean`       |    turn off(on) drag & drop       |  [example](https://codesandbox.io/s/23rl65mnzr)
-clearMotions | `Function`       |    reset all animation  |  [example](https://codesandbox.io/s/23rl65mnzr)
-pressedMotions | `Function`       |  return Motion Object       |  [example](https://codesandbox.io/s/23rl65mnzr)
-notPressedMotions | `Function`       |    return Motion Object        |  [example](https://codesandbox.io/s/23rl65mnzr)
-createStyle | `Function`       |   Apply Motion    |  [example](https://codesandbox.io/s/23rl65mnzr)
+needDrag | `Boolean`       |    Turn off(on) drag & drop       |  [example](https://codesandbox.io/s/23rl65mnzr)
+clearMotions | `Function`       |    Reset all animation function  |  [example](https://codesandbox.io/s/23rl65mnzr)
+pressedMotions | `Function`       |  Return Motion Object function       |  [example](https://codesandbox.io/s/23rl65mnzr)
+notPressedMotions | `Function`       |    return Motion Object function        |  [example](https://codesandbox.io/s/23rl65mnzr)
+createStyle | `Function`       |   Apply Motion function    |  [example](https://codesandbox.io/s/23rl65mnzr)
 #### CreateForm
 ```
   import createForm from 'dino-form';
