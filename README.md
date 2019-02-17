@@ -35,7 +35,7 @@ formProps | `Boolean`       |    Com's props |  [example](https://codesandbox.io
 needDrag | `Boolean`       |    Turn off(on) drag & drop       |  [example](https://codesandbox.io/s/23rl65mnzr)
 clearMotions | `Function`       |    Reset all animation function  |  [example](https://codesandbox.io/s/23rl65mnzr)
 pressedMotions | `Function`       |  Return Motion Object function       |  [example](https://codesandbox.io/s/23rl65mnzr)
-notPressedMotions | `Function`       |    return Motion Object function        |  [example](https://codesandbox.io/s/23rl65mnzr)
+notPressedMotions | `Function`       |    Return Motion Object function        |  [example](https://codesandbox.io/s/23rl65mnzr)
 createStyle | `Function`       |   Apply Motion function    |  [example](https://codesandbox.io/s/23rl65mnzr)
 #### CreateForm
 ```
