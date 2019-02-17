@@ -22,7 +22,7 @@
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
 fragments   | `Object`       |    fragments       |  [example](wwww)
-groups       | `Object`     |    Can be delete or add item(s)| [example](wwww)
+groups       | `Object`     |    Can be delete or add item(s)| [Detail](#group)
 subform       | `Object`     |    Nesting other dino-form       | [example](wwww)
 
 ### group
