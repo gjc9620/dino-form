@@ -33,10 +33,10 @@ field | `String`       |    Fields will become object key when collect form    |
 count | `Number`       |    init count       |  [example](wwww)
 formProps | `Boolean`       |    Com's props |  [example](wwww)
 needDrag | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
-clearMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
-pressedMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
-notPressedMotions | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
-createStyle | `Boolean`       |    turn off(on) drag &drop       |  [example](wwww)
+clearMotions | `Function`       |    reset all animation  |  [example](wwww)
+pressedMotions | `Function`       |  return Motion Object       |  [example](wwww)
+notPressedMotions | `Function`       |    return Motion Object        |  [example](wwww)
+createStyle | `Function`       |   Apply Motion    |  [example](wwww)
 #### CreateForm
 ```
   import createForm from 'dino-form';
