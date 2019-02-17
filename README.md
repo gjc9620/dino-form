@@ -21,22 +21,22 @@
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-fragments   | `Object`       |    fragments       |  [example](wwww)
+fragments   | `Object`       |    fragments       |  [example](https://codesandbox.io/s/23rl65mnzr)
 groups       | `Object`     |    Can be delete or add item(s)| [Detail](#group)
-subform       | `Object`     |    Nesting other dino-form       | [example](wwww)
+subform       | `Object`     |    Nesting other dino-form       | [example](https://codesandbox.io/s/23rl65mnzr)
 
 ### group
 group      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-Com | `dino-form`       |   Will transform become group |  [example](wwww)
-field | `String`       |    Fields will become object key when collect form    |  [example](wwww)
-count | `Number`       |    init count       |  [example](wwww)
-formProps | `Boolean`       |    Com's props |  [example](wwww)
-needDrag | `Boolean`       |    turn off(on) drag & drop       |  [example](wwww)
-clearMotions | `Function`       |    reset all animation  |  [example](wwww)
-pressedMotions | `Function`       |  return Motion Object       |  [example](wwww)
-notPressedMotions | `Function`       |    return Motion Object        |  [example](wwww)
-createStyle | `Function`       |   Apply Motion    |  [example](wwww)
+Com | `dino-form`       |   Will transform become group |  [example](https://codesandbox.io/s/23rl65mnzr)
+field | `String`       |    Fields will become object key when collect form    |  [example](https://codesandbox.io/s/23rl65mnzr)
+count | `Number`       |    init count       |  [example](https://codesandbox.io/s/23rl65mnzr)
+formProps | `Boolean`       |    Com's props |  [example](https://codesandbox.io/s/23rl65mnzr)
+needDrag | `Boolean`       |    turn off(on) drag & drop       |  [example](https://codesandbox.io/s/23rl65mnzr)
+clearMotions | `Function`       |    reset all animation  |  [example](https://codesandbox.io/s/23rl65mnzr)
+pressedMotions | `Function`       |  return Motion Object       |  [example](https://codesandbox.io/s/23rl65mnzr)
+notPressedMotions | `Function`       |    return Motion Object        |  [example](https://codesandbox.io/s/23rl65mnzr)
+createStyle | `Function`       |   Apply Motion    |  [example](https://codesandbox.io/s/23rl65mnzr)
 #### CreateForm
 ```
   import createForm from 'dino-form';
