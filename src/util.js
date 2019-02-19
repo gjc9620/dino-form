@@ -45,8 +45,7 @@ export function isEventObj(obj) {
   }
 
   return (
-    obj.type !== undefined
-    && obj.target !== undefined
+    obj.target !== undefined
     && typeof obj.preventDefault === 'function'
   );
 }
