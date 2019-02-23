@@ -21,9 +21,15 @@
 ### DinoForm
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
-fragments   | `Object`       |    fragments       |  [example](https://codesandbox.io/s/23rl65mnzr)
+fragments   | `Object`       |    fragments       |  [example](#fragments))
 groups       | `Object`     |    Can be delete or add item(s)| [Detail](#group)
-subform       | `Object`     |    Nesting other dino-form       | [example](https://codesandbox.io/s/23rl65mnzr)
+subform       | `Object`     |    Nesting other dino-form       | [example](#fragments)
+
+### fragments
+parts      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+Com   | `Object`       |    Any Component        |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L15)
+
 
 ### group
 group      | Type    |     Describe | Example 
