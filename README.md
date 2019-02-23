@@ -23,7 +23,7 @@ parts      | Type    |     Describe | Example
 ---        | ---     |    ---       | --- 
 fragments   | `Object`       |    fragments       |  [Detail](#fragments)
 groups       | `Object`     |    Can be delete or add item(s)| [Detail](#group)
-subform       | `Object`     |    Nesting other dino-form       | [Detail](#fragments)
+subform       | `Object`     |    Nesting other dino-form       | [Detail](#subForms)
 
 ### fragments
 parts      | Type    |     Describe | Example 
