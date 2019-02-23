@@ -31,6 +31,7 @@ parts      | Type    |     Describe | Example
 Com   | `Object`       |    Any Component        |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L15)
 
 
+
 ### group
 group      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
@@ -43,6 +44,19 @@ clearMotions | `Function`       |    Reset all animation function  |  [example](
 pressedMotions | `Function`       |  Return Motion Object function       |  [example](https://codesandbox.io/s/23rl65mnzr)
 notPressedMotions | `Function`       |    Return Motion Object function        |  [example](https://codesandbox.io/s/23rl65mnzr)
 createStyle | `Function`       |   Apply Motion function    |  [example](https://codesandbox.io/s/23rl65mnzr)
+
+### fragments
+parts      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+Com   | `Object`       |    Any Component        |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L15)
+
+#### subForms
+parts      | Type    |     Describe | Example 
+---        | ---     |    ---       | --- 
+SubForms   | `Object`       |    dino-form        |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L34)
+field   | `Object`       |    field       |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L34)
+formProps   | `Object`       |   props       |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L34)
+
 #### CreateForm
 ```
   import createForm from 'dino-form';
@@ -57,3 +71,4 @@ createStyle | `Function`       |   Apply Motion function    |  [example](https:/
 needDrag
 
 
+###
