@@ -45,11 +45,6 @@ pressedMotions | `Function`       |  Return Motion Object function       |  [exa
 notPressedMotions | `Function`       |    Return Motion Object function        |  [example](https://codesandbox.io/s/23rl65mnzr)
 createStyle | `Function`       |   Apply Motion function    |  [example](https://codesandbox.io/s/23rl65mnzr)
 
-### fragments
-parts      | Type    |     Describe | Example 
----        | ---     |    ---       | --- 
-Com   | `Object`       |    Any Component        |  [example](https://github.com/gjc9620/dino-form/blob/master/examples/forms/Resume.jsx#L15)
-
 #### subForms
 parts      | Type    |     Describe | Example 
 ---        | ---     |    ---       | --- 
