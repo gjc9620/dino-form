@@ -33,7 +33,8 @@ function createForm({
           super(constructorProps);
 
           this.store = createDinoFormStore();
-          this.subForms = createDinoFormSubForm(subForms);
+          // this.subForms = createDinoFormSubForm(subForms, this.topFormRender);
+          this.subForms = createDinoFormSubForm({ subForms, topFormRender: this.topFormRender });
 
           this.FromItem = createFromItem({
             createDinoFormApi: this.createDinoFormApi,

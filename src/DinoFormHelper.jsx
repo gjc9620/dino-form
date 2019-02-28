@@ -111,7 +111,7 @@ export const createDinoFormGroupWrap = ({
   }
 );
 
-export const createDinoFormSubForm = subForms => (
+export const createDinoFormSubForm = ({ subForms, topFormRender } = {}) => (
   mapObject(subForms, (formName, form) => {
     const { Form, field, formProps = {} } = form;
     const subForm = {
@@ -124,6 +124,7 @@ export const createDinoFormSubForm = subForms => (
             <Form
               { ...formProps }
               { ...this.props }
+              topFormRender={ topFormRender }
               ref={ (ref) => { subForm.ref = ref; } }
               />
           );
