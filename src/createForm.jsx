@@ -190,7 +190,11 @@ function createForm({
               const { ref, field } = subForm;
 
               if (!ref) {
-                console.warn(`[dino-form] subForm ref not registered, field = ${field}`);
+                isProduction(() => {
+                  if (debug) {
+                    console.warn(`[dino-form] subForm ref not registered, field = ${field}`);
+                  }
+                });
                 return {
                   [field]: {},
                 };
