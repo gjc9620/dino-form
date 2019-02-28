@@ -10,8 +10,9 @@ import {
   getRef,
 } from './DinoFormHelper';
 
-import { mapObject, mapObjectAsync } from './util';
-import { sleep } from './util';
+import {
+  sleep, mapObject, mapObjectAsync, isProduction,
+} from './util';
 
 class WrapCom extends Component {
   render() {
@@ -139,7 +140,7 @@ function createForm({
           return scheme.value;
         })
 
-        getFullValues = ({ onlyGetMount = true } = {}) => {
+        getFullValues = ({ onlyGetMount = true, debug = false } = {}) => {
           const fragmentsField = mapObject(
             this.store.get(),
             (
@@ -166,7 +167,11 @@ function createForm({
 
               for (const ID of IDList) {
                 if (!IDRefMap[ID].ref) {
-                  console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
+                  isProduction(() => {
+                    if (debug) {
+                      console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
+                    }
+                  });
                   continue;
                 }
                 const result = IDRefMap[ID].ref.getFullValues({ onlyGetMount });

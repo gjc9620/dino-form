@@ -50,4 +50,11 @@ export function isEventObj(obj) {
   );
 }
 
+export function isProduction(doFunc) {
+  if (1) {
+    doFunc();
+  }
+}
+
+
 export const prefix = className => `dino-form-${className}`;
