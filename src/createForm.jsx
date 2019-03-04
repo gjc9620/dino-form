@@ -178,7 +178,7 @@ function createForm({
                   });
                   continue;
                 }
-                const result = IDRefMap[ID].ref.getFullValues({ onlyGetMount });
+                const result = group.ref.getFullValues({ onlyGetMount });
                 values.push(result);
               }
 
