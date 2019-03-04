@@ -13,6 +13,7 @@ import {
 import {
   sleep, mapObject, mapObjectAsync, isProduction,
 } from './util';
+import { isNotExist } from '../es';
 
 class WrapCom extends Component {
   render() {
@@ -160,13 +161,16 @@ function createForm({
               groupName,
               {
                 field,
-                IDRefMap = [], IDList,
+                IDRefMap = [],
+                IDList,
               },
             ) => {
               const values = [];
 
               for (const ID of IDList) {
-                if (!IDRefMap[ID].ref) {
+                const group = IDRefMap[ID];
+
+                if (isNotExist(group) || isNotExist(group.ref)) {
                   isProduction(() => {
                     if (debug) {
                       console.warn(`[dino-form] group from ref not registered, field = ${field}, ID=${ID}`);
