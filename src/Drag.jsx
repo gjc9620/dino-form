@@ -50,7 +50,6 @@ export default class Drag extends Component {
       order: [...order],
       newOrder: [...order],
       children,
-      newChildren: children,
     };
 
     this.handleMouseMove = rafSchd(this.handleMouseMove);
@@ -104,9 +103,8 @@ export default class Drag extends Component {
 
       return;
     }
-    this.clearMotions().then(() => {
-      this.setState({ children, newOrder: [...nextProps.order], order: [...nextProps.order] });
-    });
+
+    this.setState({ children, newOrder: [...nextProps.order], order: [...nextProps.order] });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -313,7 +311,7 @@ export default class Drag extends Component {
 
   render() {
     const {
-      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [], children, newChildren,
+      mouseY, isPressed, originalPosOfLastPressed, newOrder, order = [], children,
     } = this.state;
 
     const {
