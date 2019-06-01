@@ -90,7 +90,7 @@ export default class Drag extends Component {
 
       this.setState({ isPressed: false });
 
-      await sleep(200);
+      await sleep(springConfig.stiffness);
 
       await this.clearMotions();
 
