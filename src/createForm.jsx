@@ -11,9 +11,8 @@ import {
 } from './DinoFormHelper';
 
 import {
-  sleep, mapObject, mapObjectAsync, isProduction,
+  sleep, mapObject, mapObjectAsync, isProduction, isNotExist,
 } from './util';
-import { isNotExist } from '../es';
 
 class WrapCom extends Component {
   render() {
