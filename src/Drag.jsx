@@ -362,10 +362,6 @@ export default class Drag extends Component {
           return (
             <Motion style={ style } key={ ID } ref={ ref => this.Motions[ID] = ref }>
               {
-               // console.log(ID, ' ', y);
-               // console.trace(ID, ' ', y);
-               // console.log('scale', ' ', scale);
-               // console.log('shadow', ' ', shadow);
                (styles) => {
                  if (!this.childrenMap[ID]) this.childrenMap[ID] = {};
                  this.childrenMap[ID].style = { y: styles.y };
